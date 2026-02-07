@@ -1,0 +1,15 @@
+/* /css/room-01.css */
+/* Only coordinates / room-specific stuff lives here */
+
+/* Hotspots */
+.r01-pot {
+    width: 10%;
+    height: 6%;
+    bottom: 41%;
+    right: 14%;
+  }
+  
+  /* Add more as needed:
+  .r01-cabinet { left: 60%; top: 25%; width: 18%; height: 28%; }
+  .r01-note { left: 18%; top: 55%; width: 10%; height: 12%; }
+  */

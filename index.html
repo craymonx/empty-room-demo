@@ -1,24 +1,37 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Cooking at 1AM</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empty Room</title>
+
+  <!-- Meta (optional but good practice) -->
+  <meta name="description" content="An interactive escape-room experience." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./css/styles.css" />
 </head>
+
 <body>
-
-  <div class="scene">
-
-    <!-- BACKGROUND -->
-    <img id="bg" src="assets/bg/kitchen-with-pot.png" class="bg">
-
-    <!-- INVISIBLE HOTSPOT (must be BEFORE script) -->
-    <div id="potHotspot" class="hotspot pot-area"></div>
-
+  <!-- Loading / Transition Screen -->
+  <div id="loading-screen" class="screen active">
+    <p>Entering the room…</p>
   </div>
 
-  <!-- Script should be at the end of body -->
-  <script src="js/game.js"></script>
+  <!-- Game Root -->
+  <main id="game-root">
+    <!-- Stages will render here -->
+  </main>
 
+  <!-- Overlay (for modals, inventory, hints, etc.) -->
+  <div id="overlay"></div>
+
+  <!-- Audio (optional global sounds) -->
+  <audio id="bgm" loop></audio>
+  <audio id="sfx"></audio>
+
+  <!-- Main entry (ES module) -->
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>
