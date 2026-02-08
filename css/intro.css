@@ -1,0 +1,37 @@
+/* /css/intro.css */
+
+/* Intro overlay card */
+.intro-card {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 20;
+  
+    width: min(760px, calc(100% - 32px));
+    padding: 18px 20px;
+    border-radius: 16px;
+  
+    background: rgba(0,0,0,.45);
+    border: 1px solid rgba(255,255,255,.10);
+    backdrop-filter: blur(6px);
+  }
+  
+  .intro-card h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    text-align: center
+  }
+  
+  .intro-card p {
+    margin: 0 0 14px;
+    opacity: .9;
+    text-align: center
+  }
+  
+  .intro-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center; 
+  }
