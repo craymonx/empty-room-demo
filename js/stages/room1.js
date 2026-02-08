@@ -2,15 +2,27 @@
 export default {
     enter({ root, go }) {
       root.innerHTML = `
-        <div class="scene" id="scene-room1">
-          <img id="bg" src="./assets/bg/kitchen-with-pot.png" class="bg" alt="Kitchen scene">
-          <button id="potHotspot" class="hotspot r01-pot" aria-label="Pot"></button>
+        <section class="scene" id="scene-room1">
+          <div class="scene-inner">
+            <img
+              id="bg"
+              src="./assets/bg/kitchen-with-pot.png"
+              class="bg"
+              alt="Kitchen scene"
+            >
   
-          <div class="hud">
-            <button id="backBtn" class="hud-btn">Back</button>
-            <button id="debugBtn" class="hud-btn">Hotspots</button>
+            <button
+              id="potHotspot"
+              class="hotspot r01-pot"
+              aria-label="Pot"
+            ></button>
+  
+            <div class="hud">
+              <button id="backBtn" class="hud-btn">Back</button>
+              <button id="debugBtn" class="hud-btn">Hotspots</button>
+            </div>
           </div>
-        </div>
+        </section>
       `;
   
       const sceneEl = root.querySelector("#scene-room1");

@@ -2,6 +2,9 @@
   --hud-bg: rgba(0, 0, 0, 0.35);
   --hud-border: rgba(255, 255, 255, 0.08);
   --text: #eaeaea;
+
+  --room-max-width: 1440px; /* one knob for ALL rooms */
+  --room-bg: #000;
 }
 
 * { box-sizing: border-box; }
@@ -45,18 +48,37 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  background: #000;
+  background: var(--room-bg);
   color: var(--text);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  overflow: hidden;
 }
 
 /* Full screen stage container */
 .scene {
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  overflow: hidden;
+  background: #000;
+
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* New inner canvas that has the capped width */
+.scene-inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--room-max-width);   /* <- change once for all rooms */
+  height: 100%;
   overflow: hidden;
   background: #000;
 }
@@ -68,6 +90,8 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  z-index: 0;
 
   user-select: none;
   -webkit-user-drag: none;
@@ -81,6 +105,7 @@ body {
   border: 0;
   padding: 0;
   border-radius: 12px;
+  z-index: 5;
 }
 
 /* Debug helper: add class "debug-hotspots" on .scene to visualize hotspots */
@@ -115,4 +140,29 @@ body {
 
 .hud-btn:active {
   transform: translateY(1px);
+}
+
+.intro-card {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 20;
+
+  width: min(760px, calc(100% - 32px));
+  padding: 16px 18px;
+  border-radius: 16px;
+
+  background: rgba(0,0,0,.45);
+  border: 1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(6px);
+}
+
+.intro-card h1 { margin: 0 0 8px; }
+.intro-card p { margin: 0 0 14px; opacity: .9; }
+
+.intro-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
