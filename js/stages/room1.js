@@ -3,8 +3,7 @@ export default {
   enter({ root, go }) {
     root.innerHTML = `
       <section class="scene" id="scene-room1">
-        <div class="scene-inner">
-          <!-- Background -->
+        <div class="scene-inner" id="room1Wrap">
           <img
             id="bg"
             src="./assets/bg/kitchen-light-on.png"
@@ -13,14 +12,12 @@ export default {
             draggable="false"
           />
 
-          <!-- STEP 1 hotspot: Stove -->
           <button
             id="kitchenStove"
             class="hotspot kitchen-stove"
             aria-label="Zoom into the stove"
           ></button>
 
-          <!-- STEP 2/3 overlays container -->
           <div id="overlays" class="overlays" aria-hidden="false"></div>
 
           <div class="hud">
@@ -32,6 +29,7 @@ export default {
     `;
 
     const sceneEl = root.querySelector("#scene-room1");
+    const wrap = root.querySelector("#room1Wrap");
     const bg = root.querySelector("#bg");
     const overlays = root.querySelector("#overlays");
     const stoveBtn = root.querySelector("#kitchenStove");
@@ -39,64 +37,113 @@ export default {
     let scene = "kitchen"; // "kitchen" -> "stove" -> "cooked"
     let cleanupDrag = null;
 
-    // ---- Helpers ------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    // OPTION B: Pixel-accurate hotspot placement (based on original image)
+    // Edit these rects in ORIGINAL IMAGE pixels (naturalWidth/naturalHeight).
+    // -----------------------------------------------------------------------
+    const RECTS = {
+      kitchen: {
+        // kitchen-light-on.png
+        stove: { x: 500, y: 420, w: 420, h: 150 },
+      },
+      stove: {
+        // pot-with-noodle-on-stove.png
+        noodles: { x: 1000, y: 530, w: 120, h: 50 }, // starting noodles position
+        pot: { x: 640, y: 320, w: 200, h: 250 }, // dropzone over pot
+      },
+    };
 
     function wait(ms) {
       return new Promise((r) => setTimeout(r, ms));
     }
 
-    async function transitionBg(nextSrc) {
-      // You can style .is-fading in CSS (opacity transition)
-      bg.classList.add("is-fading");
-      await wait(180); // keep small; match your CSS transition duration
-      bg.src = nextSrc;
-      await wait(50);
-      bg.classList.remove("is-fading");
+    // Return the drawn image rectangle inside the element box (handles object-fit: contain)
+    function getDrawnImageRect(imgEl) {
+      const box = imgEl.getBoundingClientRect();
+      const nW = imgEl.naturalWidth || 1;
+      const nH = imgEl.naturalHeight || 1;
+
+      // our CSS uses object-fit: contain
+      const scale = Math.min(box.width / nW, box.height / nH);
+      const drawnW = nW * scale;
+      const drawnH = nH * scale;
+
+      const left = box.left + (box.width - drawnW) / 2;
+      const top = box.top + (box.height - drawnH) / 2;
+
+      return { left, top, width: drawnW, height: drawnH, scale, nW, nH };
     }
 
-    function createStoveSceneOverlays() {
-      // Draggable noodles overlay (STEP 2/3)
-      const noodles = document.createElement("img");
-      noodles.id = "noodles";
-      noodles.src = "./assets/props/noodles.png";
-      noodles.alt = "Noodles";
-      noodles.className = "noodles-overlay draggable";
-      noodles.draggable = false;
+    // Place an absolutely-positioned element using image-pixel rect coordinates
+    function placeRectOnImage({ imgEl, parentEl, targetEl, rectPx }) {
+      if (!imgEl.complete || !imgEl.naturalWidth) return;
 
-      // Invisible drop zone where the pot is (YOU position via CSS)
-      const potZone = document.createElement("div");
-      potZone.id = "potDropzone";
-      potZone.className = "pot-dropzone";
-      potZone.setAttribute("aria-label", "Pot drop zone");
+      const drawn = getDrawnImageRect(imgEl);
+      const parentBox = parentEl.getBoundingClientRect();
 
-      overlays.appendChild(potZone);
-      overlays.appendChild(noodles);
+      const left = drawn.left + rectPx.x * drawn.scale - parentBox.left;
+      const top = drawn.top + rectPx.y * drawn.scale - parentBox.top;
+      const width = rectPx.w * drawn.scale;
+      const height = rectPx.h * drawn.scale;
 
-      // Hook drag behavior
-      cleanupDrag = makeDraggable({
-        el: noodles,
-        dropzone: potZone,
-        onDrop: async () => {
-          if (scene !== "stove") return;
+      targetEl.style.left = `${left}px`;
+      targetEl.style.top = `${top}px`;
+      targetEl.style.width = `${width}px`;
+      targetEl.style.height = `${height}px`;
+    }
 
-          scene = "cooked";
+    // Re-layout hotspots/overlays depending on current scene
+    function layout() {
+      if (!bg.complete || !bg.naturalWidth) return;
 
-          // lock UI / prevent extra dragging
-          noodles.style.pointerEvents = "none";
-          noodles.classList.remove("draggable");
+      if (scene === "kitchen") {
+        // Stove hotspot visible
+        if (stoveBtn.style.display !== "none") {
+          placeRectOnImage({
+            imgEl: bg,
+            parentEl: wrap,
+            targetEl: stoveBtn,
+            rectPx: RECTS.kitchen.stove,
+          });
+        }
+      }
 
-          // Optional: hide overlays before switching
-          overlays.classList.add("is-fading");
-          await wait(150);
+      if (scene === "stove") {
+        const noodles = overlays.querySelector("#noodles");
+        const potZone = overlays.querySelector("#potDropzone");
 
-          // Transition to cooked state
-          await transitionBg("./assets/bg/cooked-noodles.png");
+        if (noodles) {
+          placeRectOnImage({
+            imgEl: bg,
+            parentEl: wrap,
+            targetEl: noodles,
+            rectPx: RECTS.stove.noodles,
+          });
+        }
+        if (potZone) {
+          placeRectOnImage({
+            imgEl: bg,
+            parentEl: wrap,
+            targetEl: potZone,
+            rectPx: RECTS.stove.pot,
+          });
+        }
+      }
+    }
 
-          // Clear overlays (or keep them if you want)
-          overlays.innerHTML = "";
-          overlays.classList.remove("is-fading");
-        },
+    async function transitionBg(nextSrc) {
+      bg.classList.add("is-fading");
+      await wait(180);
+      bg.src = nextSrc;
+
+      // wait for image to load before we layout (important!)
+      await new Promise((resolve) => {
+        if (bg.complete) return resolve();
+        bg.addEventListener("load", resolve, { once: true });
       });
+
+      bg.classList.remove("is-fading");
+      layout();
     }
 
     function clearOverlays() {
@@ -112,17 +159,11 @@ export default {
     }
 
     function isDroppedOnZone(draggableEl, zoneEl) {
-      // Simple & reliable: check if noodle center is inside dropzone rect
       const dRect = draggableEl.getBoundingClientRect();
       const zRect = zoneEl.getBoundingClientRect();
       const c = rectCenter(dRect);
 
-      return (
-        c.x >= zRect.left &&
-        c.x <= zRect.right &&
-        c.y >= zRect.top &&
-        c.y <= zRect.bottom
-      );
+      return c.x >= zRect.left && c.x <= zRect.right && c.y >= zRect.top && c.y <= zRect.bottom;
     }
 
     function makeDraggable({ el, dropzone, onDrop }) {
@@ -132,8 +173,6 @@ export default {
       let currentX = 0;
       let currentY = 0;
 
-      // NOTE: You can also switch to "left/top absolute" positioning if you prefer.
-      // This uses transform so your CSS can place the initial position.
       function onPointerDown(e) {
         if (scene !== "stove") return;
         dragging = true;
@@ -157,7 +196,7 @@ export default {
         el.style.transform = `translate(${currentX}px, ${currentY}px)`;
       }
 
-      async function onPointerUp(e) {
+      async function onPointerUp() {
         if (!dragging) return;
         dragging = false;
         el.classList.remove("is-dragging");
@@ -171,7 +210,6 @@ export default {
       window.addEventListener("pointermove", onPointerMove);
       window.addEventListener("pointerup", onPointerUp);
 
-      // return cleanup
       return () => {
         el.removeEventListener("pointerdown", onPointerDown);
         window.removeEventListener("pointermove", onPointerMove);
@@ -179,33 +217,85 @@ export default {
       };
     }
 
-    // ---- Step 2 trigger: click stove ---------------------------------------
+    function createStoveSceneOverlays() {
+      const noodles = document.createElement("img");
+      noodles.id = "noodles";
+      noodles.src = "./assets/props/noodles.png";
+      noodles.alt = "Noodles";
+      noodles.className = "noodles-overlay draggable";
+      noodles.draggable = false;
 
+      const potZone = document.createElement("div");
+      potZone.id = "potDropzone";
+      potZone.className = "pot-dropzone";
+      potZone.setAttribute("aria-label", "Pot drop zone");
+
+      overlays.appendChild(potZone);
+      overlays.appendChild(noodles);
+
+      // IMPORTANT: layout BEFORE enabling drag so it starts in correct place
+      // Also reset transform offsets each time we create it
+      noodles.style.transform = "translate(0px, 0px)";
+      layout();
+
+      cleanupDrag = makeDraggable({
+        el: noodles,
+        dropzone: potZone,
+        onDrop: async () => {
+          if (scene !== "stove") return;
+          scene = "cooked";
+
+          noodles.style.pointerEvents = "none";
+          noodles.classList.remove("draggable");
+
+          overlays.classList.add("is-fading");
+          await wait(150);
+
+          await transitionBg("./assets/bg/cooked-noodles.png");
+
+          overlays.innerHTML = "";
+          overlays.classList.remove("is-fading");
+        },
+      });
+    }
+
+    // Step 2: click stove
     stoveBtn.addEventListener("click", async () => {
       if (scene !== "kitchen") return;
 
       scene = "stove";
-
-      // Move to stove view
       await transitionBg("./assets/bg/pot-with-noodle-on-stove.png");
 
-      // Hide stove hotspot (since we're “zoomed in” now)
       stoveBtn.style.display = "none";
 
-      // Add noodles overlay + pot dropzone
       clearOverlays();
       createStoveSceneOverlays();
+      layout();
     });
 
-    // ---- HUD ---------------------------------------------------------------
-
+    // HUD
     root.querySelector("#backBtn").addEventListener("click", () => go("intro"));
     root.querySelector("#debugBtn").addEventListener("click", () => {
       sceneEl.classList.toggle("debug-hotspots");
     });
+
+    // Initial layout after first bg loads + on resize
+    const onResize = () => layout();
+    window.addEventListener("resize", onResize);
+
+    bg.addEventListener("load", layout, { once: false });
+    layout();
+
+    // Cleanup listeners on exit (optional but good practice)
+    this._room1Cleanup = () => {
+      window.removeEventListener("resize", onResize);
+    };
   },
 
   exit({ root }) {
+    // remove any global listeners if set
+    // (safe even if not present)
+    if (this._room1Cleanup) this._room1Cleanup();
     root.innerHTML = "";
   },
 };

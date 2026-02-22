@@ -1,20 +1,28 @@
-.bg {
-  display: block;
+/* Make sure the scene container is the positioning reference */
+.scene-inner {
+  position: relative;
   width: 100%;
-  height: auto;
+  height: 100%;
+  overflow: hidden; /* avoids scrollbars from absolute elements */
 }
 
-.kitchen-stove {
+/* Background image fits any screen, letterboxing allowed */
+.bg {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* IMPORTANT for option B */
+  display: block;
+}
 
-  /* 👇 YOU EDIT THESE */
-  top: 75%;
-  left: 53%;
-
-  width: 450px;
-  height: 200px;
-
-  transform: translate(-50%, -50%);
+/* JS will set left/top/width/height */
+.hotspot {
+  position: absolute;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
 }
 
 .bg.is-fading {
@@ -22,10 +30,11 @@
   transition: opacity 180ms ease;
 }
 
+/* Overlays share the same coordinate space as bg */
 .overlays {
   position: absolute;
   inset: 0;
-  pointer-events: none; /* allow only specific overlay items to be interactive */
+  pointer-events: none;
 }
 
 .overlays.is-fading {
@@ -33,26 +42,28 @@
   transition: opacity 150ms ease;
 }
 
+/* JS will set left/top/width/height for noodles too */
 .noodles-overlay {
   position: absolute;
-  top: 90%;
-  left: 75%;
-  pointer-events: auto; /* make it draggable */
-  touch-action: none;   /* important for pointer dragging on mobile */
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
+/* JS will set left/top/width/height for pot dropzone too */
 .pot-dropzone {
   position: absolute;
-  top: 60%;
-  left: 45%;
-
-  width: 250px;
-  height: 200px;
-
-  pointer-events: none; /* drop detection uses rect, no need to click */
+  pointer-events: none;
 }
 
-/* Optional debug visualization */
+/* Debug visualization */
+.debug-hotspots .hotspot {
+  outline: 2px solid rgba(255, 0, 0, 0.7);
+  background: rgba(255, 0, 0, 0.15);
+}
+
 .debug-hotspots .pot-dropzone {
-  outline: 2px dashed rgba(255,255,255,0.8);
+  outline: 2px dashed rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
 }
