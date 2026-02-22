@@ -34,13 +34,12 @@ export default {
     const overlays = root.querySelector("#overlays");
     const stoveBtn = root.querySelector("#kitchenStove");
 
-    let scene = "kitchen"; // "kitchen" -> "stove" -> "cooked"
+    // Game state
+    // kitchen -> stove (drag) -> cooked (click pot) -> emptyPot (click anywhere) -> mainView (click anywhere) -> glassEmpty
+    let scene = "kitchen";
     let cleanupDrag = null;
 
-    // -----------------------------------------------------------------------
-    // OPTION B: Pixel-accurate hotspot placement (based on original image)
-    // Edit these rects in ORIGINAL IMAGE pixels (naturalWidth/naturalHeight).
-    // -----------------------------------------------------------------------
+    // --- EDIT THESE in ORIGINAL IMAGE PIXELS (naturalWidth/naturalHeight) ----
     const RECTS = {
       kitchen: {
         // kitchen-light-on.png
@@ -53,17 +52,16 @@ export default {
       },
     };
 
-    function wait(ms) {
-      return new Promise((r) => setTimeout(r, ms));
-    }
 
-    // Return the drawn image rectangle inside the element box (handles object-fit: contain)
+    // ---- helpers ------------------------------------------------------------
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
     function getDrawnImageRect(imgEl) {
       const box = imgEl.getBoundingClientRect();
       const nW = imgEl.naturalWidth || 1;
       const nH = imgEl.naturalHeight || 1;
 
-      // our CSS uses object-fit: contain
+      // CSS uses object-fit: contain
       const scale = Math.min(box.width / nW, box.height / nH);
       const drawnW = nW * scale;
       const drawnH = nH * scale;
@@ -71,10 +69,9 @@ export default {
       const left = box.left + (box.width - drawnW) / 2;
       const top = box.top + (box.height - drawnH) / 2;
 
-      return { left, top, width: drawnW, height: drawnH, scale, nW, nH };
+      return { left, top, width: drawnW, height: drawnH, scale };
     }
 
-    // Place an absolutely-positioned element using image-pixel rect coordinates
     function placeRectOnImage({ imgEl, parentEl, targetEl, rectPx }) {
       if (!imgEl.complete || !imgEl.naturalWidth) return;
 
@@ -92,12 +89,10 @@ export default {
       targetEl.style.height = `${height}px`;
     }
 
-    // Re-layout hotspots/overlays depending on current scene
     function layout() {
       if (!bg.complete || !bg.naturalWidth) return;
 
       if (scene === "kitchen") {
-        // Stove hotspot visible
         if (stoveBtn.style.display !== "none") {
           placeRectOnImage({
             imgEl: bg,
@@ -129,6 +124,19 @@ export default {
           });
         }
       }
+
+      // When cooked/emptyPot, we keep a clickable pot hotspot
+      if (scene === "cooked" || scene === "emptyPot") {
+        const potHotspot = overlays.querySelector("#potClickHotspot");
+        if (potHotspot) {
+          placeRectOnImage({
+            imgEl: bg,
+            parentEl: wrap,
+            targetEl: potHotspot,
+            rectPx: RECTS.stove.pot,
+          });
+        }
+      }
     }
 
     async function transitionBg(nextSrc) {
@@ -136,7 +144,6 @@ export default {
       await wait(180);
       bg.src = nextSrc;
 
-      // wait for image to load before we layout (important!)
       await new Promise((resolve) => {
         if (bg.complete) return resolve();
         bg.addEventListener("load", resolve, { once: true });
@@ -162,7 +169,6 @@ export default {
       const dRect = draggableEl.getBoundingClientRect();
       const zRect = zoneEl.getBoundingClientRect();
       const c = rectCenter(dRect);
-
       return c.x >= zRect.left && c.x <= zRect.right && c.y >= zRect.top && c.y <= zRect.bottom;
     }
 
@@ -186,13 +192,10 @@ export default {
         if (!dragging) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-
         currentX += dx;
         currentY += dy;
-
         startX = e.clientX;
         startY = e.clientY;
-
         el.style.transform = `translate(${currentX}px, ${currentY}px)`;
       }
 
@@ -200,10 +203,7 @@ export default {
         if (!dragging) return;
         dragging = false;
         el.classList.remove("is-dragging");
-
-        if (isDroppedOnZone(el, dropzone)) {
-          await onDrop();
-        }
+        if (isDroppedOnZone(el, dropzone)) await onDrop();
       }
 
       el.addEventListener("pointerdown", onPointerDown);
@@ -217,6 +217,42 @@ export default {
       };
     }
 
+    // A full-screen click layer for "click anywhere to continue"
+    function enableClickAnywhere(handler) {
+      // remove existing if any
+      const old = overlays.querySelector("#clickAnywhere");
+      if (old) old.remove();
+
+      const layer = document.createElement("button");
+      layer.id = "clickAnywhere";
+      layer.className = "click-anywhere";
+      layer.type = "button";
+      layer.setAttribute("aria-label", "Continue");
+      layer.addEventListener("click", handler);
+      overlays.appendChild(layer);
+    }
+
+    function disableClickAnywhere() {
+      const layer = overlays.querySelector("#clickAnywhere");
+      if (layer) layer.remove();
+    }
+
+    function showPotClickHotspot(onClick) {
+      const old = overlays.querySelector("#potClickHotspot");
+      if (old) old.remove();
+
+      const btn = document.createElement("button");
+      btn.id = "potClickHotspot";
+      btn.className = "hotspot pot-click";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Pot");
+      btn.addEventListener("click", onClick);
+      overlays.appendChild(btn);
+
+      layout();
+    }
+
+    // --- Step 2/3 overlays (drag noodles) -----------------------------------
     function createStoveSceneOverlays() {
       const noodles = document.createElement("img");
       noodles.id = "noodles";
@@ -233,8 +269,7 @@ export default {
       overlays.appendChild(potZone);
       overlays.appendChild(noodles);
 
-      // IMPORTANT: layout BEFORE enabling drag so it starts in correct place
-      // Also reset transform offsets each time we create it
+      // reset drag offset each time
       noodles.style.transform = "translate(0px, 0px)";
       layout();
 
@@ -243,6 +278,7 @@ export default {
         dropzone: potZone,
         onDrop: async () => {
           if (scene !== "stove") return;
+
           scene = "cooked";
 
           noodles.style.pointerEvents = "none";
@@ -251,15 +287,40 @@ export default {
           overlays.classList.add("is-fading");
           await wait(150);
 
+          // Step 3 result
           await transitionBg("./assets/bg/cooked-noodles.png");
 
-          overlays.innerHTML = "";
+          clearOverlays();
           overlays.classList.remove("is-fading");
+
+          // Step 4: click pot (same rect as pot dropzone)
+          showPotClickHotspot(async () => {
+            if (scene !== "cooked") return;
+            scene = "emptyPot";
+            await transitionBg("./assets/bg/empty-pot.png");
+
+            // Step 5: click anywhere -> main-view
+            enableClickAnywhere(async () => {
+              if (scene !== "emptyPot") return;
+              scene = "mainView";
+              disableClickAnywhere();
+              await transitionBg("./assets/bg/main-view.png");
+
+              // Step 6: click anywhere -> glass-empty
+              enableClickAnywhere(async () => {
+                if (scene !== "mainView") return;
+                scene = "glassEmpty";
+                disableClickAnywhere();
+                await transitionBg("./assets/bg/glass-empty.png");
+                // wrap up here – no further handlers
+              });
+            });
+          });
         },
       });
     }
 
-    // Step 2: click stove
+    // --- Step 2 trigger: click stove ----------------------------------------
     stoveBtn.addEventListener("click", async () => {
       if (scene !== "kitchen") return;
 
@@ -267,34 +328,29 @@ export default {
       await transitionBg("./assets/bg/pot-with-noodle-on-stove.png");
 
       stoveBtn.style.display = "none";
-
       clearOverlays();
       createStoveSceneOverlays();
       layout();
     });
 
-    // HUD
+    // --- HUD ----------------------------------------------------------------
     root.querySelector("#backBtn").addEventListener("click", () => go("intro"));
     root.querySelector("#debugBtn").addEventListener("click", () => {
       sceneEl.classList.toggle("debug-hotspots");
     });
 
-    // Initial layout after first bg loads + on resize
+    // Initial layout + resize handling
     const onResize = () => layout();
     window.addEventListener("resize", onResize);
-
     bg.addEventListener("load", layout, { once: false });
     layout();
 
-    // Cleanup listeners on exit (optional but good practice)
     this._room1Cleanup = () => {
       window.removeEventListener("resize", onResize);
     };
   },
 
   exit({ root }) {
-    // remove any global listeners if set
-    // (safe even if not present)
     if (this._room1Cleanup) this._room1Cleanup();
     root.innerHTML = "";
   },
