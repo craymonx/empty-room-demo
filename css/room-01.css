@@ -1,15 +1,58 @@
-/* /css/room-01.css */
-/* Only coordinates / room-specific stuff lives here */
+.bg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 
-/* Hotspots */
-.r01-pot {
-    width: 10%;
-    height: 6%;
-    bottom: 41%;
-    right: 14%;
-  }
-  
-  /* Add more as needed:
-  .r01-cabinet { left: 60%; top: 25%; width: 18%; height: 28%; }
-  .r01-note { left: 18%; top: 55%; width: 10%; height: 12%; }
-  */
+.kitchen-stove {
+  position: absolute;
+
+  /* 👇 YOU EDIT THESE */
+  top: 75%;
+  left: 53%;
+
+  width: 450px;
+  height: 200px;
+
+  transform: translate(-50%, -50%);
+}
+
+.bg.is-fading {
+  opacity: 0.15;
+  transition: opacity 180ms ease;
+}
+
+.overlays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* allow only specific overlay items to be interactive */
+}
+
+.overlays.is-fading {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.noodles-overlay {
+  position: absolute;
+  top: 90%;
+  left: 75%;
+  pointer-events: auto; /* make it draggable */
+  touch-action: none;   /* important for pointer dragging on mobile */
+}
+
+.pot-dropzone {
+  position: absolute;
+  top: 60%;
+  left: 45%;
+
+  width: 250px;
+  height: 200px;
+
+  pointer-events: none; /* drop detection uses rect, no need to click */
+}
+
+/* Optional debug visualization */
+.debug-hotspots .pot-dropzone {
+  outline: 2px dashed rgba(255,255,255,0.8);
+}
