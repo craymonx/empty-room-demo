@@ -91,6 +91,37 @@
   pointer-events: auto;
 }
 
+/* Shared draggable item styling */
+.item-overlay {
+  position: absolute;     /* JS sets left/top/width/height */
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: grab;
+}
+
+.item-overlay.is-dragging {
+  cursor: grabbing;
+}
+
+/* Drop zone (invisible by default) */
+.glass-dropzone {
+  position: absolute;     /* JS sets left/top/width/height */
+  pointer-events: none;
+}
+
+/* Debug: visualize drop zone + items */
+.debug-hotspots .glass-dropzone {
+  outline: 2px dashed rgba(0, 255, 255, 0.9);
+  background: rgba(0, 255, 255, 0.10);
+}
+
+.debug-hotspots .item-overlay {
+  outline: 2px solid rgba(255, 255, 0, 0.8);
+  background: rgba(255, 255, 0, 0.08);
+}
+
 /* Optional: show pot click area in debug mode */
 .debug-hotspots .pot-click {
   outline: 2px solid rgba(0, 255, 255, 0.8);
