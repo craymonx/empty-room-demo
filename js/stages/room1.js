@@ -50,6 +50,7 @@ export default {
         dishsoap: { x: 1135, y: 370, w: 89, h: 228 },
         whiskey: { x: 1025, y: 370, w: 92, h: 224 },
         drop: { x: 500, y: 360, w: 120, h: 130 },
+        cup:{ x: 500, y: 360, w: 120, h: 200}
       },
     };
 
@@ -143,7 +144,7 @@ export default {
         }
       }
 
-      if (scene === "glassMix") {
+      if (scene === "glassMix" || scene === "glassPostMix") {
         const dropZone = overlays.querySelector("#glassDropzone");
         if (dropZone) {
           placeRectOnImage({
@@ -151,6 +152,16 @@ export default {
             parentEl: wrap,
             targetEl: dropZone,
             rectPx: RECTS.glass.drop,
+          });
+        }
+
+        const cupHotspot = overlays.querySelector("#cupClickHotspot");
+        if (cupHotspot) {
+          placeRectOnImage({
+          imgEl: bg,
+          parentEl: wrap,
+          targetEl: cupHotspot,
+          rectPx: RECTS.glass.cup, // change later to your cup rect
           });
         }
 
@@ -312,6 +323,21 @@ export default {
       layout();
     }
 
+    function showCupClickHotspot(onClick) {
+      const old = overlays.querySelector("#cupClickHotspot");
+      if (old) old.remove();
+    
+      const btn = document.createElement("button");
+      btn.id = "cupClickHotspot";
+      btn.className = "hotspot cup-click";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Cup");
+      btn.addEventListener("click", onClick);
+      overlays.appendChild(btn);
+    
+      layout();
+    }
+
     // ✅ IMPORTANT: define popup helper ONCE here (not inside click callbacks)
     function showCompletionPopup({ title = "Completed!", message = "Next stage unlocked.", onContinue }) {
       // Remove any existing popup
@@ -389,25 +415,78 @@ export default {
         used.add(id);
         filledCount += 1;
 
-        itemEl.style.display = "none";
         itemEl.style.pointerEvents = "none";
+        itemEl.classList.add("used"); // optional
+        
+        // snap back to original position (since you drag using transform)
+        itemEl.style.transform = "translate(0px, 0px)";
 
         await transitionBg(bgForCount(filledCount));
         layout();
 
-        // ✅ ROOM COMPLETE when all 3 items are dropped
-        if (filledCount >= 3) {
-          await wait(250);
+        // ✅ After all 3 items are dropped, continue with extra steps
+if (filledCount >= 3) {
+  await wait(200);
 
-          localStorage.setItem("room1_done", "1");
-          scene = "roomComplete";
+  // lock the mini-game state
+  scene = "glassPostMix";
+  disableClickAnywhere();
 
-          showCompletionPopup({
-            title: "Room 1 cleared",
-            message: "You are ready to unlock the next stage.",
-            onContinue: () => go("intro"),
-          });
-        }
+  // (optional) hide/disable items so player focuses on cup
+  items.forEach(({ id }) => {
+    const it = overlays.querySelector(`#${id}`);
+    if (it) it.style.pointerEvents = "none";
+  });
+
+  // 1) User clicks cup area -> go to glass-empty.png
+  showCupClickHotspot(async () => {
+    if (scene !== "glassPostMix") return;
+
+    scene = "glassEmptyAfterMix";
+    // remove the cup hotspot once clicked
+    const cup = overlays.querySelector("#cupClickHotspot");
+    if (cup) cup.remove();
+
+    await transitionBg("./assets/bg/glass-empty.png");
+
+    // 2) click anywhere -> main-view.png
+    enableClickAnywhere(async () => {
+      if (scene !== "glassEmptyAfterMix") return;
+      scene = "mainViewAfterMix";
+      disableClickAnywhere();
+    
+       // Remove all bottles
+    ["ketchup", "dishsoap", "whiskey"].forEach((id) => {
+      const el = overlays.querySelector(`#${id}`);
+      if (el) el.remove();
+    });
+
+      await transitionBg("./assets/bg/main-view.png");
+
+      // 3) click anywhere -> distortion gif
+      enableClickAnywhere(async () => {
+        if (scene !== "mainViewAfterMix") return;
+        scene = "distortionAfterMix";
+        disableClickAnywhere();
+
+        await transitionBg("./assets/bg/distortion-gif.png");
+
+        // Now mark room complete + popup
+        await wait(250);
+        localStorage.setItem("room1_done", "1");
+        scene = "roomComplete";
+
+        showCompletionPopup({
+          title: "Room 1 cleared",
+          message: "You are ready to unlock the next stage.",
+          onContinue: () => go("intro"),
+        });
+      });
+    });
+  });
+
+  layout();
+}
       }
 
       items.forEach(({ id, src, alt }) => {
@@ -448,7 +527,7 @@ export default {
       noodles.id = "noodles";
       noodles.src = "./assets/props/noodles.png";
       noodles.alt = "Noodles";
-      noodles.className = "noodles-overlay draggable";
+      noodles.className = "item-overlay draggable";
       noodles.draggable = false;
 
       const potZone = document.createElement("div");
@@ -486,7 +565,7 @@ export default {
               if (scene !== "emptyPot") return;
               scene = "mainView";
               disableClickAnywhere();
-              await transitionBg("./assets/bg/main-view.png");
+              await transitionBg("./assets/bg/projection.png");
 
               enableClickAnywhere(async () => {
                 if (scene !== "mainView") return;

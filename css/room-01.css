@@ -22,6 +22,9 @@
   background: transparent;
   border: 0;
   padding: 0;
+  inset: 0;
+  z-index: 60;
+  pointer-events: auto;  
   cursor: pointer;
 }
 
@@ -35,6 +38,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 20;
 }
 
 .overlays.is-fading {
@@ -100,6 +104,7 @@
   user-select: none;
   -webkit-user-drag: none;
   cursor: grab;
+  z-index: 50;
 }
 
 .item-overlay.is-dragging {
