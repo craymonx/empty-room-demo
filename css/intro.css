@@ -35,3 +35,41 @@
     flex-wrap: wrap;
     justify-content: center; 
   }
+
+  /* Room list layout */
+.room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Room button */
+.room-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 14px;
+  border-radius: 10px;
+
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  color: #fff;
+
+  cursor: pointer;
+  transition: background .2s ease, transform .1s ease;
+}
+
+.room-item:hover {
+  background: rgba(255,255,255,.15);
+  transform: translateY(-1px);
+}
+
+.room-item.locked {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.room-item .lock {
+  font-size: 14px;
+}

@@ -166,3 +166,38 @@ body {
   gap: 10px;
   flex-wrap: wrap;
 }
+
+/* Completion popup */
+.popup {
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+}
+
+.popup-card {
+  width: min(520px, calc(100% - 32px));
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.55);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.popup-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.popup-msg {
+  margin: 0 0 14px;
+  opacity: .9;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

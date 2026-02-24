@@ -312,6 +312,50 @@ export default {
       layout();
     }
 
+    // ✅ IMPORTANT: define popup helper ONCE here (not inside click callbacks)
+    function showCompletionPopup({ title = "Completed!", message = "Next stage unlocked.", onContinue }) {
+      // Remove any existing popup
+      const old = wrap.querySelector("#completePopup");
+      if (old) old.remove();
+    
+      const modal = document.createElement("div");
+      modal.id = "completePopup";
+      modal.className = "popup";
+      modal.innerHTML = `
+        <div class="popup-card" role="dialog" aria-modal="true">
+          <h3 class="popup-title">${title}</h3>
+          <p class="popup-msg">${message}</p>
+          <div class="popup-actions">
+            <button id="popupContinue" class="hud-btn" type="button">Back to Menu</button>
+          </div>
+        </div>
+      `;
+    
+      // ✅ IMPORTANT: put popup above everything and clickable
+      modal.style.position = "absolute";
+      modal.style.inset = "0";
+      modal.style.zIndex = "9999";
+      modal.style.pointerEvents = "auto";
+    
+      wrap.appendChild(modal);
+    
+      const btn = modal.querySelector("#popupContinue");
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        modal.remove();
+        onContinue?.();
+      });
+    
+      // click dark area to continue
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.remove();
+          onContinue?.();
+        }
+      });
+    }
+
     function startGlassMixingGame() {
       scene = "glassMix";
       clearOverlays();
@@ -350,6 +394,20 @@ export default {
 
         await transitionBg(bgForCount(filledCount));
         layout();
+
+        // ✅ ROOM COMPLETE when all 3 items are dropped
+        if (filledCount >= 3) {
+          await wait(250);
+
+          localStorage.setItem("room1_done", "1");
+          scene = "roomComplete";
+
+          showCompletionPopup({
+            title: "Room 1 cleared",
+            message: "You are ready to unlock the next stage.",
+            onContinue: () => go("intro"),
+          });
+        }
       }
 
       items.forEach(({ id, src, alt }) => {

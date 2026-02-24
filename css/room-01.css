@@ -71,6 +71,7 @@
 /* Full-screen "click anywhere" layer */
 .click-anywhere {
   position: absolute;
+  z-index: 10;
   inset: 0;
   width: 100%;
   height: 100%;
