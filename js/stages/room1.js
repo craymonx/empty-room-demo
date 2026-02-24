@@ -46,9 +46,9 @@ export default {
         pot: { x: 640, y: 320, w: 200, h: 250 },
       },
       glass: {
-        ketchup: { x: 944, y: 370, w: 193, h: 220 },
-        dishsoap: { x: 942, y: 370, w: 200, h: 220 },
-        whiskey: { x: 955, y: 370, w: 220, h: 220 },
+        ketchup: { x: 944, y: 370, w: 76, h: 220 },
+        dishsoap: { x: 1135, y: 370, w: 89, h: 228 },
+        whiskey: { x: 1025, y: 370, w: 92, h: 224 },
         drop: { x: 500, y: 360, w: 120, h: 130 },
       },
     };
@@ -448,7 +448,7 @@ export default {
       if (scene !== "kitchen") return;
 
       scene = "stove";
-      await transitionBg("./assets/bg/pot-with-noodle-on-stove.png");
+      await transitionBg("./assets/bg/empty-pot-boiling-water.png");
 
       stoveBtn.style.display = "none";
       clearOverlays();
