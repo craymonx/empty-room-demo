@@ -4,6 +4,7 @@ import { registerStages, goToStage } from "./router.js";
 // Import stages
 import intro from "./stages/intro.js";
 import room1 from "./stages/room1.js";
+import room2 from "./stages/room2.js";
 import ending from "./stages/ending.js";
 
 function setLoading(isLoading) {
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const start = performance.now();
 
   // Register all stages ONCE
-  registerStages({ intro, room1, ending });
+  registerStages({ intro, room1, room2, ending });
 
   // Go to intro
   goToStage("intro");
