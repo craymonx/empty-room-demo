@@ -360,12 +360,12 @@ export default {
   
         showRpgDialog({
           speaker: "JOHN:",
-          textLines: ["Gramps!", "I'm fed up with this city."],
+          textLines: ["There are some people talking. What would you do?"],
           choices: [
-            "再等下啦",
-            "去飲啤酒啦",
-            "煙霧會帶走記憶",
-            "唔好諗咁多",
+            "Wave to them",
+            "Yo what's up",
+            "Join their conversation",
+            "Go back to bedroom",
           ],
           onChoose: async () => {
             scene = "smoke";
