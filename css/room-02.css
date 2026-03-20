@@ -90,14 +90,62 @@
   
   /* Turn on when debugging */
   
-  .debug-hotspots .beer-dropzone,
-  .debug-hotspots .smoke-hotspot,
-  .debug-hotspots .can-hotspot {
-    outline: 2px dashed rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.15);
+  .debug-hotspots .sorting-zone {
+    outline: 2px dashed rgba(255, 255, 0, 0.95);
+    background: rgba(255, 255, 0, 0.12);
+    pointer-events: none;
   }
 
+  .debug-hotspots .beer-dropzone,
+  .debug-hotspots .sorting-zone,
+  .debug-hotspots .smoke-hotspot,
+  .debug-hotspots .can-hotspot,
+  .debug-hotspots .left-area-hotspot,
+  .debug-hotspots .counter-hotspot,
+  .debug-hotspots .drawer-hotspot,
+  .debug-hotspots .drawer-open-hotspot {
+    outline: 2px dashed rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .debug-hotspots #forkZone {
+    outline: 3px solid red !important;
+    background: rgba(255, 0, 0, 0.25) !important;
+    z-index: 999 !important;
+  }
   
+  .debug-hotspots #spoonZone {
+    outline: 3px solid lime !important;
+    background: rgba(0, 255, 0, 0.25) !important;
+    z-index: 999 !important;
+  }
+  
+  .debug-hotspots #knifeZone {
+    outline: 3px solid blue !important;
+    background: rgba(0, 100, 255, 0.25) !important;
+    z-index: 999 !important;
+  }
+  
+  .debug-hotspots .utensil-item {
+    outline: 2px solid yellow !important;
+  }
+
+.beer-dropzone,
+.sorting-zone {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.item-overlay,
+.utensil-item {
+  position: absolute;
+}
+
+.utensil-item {
+  z-index: 20;
+}
+
   @media (max-width: 768px) {
     .rpg-ui {
       width: 92vw;
@@ -119,4 +167,6 @@
     .rpg-choice {
       font-size: 18px;
     }
+
+    
   }
