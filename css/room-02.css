@@ -146,6 +146,15 @@
   z-index: 20;
 }
 
+.click-anywhere {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  z-index: 40;
+}
+
   @media (max-width: 768px) {
     .rpg-ui {
       width: 92vw;

@@ -60,35 +60,43 @@ export default {
       },
 
       sortingZones: {
-        forkZone:  { x: 625,  y: 600, w: 450, h: 700 },
+        forkZone: { x: 625, y: 600, w: 450, h: 700 },
         spoonZone: { x: 1125, y: 600, w: 450, h: 700 },
         knifeZone: { x: 1625, y: 600, w: 450, h: 700 },
       },
 
       sortingSlots: {
         forks: [
-          { x: 635, y: 700, w: 90, h: 580 },
-          { x: 745, y: 700, w: 90, h: 580 },
-          { x: 855, y: 700, w: 90, h: 580 },
-          { x: 965, y: 700, w: 90, h: 580 },
+          { x: 635, y: 700, w: 90, h: 580, r: 0 },
+          { x: 745, y: 700, w: 90, h: 580, r: 0 },
+          { x: 855, y: 700, w: 90, h: 580, r: 0 },
+          { x: 965, y: 700, w: 90, h: 580, r: 0 },
         ],
         spoons: [
-          { x: 1135, y: 700, w: 90, h: 580 },
-          { x: 1245, y: 700, w: 90, h: 580 },
-          { x: 1355, y: 700, w: 90, h: 580 },
-          { x: 1465, y: 700, w: 90, h: 580 },
+          { x: 1135, y: 700, w: 90, h: 580, r: 0 },
+          { x: 1245, y: 700, w: 90, h: 580, r: 0 },
+          { x: 1355, y: 700, w: 90, h: 580, r: 0 },
+          { x: 1465, y: 700, w: 90, h: 580, r: 0 },
         ],
         knives: [
-          { x: 1635, y: 700, w: 90, h: 580 },
-          { x: 1745, y: 700, w: 90, h: 580 },
-          { x: 1855, y: 700, w: 90, h: 580 },
-          { x: 1965, y: 700, w: 90, h: 580 },
+          { x: 1635, y: 700, w: 90, h: 580, r: 0 },
+          { x: 1745, y: 700, w: 90, h: 580, r: 0 },
+          { x: 1855, y: 700, w: 90, h: 580, r: 0 },
+          { x: 1965, y: 700, w: 90, h: 580, r: 0 },
         ],
+      },
+
+      stare2: {
+        leftArea: { x: 50, y: 100, w: 750, h: 1500 },
+      },
+
+      mainViewStatic: {
+        room: { x: 900, y: 250, w: 900, h: 1100 },
       },
 
       sortingItems: {
         fork1: { type: "fork", src: "./assets/props/room2/fork-1.png", x: 800, y: 700, w: 90, h: 580, r: -120 },
-        fork2: { type: "fork", src: "./assets/props/room2/fork-2.png", x: 1290, y: 795, w: 90, h: 580, r: -50  },
+        fork2: { type: "fork", src: "./assets/props/room2/fork-2.png", x: 1290, y: 795, w: 90, h: 580, r: -50 },
         fork3: { type: "fork", src: "./assets/props/room2/fork-3.png", x: 1010, y: 775, w: 90, h: 580, r: -130 },
         fork4: { type: "fork", src: "./assets/props/room2/fork-4.png", x: 1320, y: 800, w: 90, h: 580, r: -290 },
 
@@ -100,7 +108,7 @@ export default {
         knife1: { type: "knife", src: "./assets/props/room2/knife-1.png", x: 760, y: 720, w: 90, h: 580, r: -270 },
         knife2: { type: "knife", src: "./assets/props/room2/knife-2.png", x: 1210, y: 830, w: 90, h: 580, r: -20 },
         knife3: { type: "knife", src: "./assets/props/room2/knife-3.png", x: 1200, y: 515, w: 90, h: 580, r: -110 },
-        knife4: { type: "knife", src: "./assets/props/room2/knife-4.png", x: 1570, y: 635, w: 90, h: 580, r: -230  },
+        knife4: { type: "knife", src: "./assets/props/room2/knife-4.png", x: 1570, y: 635, w: 90, h: 580, r: -230 },
       },
     };
 
@@ -268,7 +276,6 @@ export default {
       }
 
       if (scene === "utensilsScattered") {
-  
         ["forkZone", "spoonZone", "knifeZone"].forEach((zoneId) => {
           const zoneEl = overlays.querySelector(`#${zoneId}`);
           if (!zoneEl) return;
@@ -285,11 +292,6 @@ export default {
           const el = overlays.querySelector(`#${id}`);
           if (!el) return;
 
-          function applyTransform() {
-            const r = sortingState.items[el.id]?.currentRect?.r || 0;
-            applyTransform();
-          }
-
           placeRectOnImage({
             imgEl: bg,
             parentEl: wrap,
@@ -297,6 +299,30 @@ export default {
             rectPx: sortingState.items[id].currentRect,
           });
         });
+      }
+
+      if (scene === "stare2" || scene === "drawerSorted") {
+        const leftHotspot2 = overlays.querySelector("#leftAreaHotspot2");
+        if (leftHotspot2) {
+          placeRectOnImage({
+            imgEl: bg,
+            parentEl: wrap,
+            targetEl: leftHotspot2,
+            rectPx: RECTS.stare2.leftArea,
+          });
+        }
+      }
+
+      if (scene === "mainViewStatic") {
+        const roomHotspot = overlays.querySelector("#roomHotspot");
+        if (roomHotspot) {
+          placeRectOnImage({
+            imgEl: bg,
+            parentEl: wrap,
+            targetEl: roomHotspot,
+            rectPx: RECTS.mainViewStatic.room,
+          });
+        }
       }
     }
 
@@ -329,6 +355,11 @@ export default {
       let currentX = 0;
       let currentY = 0;
 
+      function applyTransform() {
+        const r = sortingState.items[el.id]?.currentRect?.r || 0;
+        el.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${r}deg)`;
+      }
+
       function onPointerDown(e) {
         if (!canDrag()) return;
         dragging = true;
@@ -346,7 +377,7 @@ export default {
         currentY += dy;
         startX = e.clientX;
         startY = e.clientY;
-        el.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        applyTransform();
       }
 
       async function onPointerUp() {
@@ -358,7 +389,8 @@ export default {
         function resetTransform() {
           currentX = 0;
           currentY = 0;
-          el.style.transform = "translate(0px, 0px)";
+          const r = sortingState.items[el.id]?.currentRect?.r || 0;
+          el.style.transform = `translate(0px, 0px) rotate(${r}deg)`;
         }
       }
 
@@ -371,6 +403,24 @@ export default {
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("pointerup", onPointerUp);
       };
+    }
+
+    function enableClickAnywhere(handler) {
+      const old = overlays.querySelector("#clickAnywhere");
+      if (old) old.remove();
+
+      const layer = document.createElement("button");
+      layer.id = "clickAnywhere";
+      layer.className = "click-anywhere";
+      layer.type = "button";
+      layer.setAttribute("aria-label", "Continue");
+      layer.addEventListener("click", handler);
+      overlays.appendChild(layer);
+    }
+
+    function disableClickAnywhere() {
+      const layer = overlays.querySelector("#clickAnywhere");
+      if (layer) layer.remove();
     }
 
     function showRpgDialog({ speaker, textLines, choices, onChoose }) {
@@ -492,6 +542,36 @@ export default {
       btn.className = "hotspot drawer-open-hotspot";
       btn.type = "button";
       btn.setAttribute("aria-label", "Open drawer");
+      btn.addEventListener("click", onClick);
+      overlays.appendChild(btn);
+
+      layout();
+    }
+
+    function showLeftAreaHotspot2(onClick) {
+      const old = overlays.querySelector("#leftAreaHotspot2");
+      if (old) old.remove();
+
+      const btn = document.createElement("button");
+      btn.id = "leftAreaHotspot2";
+      btn.className = "hotspot left-area-hotspot-2";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Look left");
+      btn.addEventListener("click", onClick);
+      overlays.appendChild(btn);
+
+      layout();
+    }
+
+    function showRoomHotspot(onClick) {
+      const old = overlays.querySelector("#roomHotspot");
+      if (old) old.remove();
+
+      const btn = document.createElement("button");
+      btn.id = "roomHotspot";
+      btn.className = "hotspot room-hotspot";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Bedroom");
       btn.addEventListener("click", onClick);
       overlays.appendChild(btn);
 
@@ -636,13 +716,53 @@ export default {
                 clearOverlays();
                 await transitionBg("./assets/bg/room2/zoom-drawer.png");
 
-                await wait(250);
-                localStorage.setItem("room2_done", "1");
+                showLeftAreaHotspot2(async () => {
+                  if (scene !== "drawerSorted") return;
 
-                showCompletionPopup({
-                  title: "Room 2 cleared",
-                  message: "You are ready to unlock the next stage.",
-                  onContinue: () => go("intro"),
+                  scene = "stare2";
+                  clearOverlays();
+                  await transitionBg("./assets/bg/room2/stare-2.png");
+
+                  enableClickAnywhere(async () => {
+                    if (scene !== "stare2") return;
+
+                    scene = "stand";
+                    disableClickAnywhere();
+                    await transitionBg("./assets/bg/room2/stand.png");
+
+                    enableClickAnywhere(async () => {
+                      if (scene !== "stand") return;
+
+                      scene = "standFront";
+                      disableClickAnywhere();
+                      await transitionBg("./assets/bg/room2/stand-front.png");
+
+                      enableClickAnywhere(async () => {
+                        if (scene !== "standFront") return;
+
+                        scene = "mainViewStatic";
+                        disableClickAnywhere();
+                        await transitionBg("./assets/bg/room2/main-view-static.png");
+
+                        showRoomHotspot(async () => {
+                          if (scene !== "mainViewStatic") return;
+
+                          scene = "bedroom";
+                          clearOverlays();
+                          await transitionBg("./assets/bg/room2/bedroom.png");
+
+                          await wait(250);
+                          localStorage.setItem("room2_done", "1");
+
+                          showCompletionPopup({
+                            title: "Room 2 cleared",
+                            message: "You are ready to unlock the next stage.",
+                            onContinue: () => go("intro"),
+                          });
+                        });
+                      });
+                    });
+                  });
                 });
               }
             } else {
