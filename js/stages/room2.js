@@ -87,20 +87,20 @@ export default {
       },
 
       sortingItems: {
-        fork1: { type: "fork", src: "./assets/props/room2/fork-1.png", x: 800, y: 1280, w: 85, h: 240 },
-        fork2: { type: "fork", src: "./assets/props/room2/fork-2.png", x: 900, y: 1295, w: 85, h: 240 },
-        fork3: { type: "fork", src: "./assets/props/room2/fork-3.png", x: 1010, y: 1275, w: 85, h: 240 },
-        fork4: { type: "fork", src: "./assets/props/room2/fork-4.png", x: 1120, y: 1300, w: 85, h: 240 },
+        fork1: { type: "fork", src: "./assets/props/room2/fork-1.png", x: 800, y: 700, w: 90, h: 580, r: -120 },
+        fork2: { type: "fork", src: "./assets/props/room2/fork-2.png", x: 1290, y: 795, w: 90, h: 580, r: -50  },
+        fork3: { type: "fork", src: "./assets/props/room2/fork-3.png", x: 1010, y: 775, w: 90, h: 580, r: -130 },
+        fork4: { type: "fork", src: "./assets/props/room2/fork-4.png", x: 1320, y: 800, w: 90, h: 580, r: -290 },
 
-        spoon1: { type: "spoon", src: "./assets/props/room2/spoon-1.png", x: 1220, y: 1290, w: 85, h: 240 },
-        spoon2: { type: "spoon", src: "./assets/props/room2/spoon-2.png", x: 1320, y: 1275, w: 85, h: 240 },
-        spoon3: { type: "spoon", src: "./assets/props/room2/spoon-3.png", x: 1420, y: 1300, w: 85, h: 240 },
-        spoon4: { type: "spoon", src: "./assets/props/room2/spoon-4.png", x: 1520, y: 1280, w: 85, h: 240 },
+        spoon1: { type: "spoon", src: "./assets/props/room2/spoon-1.png", x: 1220, y: 790, w: 90, h: 580, r: -120 },
+        spoon2: { type: "spoon", src: "./assets/props/room2/spoon-2.png", x: 820, y: 675, w: 90, h: 580, r: -300 },
+        spoon3: { type: "spoon", src: "./assets/props/room2/spoon-3.png", x: 1020, y: 700, w: 90, h: 580, r: -250 },
+        spoon4: { type: "spoon", src: "./assets/props/room2/spoon-4.png", x: 1550, y: 580, w: 90, h: 580, r: -50 },
 
-        knife1: { type: "knife", src: "./assets/props/room2/knife-1.png", x: 960, y: 1320, w: 80, h: 250 },
-        knife2: { type: "knife", src: "./assets/props/room2/knife-2.png", x: 1080, y: 1330, w: 80, h: 250 },
-        knife3: { type: "knife", src: "./assets/props/room2/knife-3.png", x: 1200, y: 1315, w: 80, h: 250 },
-        knife4: { type: "knife", src: "./assets/props/room2/knife-4.png", x: 1340, y: 1335, w: 80, h: 250 },
+        knife1: { type: "knife", src: "./assets/props/room2/knife-1.png", x: 760, y: 720, w: 90, h: 580, r: -270 },
+        knife2: { type: "knife", src: "./assets/props/room2/knife-2.png", x: 1210, y: 830, w: 90, h: 580, r: -20 },
+        knife3: { type: "knife", src: "./assets/props/room2/knife-3.png", x: 1200, y: 515, w: 90, h: 580, r: -110 },
+        knife4: { type: "knife", src: "./assets/props/room2/knife-4.png", x: 1570, y: 635, w: 90, h: 580, r: -230  },
       },
     };
 
@@ -118,8 +118,8 @@ export default {
         id,
         type: cfg.type,
         src: cfg.src,
-        baseRect: { x: cfg.x, y: cfg.y, w: cfg.w, h: cfg.h },
-        currentRect: { x: cfg.x, y: cfg.y, w: cfg.w, h: cfg.h },
+        baseRect: { x: cfg.x, y: cfg.y, w: cfg.w, h: cfg.h, r: cfg.r || 0 },
+        currentRect: { x: cfg.x, y: cfg.y, w: cfg.w, h: cfg.h, r: cfg.r || 0 },
         placed: false,
       };
     });
@@ -152,15 +152,13 @@ export default {
       const width = rectPx.w * drawn.scale;
       const height = rectPx.h * drawn.scale;
 
-      if (targetEl.id === "forkZone") {
-        console.log("forkZone rectPx", rectPx);
-        console.log("forkZone computed", { left, top, width, height });
-      }
-
       targetEl.style.left = `${left}px`;
       targetEl.style.top = `${top}px`;
       targetEl.style.width = `${width}px`;
       targetEl.style.height = `${height}px`;
+
+      const r = rectPx.r || 0;
+      targetEl.style.transform = `rotate(${r}deg)`;
     }
 
     function isDroppedOnZone(draggableEl, zoneEl) {
@@ -270,8 +268,7 @@ export default {
       }
 
       if (scene === "utensilsScattered") {
-        console.log("sortingZones source", JSON.stringify(RECTS.sortingZones, null, 2));
-
+  
         ["forkZone", "spoonZone", "knifeZone"].forEach((zoneId) => {
           const zoneEl = overlays.querySelector(`#${zoneId}`);
           if (!zoneEl) return;
@@ -288,7 +285,10 @@ export default {
           const el = overlays.querySelector(`#${id}`);
           if (!el) return;
 
-          el.style.transform = "translate(0px, 0px)";
+          function applyTransform() {
+            const r = sortingState.items[el.id]?.currentRect?.r || 0;
+            applyTransform();
+          }
 
           placeRectOnImage({
             imgEl: bg,
@@ -634,7 +634,7 @@ export default {
               if (allSortingPlaced()) {
                 scene = "drawerSorted";
                 clearOverlays();
-                await transitionBg("./assets/bg/room2/utensils-sorted.png");
+                await transitionBg("./assets/bg/room2/zoom-drawer.png");
 
                 await wait(250);
                 localStorage.setItem("room2_done", "1");
