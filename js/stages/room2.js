@@ -91,7 +91,7 @@ export default {
       },
 
       mainViewStatic: {
-        room: { x: 900, y: 250, w: 900, h: 1100 },
+        room: { x: 50, y: 100, w: 750, h: 1500 },
       },
 
       sortingItems: {
@@ -337,6 +337,17 @@ export default {
       });
 
       bg.classList.remove("is-fading");
+      layout();
+    }
+
+    async function setBgInstant(nextSrc) {
+      bg.src = nextSrc;
+    
+      await new Promise((resolve) => {
+        if (bg.complete) return resolve();
+        bg.addEventListener("load", resolve, { once: true });
+      });
+    
       layout();
     }
 
@@ -721,21 +732,21 @@ export default {
 
                   scene = "stare2";
                   clearOverlays();
-                  await transitionBg("./assets/bg/room2/stare-2.png");
+                  await setBgInstant("./assets/bg/room2/stare-2.png");
 
                   enableClickAnywhere(async () => {
                     if (scene !== "stare2") return;
 
                     scene = "stand";
                     disableClickAnywhere();
-                    await transitionBg("./assets/bg/room2/stand.png");
+                    await setBgInstant("./assets/bg/room2/stand.png");
 
                     enableClickAnywhere(async () => {
                       if (scene !== "stand") return;
 
                       scene = "standFront";
                       disableClickAnywhere();
-                      await transitionBg("./assets/bg/room2/stand-front.png");
+                      await setBgInstant("./assets/bg/room2/stand-front.png");
 
                       enableClickAnywhere(async () => {
                         if (scene !== "standFront") return;
