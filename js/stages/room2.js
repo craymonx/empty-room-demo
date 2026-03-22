@@ -896,7 +896,7 @@ export default {
 
             scene = "canSmoke";
             clearOverlays();
-            await transitionBg("./assets/bg/room2/can-smoke.png");
+            await transitionBg("./assets/bg/room2/can-explode.png");
 
             showCanHotspot(async () => {
               if (scene !== "canSmoke") return;
