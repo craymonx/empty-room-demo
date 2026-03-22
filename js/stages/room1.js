@@ -6,7 +6,7 @@ export default {
         <div class="scene-inner" id="room1Wrap">
           <img
             id="bg"
-            src="./assets/bg/kitchen-light-on.png"
+            src="./assets/bg/room1/kitchen-close-up.png"
             class="bg"
             alt="Kitchen scene"
             draggable="false"
@@ -36,6 +36,9 @@ export default {
 
     let scene = "kitchen";
     let cleanupDrag = null;
+
+    let chopstickEl = null;
+    let chopstickTracking = false;  
 
     const RECTS = {
       kitchen: {
@@ -96,8 +99,72 @@ export default {
       return cx >= zRect.left && cx <= zRect.right && cy >= zRect.top && cy <= zRect.bottom;
     }
 
+    function ensureChopstick() {
+      if (chopstickEl) return chopstickEl;
+    
+      chopstickEl = document.createElement("img");
+      chopstickEl.id = "fakeCursorChopstick";
+      chopstickEl.src = "./assets/props/room1/chopsticks.png";
+      chopstickEl.alt = "";
+      chopstickEl.setAttribute("aria-hidden", "true");
+      chopstickEl.style.position = "fixed";
+      chopstickEl.style.left = "-100px";
+      chopstickEl.style.top = "-45px";
+      chopstickEl.style.width = "250px";
+      chopstickEl.style.pointerEvents = "none";
+      chopstickEl.style.zIndex = "99999";
+      chopstickEl.style.display = "none";
+      chopstickEl.style.transform = "translate(-9999px, -9999px)";
+      document.body.appendChild(chopstickEl);
+    
+      return chopstickEl;
+    }
+    
+    function moveChopstick(clientX, clientY) {
+      if (!chopstickEl) return;
+    
+      const offsetX = 8;
+      const offsetY = -10;
+      chopstickEl.style.transform = `translate(${clientX + offsetX}px, ${clientY + offsetY}px) rotate(-20deg)`;
+    }
+    
+    function handleChopstickPointerMove(e) {
+      if (!chopstickTracking) return;
+      moveChopstick(e.clientX, e.clientY);
+    }
+    
+    function showFakeChopstickCursor() {
+      ensureChopstick();
+      chopstickTracking = true;
+      chopstickEl.style.display = "block";
+      document.body.style.cursor = "none";
+      wrap.style.cursor = "none";
+      window.addEventListener("pointermove", handleChopstickPointerMove);
+    }
+    
+    function hideFakeChopstickCursor() {
+      chopstickTracking = false;
+      window.removeEventListener("pointermove", handleChopstickPointerMove);
+      document.body.style.cursor = "";
+      wrap.style.cursor = "";
+    
+      if (!chopstickEl) return;
+      chopstickEl.style.display = "none";
+      chopstickEl.style.transform = "translate(-9999px, -9999px)";
+    }
+
+  function updateCursorByScene() {
+  if (scene === "cooked") {
+    showFakeChopstickCursor();
+  } else {
+    hideFakeChopstickCursor();
+  }
+}
+
     function layout() {
       if (!bg.complete || !bg.naturalWidth) return;
+
+      updateCursorByScene(); 
 
       if (scene === "kitchen") {
         if (stoveBtn.style.display !== "none") {
@@ -200,13 +267,14 @@ export default {
       overlays.innerHTML = "";
     }
 
-    function makeDraggable({ el, dropzone, onDrop }) {
+  
+    function makeDraggable({ el, dropzone, onDrop, onStart, onMove, onEnd }) {
       let dragging = false;
       let startX = 0;
       let startY = 0;
       let currentX = 0;
       let currentY = 0;
-
+    
       function onPointerDown(e) {
         if (scene !== "stove") return;
         dragging = true;
@@ -214,8 +282,9 @@ export default {
         startX = e.clientX;
         startY = e.clientY;
         el.classList.add("is-dragging");
+        onStart?.(e);
       }
-
+    
       function onPointerMove(e) {
         if (!dragging) return;
         const dx = e.clientX - startX;
@@ -225,19 +294,24 @@ export default {
         startX = e.clientX;
         startY = e.clientY;
         el.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        onMove?.(e);
       }
-
-      async function onPointerUp() {
+    
+      async function onPointerUp(e) {
         if (!dragging) return;
         dragging = false;
         el.classList.remove("is-dragging");
-        if (isDroppedOnZone(el, dropzone)) await onDrop();
+        onEnd?.(e);
+    
+        if (isDroppedOnZone(el, dropzone)) {
+          await onDrop();
+        }
       }
-
+    
       el.addEventListener("pointerdown", onPointerDown);
       window.addEventListener("pointermove", onPointerMove);
       window.addEventListener("pointerup", onPointerUp);
-
+    
       return () => {
         el.removeEventListener("pointerdown", onPointerDown);
         window.removeEventListener("pointermove", onPointerMove);
@@ -392,9 +466,9 @@ export default {
       overlays.appendChild(dropZone);
 
       const items = [
-        { id: "ketchup", src: "./assets/props/ketchup.png", alt: "Ketchup" },
-        { id: "dishsoap", src: "./assets/props/dishsoap.png", alt: "Dish soap" },
-        { id: "whiskey", src: "./assets/props/whiskey.png", alt: "Whiskey" },
+        { id: "ketchup", src: "./assets/props/room1/ketchup.png", alt: "Ketchup" },
+        { id: "dishsoap", src: "./assets/props/room1/dishsoap.png", alt: "Dish soap" },
+        { id: "whiskey", src: "./assets/props/room1/whisky.png", alt: "Whiskey" },
       ];
 
       const used = new Set();
@@ -402,10 +476,10 @@ export default {
       const cleaners = [];
 
       function bgForCount(n) {
-        if (n === 1) return "./assets/bg/glass-1_3-filled.png";
-        if (n === 2) return "./assets/bg/glass-half-filled.png";
-        if (n === 3) return "./assets/bg/Glass-full.png";
-        return "./assets/bg/glass-empty.png";
+        if (n === 1) return "./assets/bg/room1/glass-1_3-full.png";
+        if (n === 2) return "./assets/bg/room1/glass-half-full.png";
+        if (n === 3) return "./assets/bg/room1/glass-full.png";
+        return "./assets/bg/room1/glass-empty.png";
       }
 
       async function handleSuccessfulDrop(itemEl) {
@@ -447,7 +521,7 @@ if (filledCount >= 3) {
     const cup = overlays.querySelector("#cupClickHotspot");
     if (cup) cup.remove();
 
-    await transitionBg("./assets/bg/glass-empty.png");
+    await transitionBg("./assets/bg/room1/glass-empty.png");
 
     // 2) click anywhere -> main-view.png
     enableClickAnywhere(async () => {
@@ -461,7 +535,7 @@ if (filledCount >= 3) {
       if (el) el.remove();
     });
 
-      await transitionBg("./assets/bg/main-view.png");
+      await transitionBg("./assets/bg/room1/main-view.png");
 
       // 3) click anywhere -> distortion gif
       enableClickAnywhere(async () => {
@@ -469,7 +543,7 @@ if (filledCount >= 3) {
         scene = "distortionAfterMix";
         disableClickAnywhere();
 
-        await transitionBg("./assets/bg/distortion-gif.png");
+        await transitionBg("./assets/bg/room1/vision distorted gif.gif");
 
         // Now mark room complete + popup
         await wait(250);
@@ -525,54 +599,58 @@ if (filledCount >= 3) {
     function createStoveSceneOverlays() {
       const noodles = document.createElement("img");
       noodles.id = "noodles";
-      noodles.src = "./assets/props/noodles.png";
+      noodles.src = "./assets/props/room1/noodles.png";
       noodles.alt = "Noodles";
       noodles.className = "item-overlay draggable";
       noodles.draggable = false;
-
+    
       const potZone = document.createElement("div");
       potZone.id = "potDropzone";
       potZone.className = "pot-dropzone";
       potZone.setAttribute("aria-label", "Pot drop zone");
-
+    
       overlays.appendChild(potZone);
       overlays.appendChild(noodles);
-
+    
       noodles.style.transform = "translate(0px, 0px)";
       layout();
-
+    
       cleanupDrag = makeDraggable({
         el: noodles,
         dropzone: potZone,
+    
         onDrop: async () => {
           if (scene !== "stove") return;
-
+    
           scene = "cooked";
           overlays.classList.add("is-fading");
           await wait(150);
-
-          await transitionBg("./assets/bg/cooked-noodles.png");
-
+    
+          await transitionBg("./assets/bg/room1/cooked-noodles.png");
+    
           clearOverlays();
           overlays.classList.remove("is-fading");
-
+    
           showPotClickHotspot(async () => {
             if (scene !== "cooked") return;
+    
             scene = "emptyPot";
-            await transitionBg("./assets/bg/empty-pot.png");
-
+            await transitionBg("./assets/bg/room1/empty-pot.png");
+    
             enableClickAnywhere(async () => {
               if (scene !== "emptyPot") return;
+    
               scene = "mainView";
               disableClickAnywhere();
-              await transitionBg("./assets/bg/projection.png");
-
+              await transitionBg("./assets/bg/room1/projection.png");
+    
               enableClickAnywhere(async () => {
                 if (scene !== "mainView") return;
+    
                 scene = "glassEmpty";
                 disableClickAnywhere();
-                await transitionBg("./assets/bg/glass-empty.png");
-
+                await transitionBg("./assets/bg/room1/glass-empty.png");
+    
                 startGlassMixingGame();
               });
             });
@@ -583,10 +661,10 @@ if (filledCount >= 3) {
 
     stoveBtn.addEventListener("click", async () => {
       if (scene !== "kitchen") return;
-
+    
       scene = "stove";
-      await transitionBg("./assets/bg/empty-pot-boiling-water.png");
-
+      await transitionBg("./assets/bg/room1/empty-pot-boiling.png");
+    
       stoveBtn.style.display = "none";
       clearOverlays();
       createStoveSceneOverlays();
@@ -605,6 +683,18 @@ if (filledCount >= 3) {
 
     this._room1Cleanup = () => {
       window.removeEventListener("resize", onResize);
+    
+      if (cleanupDrag) {
+        cleanupDrag();
+        cleanupDrag = null;
+      }
+    
+      hideFakeChopstickCursor();
+    
+      if (chopstickEl) {
+        chopstickEl.remove();
+        chopstickEl = null;
+      }
     };
   },
 

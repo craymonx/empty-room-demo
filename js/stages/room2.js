@@ -39,7 +39,7 @@ export default {
       },
 
       emptyCup: {
-        beer: { x: 1200, y: 900, w: 125, h: 275 },
+        beer: { x: 1160, y: 790, w: 160, h: 360 },
         drop: { x: 1520, y: 975, w: 275, h: 225 },
       },
 
@@ -437,13 +437,12 @@ export default {
     function showRpgDialog({ speaker, textLines, choices, onChoose }) {
       const old = overlays.querySelector("#rpgDialog");
       if (old) old.remove();
-
+    
       const box = document.createElement("div");
       box.id = "rpgDialog";
       box.className = "rpg-ui";
       box.innerHTML = `
         <div class="rpg-box rpg-box--dialog">
-          <div class="rpg-speaker">${speaker}</div>
           <div class="rpg-text">${textLines.map((line) => `<div>${line}</div>`).join("")}</div>
         </div>
         <div class="rpg-box rpg-box--choices">
@@ -458,13 +457,22 @@ export default {
             .join("")}
         </div>
       `;
-
+    
       overlays.appendChild(box);
-
-      box.querySelectorAll(".rpg-choice").forEach((btn) => {
+    
+      const buttons = [...box.querySelectorAll(".rpg-choice")];
+    
+      buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
+          buttons.forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+      
           const index = Number(btn.dataset.choice);
-          onChoose(index);
+      
+          // allow one visible frame before changing scene
+          setTimeout(() => {
+            onChoose(index);
+          }, 120);
         });
       });
     }
@@ -871,7 +879,6 @@ export default {
       clearOverlays();
 
       showRpgDialog({
-        speaker: "Stranger:",
         textLines: ["There are some people talking. What would you do?"],
         choices: [
           "Wave to them",
