@@ -1,0 +1,375 @@
+/* /css/room-03.css */
+
+#scene-room3 {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background: #000;
+  }
+  
+  #scene-room3 .scene-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  
+  #scene-room3 .bg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  
+  #scene-room3 .overlays,
+  #scene-room3 .room3-dialog-layer {
+    position: absolute;
+    inset: 0;
+  }
+  
+  #scene-room3 .overlays {
+    pointer-events: none;
+    z-index: 10;
+  }
+  
+  #scene-room3 .room3-dialog-layer {
+    pointer-events: none;
+    z-index: 30;
+  }
+  
+  #scene-room3 .room3-hotspot {
+    position: absolute;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 15;
+  }
+  
+  #scene-room3 .hud {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    gap: 10px;
+    z-index: 40;
+  }
+  
+  #scene-room3 .hud-btn {
+    border: 0;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  
+  .room3-monologue {
+    position: absolute;
+    left: 50%;
+    bottom: 140px; /* higher */
+    transform: translateX(-50%);
+    width: min(600px, calc(100% - 48px));
+    pointer-events: auto;
+    z-index: 35;
+  }
+  
+  .room3-monologue__inner {
+    position: relative;
+    padding: 14px 52px 14px 14px;
+    background: #e9e9e9;
+    border: 4px double #2f2f2f;
+    box-shadow:
+      0 0 0 1px #8d8d8d inset,
+      0 6px 18px rgba(0, 0, 0, 0.18);
+  }
+  
+  .room3-monologue__text {
+    margin: 0;
+    color: #222;
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+  
+  .room3-monologue__next {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    border: 0;
+    background: transparent;
+    color: #333;
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .room3-paper-popup {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: auto;
+    z-index: 45;
+  }
+  
+  .room3-paper-popup__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.18);
+  }
+  
+  .room3-paper-popup__sheet-wrap {
+    position: relative;
+    z-index: 1;
+    width: min(78vw, 760px);
+    max-height: 85vh;
+    transform: rotate(-2deg);
+  }
+  
+  .room3-paper-popup__sheet {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 85vh;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: pointer;
+    filter:
+      drop-shadow(0 20px 30px rgba(0, 0, 0, 0.32))
+      drop-shadow(0 8px 12px rgba(0, 0, 0, 0.18));
+  }
+
+  .room3-paper-popup__exit-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 22vw;
+    max-width: 260px;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 2;
+  }
+  
+  .room3-advance-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 46;
+  }
+  
+  .room3-advance-overlay__hit {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+  }
+  
+  .room3-monologue--blocking {
+    pointer-events: none;
+  }
+  
+  .room3-phone-popup {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 50;
+    pointer-events: auto;
+  }
+  
+  .room3-phone-popup__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  
+  .room3-phone {
+    position: relative;
+    z-index: 1;
+    width: min(360px, 88vw);
+    padding: 18px 18px 20px;
+    border-radius: 28px;
+    background:
+      linear-gradient(180deg, #292929 0%, #171717 100%);
+    box-shadow:
+      0 24px 60px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border: 2px solid #0e0e0e;
+  }
+  
+  .room3-phone__close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    border: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .room3-phone__speaker {
+    width: 90px;
+    height: 6px;
+    margin: 2px auto 16px;
+    border-radius: 999px;
+    background: #0a0a0a;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.08);
+  }
+  
+  .room3-phone__screen {
+    padding: 14px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #a8d3a6 0%, #7faf7a 100%);
+    border: 2px solid #51644f;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  }
+  
+  .room3-phone__label {
+    margin-bottom: 8px;
+    color: #1b2a19;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  
+  .room3-phone__display {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(14, 31, 14, 0.16);
+    border: 1px solid rgba(29, 48, 29, 0.35);
+  }
+  
+  .room3-phone__display-text {
+    display: block;
+    color: #142114;
+    font-family: "Courier New", monospace;
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    word-break: break-all;
+    min-height: 30px;
+  }
+  
+  .room3-phone__pad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  
+  .room3-phone__key {
+    min-height: 54px;
+    border: 0;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #404040 0%, #232323 100%);
+    color: #f2f2f2;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 4px 10px rgba(0, 0, 0, 0.22);
+  }
+  
+  .room3-phone__key--wide {
+    font-size: 18px;
+  }
+  
+  .room3-phone__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  
+  .room3-phone__btn {
+    min-height: 46px;
+    border: 0;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .room3-phone__btn--cancel {
+    background: linear-gradient(180deg, #7d2424 0%, #5a1313 100%);
+    color: #fff;
+  }
+  
+  .room3-phone__btn--dial {
+    background: linear-gradient(180deg, #2c8f45 0%, #1e6f34 100%);
+    color: #fff;
+  }
+  
+  .room3-advance-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 46;
+    pointer-events: auto;
+  }
+  
+  .room3-advance-overlay__hit {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .room3-freshener {
+    position: absolute;
+    z-index: 60;
+    width: 30px; 
+  height: 100px;
+    height: auto;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+    pointer-events: auto;
+    filter:
+      drop-shadow(0 12px 20px rgba(0, 0, 0, 0.28))
+      drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
+  }
+  
+  .room3-freshener.is-dragging {
+    cursor: grabbing;
+    transform: scale(1.03);
+  }
+  
+  .room3-end-popup {
+    pointer-events: auto;
+  }
+  
+  .room3-end-popup .popup-card {
+    background: rgba(20, 20, 20, 0.92);
+    color: #fff;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  }
+  
+  .room3-end-popup .popup-title,
+  .room3-end-popup .popup-msg {
+    color: #fff;
+  }
+
+  #scene-room3 .room3-hotspot:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 2px;
+  }
