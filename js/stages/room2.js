@@ -768,7 +768,7 @@ export default {
 
                           scene = "bedroom";
                           clearOverlays();
-                          await transitionBg("./assets/bg/room2/bedroom.png");
+                          await transitionBg("./assets/bg/room2/bedroom-game2.png");
 
                           await wait(250);
                           localStorage.setItem("room2_done", "1");
