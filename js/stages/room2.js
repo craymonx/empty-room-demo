@@ -813,7 +813,7 @@ export default {
 
       const beer = document.createElement("img");
       beer.id = "beer";
-      beer.src = "./assets/props/room2/beer.png";
+      beer.src = "./assets/props/room2/game-beer.png";
       beer.alt = "Beer";
       beer.className = "item-overlay draggable";
       beer.draggable = false;
@@ -852,7 +852,7 @@ export default {
 
               scene = "kitchenCounter";
               clearOverlays();
-              await transitionBg("./assets/bg/room2/kitchen-counter.png");
+              await transitionBg("./assets/bg/room2/kitchen-countertop.png");
 
               showDrawerHotspot(async () => {
                 if (scene !== "kitchenCounter") return;

@@ -466,9 +466,9 @@ export default {
       overlays.appendChild(dropZone);
 
       const items = [
-        { id: "ketchup", src: "./assets/props/room1/ketchup.png", alt: "Ketchup" },
-        { id: "dishsoap", src: "./assets/props/room1/dishsoap.png", alt: "Dish soap" },
-        { id: "whiskey", src: "./assets/props/room1/whisky.png", alt: "Whiskey" },
+        { id: "ketchup", src: "./assets/props/room1/game-ketchup.png", alt: "Ketchup" },
+        { id: "dishsoap", src: "./assets/props/room1/game-dishsoap.png", alt: "Dish soap" },
+        { id: "whiskey", src: "./assets/props/room1/game-whisky.png", alt: "Whiskey" },
       ];
 
       const used = new Set();
@@ -543,7 +543,7 @@ if (filledCount >= 3) {
         scene = "distortionAfterMix";
         disableClickAnywhere();
 
-        await transitionBg("./assets/bg/room1/vision distorted gif.gif");
+        await transitionBg("./assets/bg/room1/vision-distorted-gif.gif");
 
         // Now mark room complete + popup
         await wait(250);
@@ -599,7 +599,7 @@ if (filledCount >= 3) {
     function createStoveSceneOverlays() {
       const noodles = document.createElement("img");
       noodles.id = "noodles";
-      noodles.src = "./assets/props/room1/noodles.png";
+      noodles.src = "./assets/props/room1/game-noodles.png";
       noodles.alt = "Noodles";
       noodles.className = "item-overlay draggable";
       noodles.draggable = false;
