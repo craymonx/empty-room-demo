@@ -47,7 +47,7 @@ export default {
     root.innerHTML = `
       <section class="scene" id="scene-intro">
         <div class="scene-inner">
-          <img class="bg" src="./assets/bg/main-view.png" alt="Intro">
+          <img class="bg" src="./assets/bg/game-main-view.png" alt="Intro">
 
           <div class="intro-card">
             <h1>Empty Room</h1>
