@@ -62,24 +62,30 @@ export default {
         },
   
         security1: {
-          security: { x: 2300, y: 350, w: 300, h: 800 }, // adjust later
-          guard: { x: 1850, y: 280, w: 700, h: 1300 },   // adjust later
-          paper: { x: 1230, y: 950, w: 320, h: 340 },    // adjust later
+          security: { x: 2300, y: 350, w: 300, h: 800 },
+          guard: { x: 1850, y: 280, w: 700, h: 1300 },
+          paper: { x: 1230, y: 950, w: 320, h: 340 },
         },
   
         inspect1: {
-            toInspect2: { x: 1650, y: 500, w: 330, h: 540 }, // adjust later
+            toInspect2: { x: 1650, y: 500, w: 330, h: 540 },
           },
   
         inspect2: {
-            paper: { x: 850, y: 1075, w: 425, h: 150 }, // adjust later
+            next: { x: 0, y: 0, w: 2800, h: 1800 }, 
+          },
+
+          paper1: {
+            paper: { x: 1250, y: 1170, w: 325, h: 150 },
           },
   
         security2: {
-          security: { x: 850, y: 1075, w: 800, h: 450 }, // adjust later
+          security: { x: 850, y: 1075, w: 800, h: 450 },
         },
   
-        paper2: {},
+        paper2: {
+            freshenerStart: { x: 200, y: 675, w: 50, h: 150 },
+          },
   
         roomCleaned: {},
       };
@@ -92,6 +98,7 @@ export default {
         security1: "./assets/bg/room3/security-1.png",
         inspect1: "./assets/bg/room3/inspect-1.png",
         inspect2: "./assets/bg/room3/inspect-2.png",
+        paper1: "./assets/bg/room3/paper-1.png",
         security2: "./assets/bg/room3/security-2.png",
         paper2: "./assets/bg/room3/paper-2.png",
         roomCleaned: "./assets/bg/room3/room-cleaned.png",
@@ -410,12 +417,25 @@ export default {
         freshener.className = "room3-freshener";
         freshener.draggable = false;
       
-        let x = 100;
-        let y = 500;
+        const drawnRect = getDrawnImageRect(bg);
+        const naturalW = bg.naturalWidth || 1;
+        const naturalH = bg.naturalHeight || 1;
+      
+        const startPlaced = placeRectOnImage(
+          RECTS.paper2.freshenerStart,
+          drawnRect,
+          naturalW,
+          naturalH
+        );
+      
+        let x = startPlaced.left;
+        let y = startPlaced.top;
         let dragging = false;
         let pointerId = null;
         let offsetX = 0;
         let offsetY = 0;
+      
+        freshener.style.width = `${startPlaced.width}px`;
       
         function applyPos() {
           freshener.style.left = `${x}px`;
@@ -601,7 +621,16 @@ export default {
   
           if (scene === "inspect2") {
             items.push(
-              makeHotspot("paper", RECTS.inspect2.paper, () => {
+              makeHotspot("next", RECTS.inspect2.next, () => {
+                scene = "paper1";
+                render();
+              })
+            );
+          }
+
+          if (scene === "paper1") {
+            items.push(
+              makeHotspot("paper", RECTS.paper1.paper, () => {
                 openChecklistPopup();
               })
             );
