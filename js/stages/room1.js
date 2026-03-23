@@ -535,7 +535,7 @@ if (filledCount >= 3) {
       if (el) el.remove();
     });
 
-      await transitionBg("./assets/bg/room1/main-view.png");
+      await transitionBg("./assets/bg/room1/kitchen-main-view.png");
 
       // 3) click anywhere -> distortion gif
       enableClickAnywhere(async () => {
