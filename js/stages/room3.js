@@ -42,7 +42,7 @@ export default {
       let freshenerDone = false;
       let endShown = false;
   
-      const CORRECT_SECURITY_NUMBER = "20210115";
+      const CORRECT_SECURITY_NUMBER = "20200813";
       const FRESHENER_REQUIRED_MS = 3000;
   
       const RECTS = {
