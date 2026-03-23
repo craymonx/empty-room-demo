@@ -747,14 +747,14 @@ export default {
 
                     scene = "stand";
                     disableClickAnywhere();
-                    await setBgInstant("./assets/bg/room2/stand.png");
+                    await setBgInstant("./assets/bg/room2/stare-stand.png");
 
                     enableClickAnywhere(async () => {
                       if (scene !== "stand") return;
 
                       scene = "standFront";
                       disableClickAnywhere();
-                      await setBgInstant("./assets/bg/room2/stand-front.png");
+                      await setBgInstant("./assets/bg/room2/stare-stand-front.png");
 
                       enableClickAnywhere(async () => {
                         if (scene !== "standFront") return;
