@@ -546,7 +546,7 @@ if (filledCount >= 3) {
         await transitionBg("./assets/bg/room1/vision-distorted-gif.gif");
 
         // Now mark room complete + popup
-        await wait(250);
+        await wait(2500);
         localStorage.setItem("room1_done", "1");
         scene = "roomComplete";
 
