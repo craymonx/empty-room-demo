@@ -203,6 +203,7 @@ export default {
         `;
       
         popup.querySelector('[data-action="exit"]').addEventListener("click", () => {
+          localStorage.setItem("room3_done", "1");
           go("intro");
         });
       
@@ -625,6 +626,7 @@ export default {
 
         if (scene === "roomCleaned" && !endShown) {
             endShown = true;
+            localStorage.setItem("room3_done", "1");
             setTimeout(() => {
               showEndGame();
             }, 5000);
