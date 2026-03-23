@@ -405,7 +405,7 @@ export default {
   
       function enableFreshenerDrag() {
         const freshener = document.createElement("img");
-        freshener.src = "./assets/props/room3/air-freshener.png";
+        freshener.src = "./assets/props/room3/freshener.png";
         freshener.alt = "Air freshener";
         freshener.className = "room3-freshener";
         freshener.draggable = false;
