@@ -719,11 +719,6 @@ export default {
             enableFreshenerDrag();
           }
 
-          if (scene === "roomCleaned") {
-            setTimeout(() => {
-              showEndGame();
-            }, 5000);
-          }
         };
   
         bg.onerror = () => {
