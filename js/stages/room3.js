@@ -393,7 +393,7 @@ export default {
           <div class="room3-paper-popup__sheet-wrap">
             <img
               class="room3-paper-popup__sheet"
-              src="./assets/props/room3/checklist.png"
+              src="./assets/props/room3/checklist-1.png"
               alt="Checklist"
               draggable="false"
             />

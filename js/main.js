@@ -7,6 +7,8 @@ import room2 from "./stages/room2.js";
 import room3 from "./stages/room3.js";
 import room4 from "./stages/room4.js";
 import room5 from "./stages/room5.js";
+import room6 from "./stages/room6.js";
+import room7 from "./stages/room7.js";
 import ending from "./stages/ending.js";
 
 function setLoading(isLoading) {
@@ -52,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const start = performance.now();
 
   // Register all stages ONCE
-  registerStages({ intro, room1, room2, room3, room4, room5, ending});
+  registerStages({ intro, room1, room2, room3, room4, room5, room6, room7, ending});
 
   // Go to intro
   goToStage("intro");

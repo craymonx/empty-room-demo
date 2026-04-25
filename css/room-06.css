@@ -1,0 +1,106 @@
+.room6-shovel {
+    position: absolute;
+    z-index: 20;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    object-fit: contain;
+  }
+  
+  .room6-shovel.dragging {
+    cursor: grabbing;
+    z-index: 30;
+  }
+  
+  .room6-hotspot {
+    position: absolute;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .room6-debug-rect,
+  .room6-hotspot.debug-visible {
+    position: absolute;
+    outline: 2px dashed red;
+    background: rgba(255, 0, 0, 0.12);
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  .room6-blackout {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    background: #000;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .room6-fullscreen-click {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .overlays {
+    pointer-events: none;
+  }
+  
+  .room6-shovel,
+  .room6-hotspot,
+  .room6-blackout {
+    pointer-events: auto;
+  }
+  
+  .room6-blackout {
+    position: absolute;
+    inset: 0;
+    z-index: 999;
+  
+    background: #000;
+    border: none;
+    cursor: pointer;
+  
+    opacity: 0;
+    transition: opacity 1.2s ease; 
+  
+    pointer-events: auto;
+  }
+  
+  .room6-blackout.visible {
+    opacity: 1;
+  }
+
+  .room6-next-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 1000;
+  
+    padding: 10px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 999px;
+  
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+  
+    font-size: 16px;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  
+  .room6-next-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+.room6-shovel,
+.room6-hotspot,
+.room6-blackout,
+.room6-next-btn {
+  pointer-events: auto;
+}
