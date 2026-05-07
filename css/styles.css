@@ -200,3 +200,9 @@ body {
   justify-content: flex-end;
   gap: 10px;
 }
+
+html,
+body,
+#game-root {
+  height: 100%;
+}

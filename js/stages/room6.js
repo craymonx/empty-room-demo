@@ -38,7 +38,7 @@ export default {
       const RECTS = {
         fogForest: {
           shovelStart: { x: 250, y: 920, w: 260, h: 260 },
-          digZone: { x: 1060, y: 560, w: 440, h: 360 },
+          digZone: { x: 600, y: 800, w: 1250, h: 500 },
         },
         lake: {
           middleZone: { x: 600, y: 900, w: 1500, h: 250 },

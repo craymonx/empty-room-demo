@@ -285,14 +285,14 @@ export default {
       scene = "deteriorate1";
       renderScene();
 
-      await wait(1000);
+      await wait(2000);
       if (destroyed) return;
       if (scene !== "deteriorate1") return;
 
       scene = "deteriorate2";
       renderScene();
 
-      await wait(1000);
+      await wait(2000);
       if (destroyed) return;
       if (scene !== "deteriorate2") return;
 
@@ -308,14 +308,14 @@ export default {
       scene = "deteriorate3";
       renderScene();
 
-      await wait(1000);
+      await wait(2000);
       if (destroyed) return;
       if (scene !== "deteriorate3") return;
 
       scene = "deteriorate2";
       renderScene();
 
-      await wait(1000);
+      await wait(2000);
       if (destroyed) return;
       if (scene !== "deteriorate2") return;
 

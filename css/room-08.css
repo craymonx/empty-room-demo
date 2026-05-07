@@ -1,0 +1,89 @@
+#scene-room8 {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+  
+  #room8Wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  #room8Wrap .bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  #room8Wrap .overlays {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: auto !important;
+  }
+  
+  .room8-hotspot {
+    position: absolute;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 10;
+    pointer-events: auto !important;
+    display: block;
+  }
+  
+  .room8-prop {
+    position: absolute;
+    object-fit: contain;
+    z-index: 20;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+  }
+  
+  .room8-prop.is-dragging {
+    cursor: grabbing;
+    z-index: 50;
+  }
+  
+  .room8-mop-auto {
+    transition: left 0.85s ease, top 0.85s ease, width 0.85s ease, height 0.85s ease;
+    pointer-events: none;
+    z-index: 60;
+  }
+  
+  .room8-debug-rect {
+    position: absolute;
+    border: 2px solid red;
+    background: rgba(255, 0, 0, 0.18);
+    z-index: 90;
+    pointer-events: none;
+  }
+  
+  .room8-next-btn {
+    position: absolute;
+    top: 28px;
+    right: 32px;
+    z-index: 100;
+    padding: 10px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+  }
+  
+  .room8-next-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
