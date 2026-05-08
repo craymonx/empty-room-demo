@@ -390,7 +390,7 @@ export default {
       }
 
       if (scene === "burningBushFlash") {
-        bg.src = "./assets/bg/room7/burning-bush-flash.gif";
+        bg.src = "./assets/bg/room7/burning-bush-flash-ending.gif";
       }
 
       bg.onload = layout;
