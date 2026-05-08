@@ -288,18 +288,20 @@ export default {
       const elBox = el.getBoundingClientRect();
       const centerX = elBox.left + elBox.width / 2;
       const centerY = elBox.top + elBox.height / 2;
-
+    
+      const wrapBox = wrap.getBoundingClientRect();
       const imgRect = getDrawnImageRect(bg);
+    
       const scaleX = imgRect.width / BASE_W;
       const scaleY = imgRect.height / BASE_H;
-
+    
       const zone = {
-        left: imgRect.left + zoneRect.x * scaleX,
-        top: imgRect.top + zoneRect.y * scaleY,
-        right: imgRect.left + (zoneRect.x + zoneRect.w) * scaleX,
-        bottom: imgRect.top + (zoneRect.y + zoneRect.h) * scaleY,
+        left: wrapBox.left + imgRect.left + zoneRect.x * scaleX,
+        top: wrapBox.top + imgRect.top + zoneRect.y * scaleY,
+        right: wrapBox.left + imgRect.left + (zoneRect.x + zoneRect.w) * scaleX,
+        bottom: wrapBox.top + imgRect.top + (zoneRect.y + zoneRect.h) * scaleY,
       };
-
+    
       return (
         centerX >= zone.left &&
         centerX <= zone.right &&
