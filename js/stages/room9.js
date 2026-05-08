@@ -143,7 +143,7 @@ export default {
         r6: "r6.png",
         r61: "r61.png",
         r62: "r62.png",
-        shore: "Shore.png",
+        shore: "shore-forest.png",
         "bush-boat": "bush-boat.png",
         bush: "bush.png",
         "bush-fog": "bush-fog.png",
