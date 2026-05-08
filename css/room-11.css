@@ -1,0 +1,213 @@
+#scene-room11 .overlays,
+#scene-room11 .room11-popup-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#scene-room11 .overlays > *,
+#scene-room11 .room11-popup-layer > * {
+  pointer-events: auto;
+}
+
+#scene-room11 .room11-hotspot,
+#scene-room11 .room11-left-hotspot {
+  position: absolute;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 5;
+}
+
+#room11Wrap.debug .room11-hotspot,
+#room11Wrap.debug .room11-left-hotspot {
+  background: rgba(255, 0, 0, 0.22);
+  outline: 2px solid rgba(255, 0, 0, 0.85);
+}
+
+.room11-alert-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.room11-alert-box {
+  position: relative;
+  width: min(520px, 90vw);
+  background: #120000;
+  border: 2px solid #ff3232;
+  box-shadow:
+    0 0 22px rgba(255, 0, 0, 0.55),
+    inset 0 0 18px rgba(255, 0, 0, 0.18);
+  color: #fff;
+  font-family: monospace;
+  animation: room11-alert-pulse 0.65s infinite alternate;
+}
+
+.room11-alert-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ff3232;
+  background: #220000;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.room11-alert-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 54px 14px 18px;
+  background: #ff3232;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: 18px;
+}
+
+.room11-alert-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  color: #ff3232;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+.room11-alert-body {
+  padding: 22px 24px 26px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.room11-alert-body p {
+  margin: 0 0 14px;
+}
+
+.room11-alert-body p:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes room11-alert-pulse {
+  from {
+    filter: brightness(0.9);
+  }
+
+  to {
+    filter: brightness(1.2);
+  }
+}
+
+.room11-rpg-dialog {
+    position: absolute;
+    left: 50%;
+    bottom: 110px;
+    transform: translateX(-50%);
+    z-index: 30;
+    width: min(760px, 88vw);
+    background: rgba(10, 10, 10, 0.92);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: #fff;
+    padding: 18px 22px 20px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+    font-family: system-ui, sans-serif;
+  }
+
+.room11-rpg-name {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.room11-rpg-text {
+  font-size: 20px;
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+.room11-rpg-next {
+  display: block;
+  margin-left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: transparent;
+  color: #fff;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+
+.room11-left-gradient {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 34%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.72),
+      rgba(0, 0, 0, 0.42),
+      rgba(0, 0, 0, 0)
+    );
+    opacity: 0;
+    transform: translateX(-55%);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+    z-index: 20;
+  }
+  
+  .room11-left-gradient.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .room11-left-click-zone {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 34%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 21;
+  }
+  
+  .room11-left-arrow {
+    position: absolute;
+    left: 72px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    color: rgba(255, 255, 255, 0.9);
+    animation: room11-left-arrow-pulse 0.9s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  
+  @keyframes room11-left-arrow-pulse {
+    from {
+      transform: translateY(-50%) translateX(0);
+      opacity: 0.65;
+    }
+  
+    to {
+      transform: translateY(-50%) translateX(-14px);
+      opacity: 1;
+    }
+  }
