@@ -47,6 +47,9 @@ export default {
         shore: {
           bush: { x: 620, y: 120, w: 760, h: 650 },
         },
+        r61: {
+          house: { x: 690, y: 420, w: 500, h: 250 },
+        },
       };
   
       const ROUTES = {
@@ -80,7 +83,7 @@ export default {
           { to: "shore", dir: "forward" },
           { to: "further", dir: "back" },
           { to: "l4", dir: "left" },
-          { to: "r4", dir: "right" },
+          { to: "r5", dir: "right" },
         ],
   
         shore: [
@@ -107,17 +110,17 @@ export default {
         r5: [
           { to: "r6", dir: "forward" },
           { to: "r4", dir: "back" },
+          { to: "m", dir: "left" },
           { to: "r61", dir: "right" },
         ],
         r6: [
           { to: "r5", dir: "back" },
         ],
         r61: [
-          { to: "r62", dir: "right" },
           { to: "r5", dir: "left" },
         ],
         r62: [
-          { to: "r61", dir: "left" },
+          { to: "r61", dir: "back" },
         ],
       };
   
@@ -250,6 +253,10 @@ export default {
         if (scene === "shore") {
           renderShoreHotspot();
         }
+
+        if (scene === "r61") {
+          renderR61HouseHotspot();
+        } 
       }
 
       function renderFogBoatArrow() {
@@ -297,6 +304,20 @@ export default {
   
         overlays.appendChild(btn);
         placeRectOnImage(btn, RECTS.shore.bush);
+      }
+
+      function renderR61HouseHotspot() {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `room9-hotspot ${debug ? "debug" : ""}`;
+        btn.setAttribute("aria-label", "Inspect house");
+      
+        btn.addEventListener("click", () => {
+          setScene("r62", { fade: true, render: true });
+        });
+      
+        overlays.appendChild(btn);
+        placeRectOnImage(btn, RECTS.r61.house);
       }
   
       async function startIntroSequence() {
@@ -362,9 +383,15 @@ for (const s of returnSeq) {
       }
   
       function layout() {
+        const hotspot = overlays.querySelector(".room9-hotspot");
+        if (!hotspot) return;
+      
         if (scene === "shore") {
-          const hotspot = overlays.querySelector(".room9-hotspot");
-          if (hotspot) placeRectOnImage(hotspot, RECTS.shore.bush);
+          placeRectOnImage(hotspot, RECTS.shore.bush);
+        }
+      
+        if (scene === "r61") {
+          placeRectOnImage(hotspot, RECTS.r61.house);
         }
       }
   
