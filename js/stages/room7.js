@@ -68,12 +68,6 @@ export default {
             }
           }
 
-          .room7-next-btn {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            z-index: 30;
-          }
         </style>
 
         <div class="scene-inner" id="room7Wrap">
@@ -91,10 +85,6 @@ export default {
 
           <div id="overlays" class="overlays" aria-hidden="false"></div>
 
-          <div class="hud">
-            <button id="backBtn" class="hud-btn">Back</button>
-            <button id="debugBtn" class="hud-btn">Hotspots</button>
-          </div>
         </div>
       </section>
     `;
@@ -103,8 +93,6 @@ export default {
     const bg = root.querySelector("#bg");
     const overlays = root.querySelector("#overlays");
     const leftGradient = root.querySelector("#leftGradient");
-    const backBtn = root.querySelector("#backBtn");
-    const debugBtn = root.querySelector("#debugBtn");
 
     const BASE_W = 1920;
     const BASE_H = 1080;
@@ -112,7 +100,7 @@ export default {
     let scene = "main";
     let debug = false;
     let emptyRoomClickCount = 0;
-    let nextBtnTimer = null;
+    let endButtonTimer = null;
 
     const RECTS = {
       main: {
@@ -238,48 +226,42 @@ export default {
       return img;
     }
 
-    function addNextButton() {
-      if (root.querySelector("#room7NextBtn")) return;
+    
 
-      const btn = document.createElement("button");
-      btn.id = "room7NextBtn";
-      btn.textContent = "Next";
-      btn.className = "hud-btn room7-next-btn";
-
-      btn.addEventListener("click", () => {
-        localStorage.setItem("room7_done", "1");
-        go("intro");
-      });
-
-      wrap.appendChild(btn);
-    }
-
-    function clearNextButtonAndTimer() {
-      const oldBtn = root.querySelector("#room7NextBtn");
-      if (oldBtn) oldBtn.remove();
-
-      if (nextBtnTimer) {
-        clearTimeout(nextBtnTimer);
-        nextBtnTimer = null;
+    function clearEndButtonTimer() {
+      if (endButtonTimer) {
+        clearTimeout(endButtonTimer);
+        endButtonTimer = null;
       }
     }
 
     function resetEmptyRoomState() {
       emptyRoomClickCount = 0;
-      clearNextButtonAndTimer();
+      clearEndButtonTimer();
     }
 
     function handleEmptyRoomClick() {
       if (emptyRoomClickCount >= 2) {
         setScene("burningBushFlash");
-
-        nextBtnTimer = setTimeout(() => {
-          addNextButton();
+    
+        endButtonTimer = setTimeout(() => {
+          localStorage.setItem("room7_done", "1");
+    
+          window.dispatchEvent(
+            new CustomEvent("stage:end", {
+              detail: {
+                nextStage: "room8",
+                menuStage: "intro",
+                nextLabel: "Next",
+                menuLabel: "Back to Menu",
+              },
+            })
+          );
         }, 5000);
-
+    
         return;
       }
-
+    
       emptyRoomClickCount += 1;
       layout();
     }
@@ -370,7 +352,7 @@ export default {
       }
 
       if (scene !== "burningBushFlash") {
-        clearNextButtonAndTimer();
+        clearEndButtonTimer();
       }
 
       if (scene === "main") bg.src = "./assets/bg/room7/main.png";
@@ -397,6 +379,7 @@ export default {
       layout();
     }
 
+    
     function layout() {
       clearOverlays();
 
@@ -530,15 +513,6 @@ export default {
       }
     }
 
-    backBtn.addEventListener("click", () => {
-      go("intro");
-    });
-
-    debugBtn.addEventListener("click", () => {
-      debug = !debug;
-      layout();
-    });
-
     wrap.addEventListener("mousemove", handleLeftGradient);
 
     wrap.addEventListener("mouseleave", () => {
@@ -555,9 +529,9 @@ export default {
       window.removeEventListener("resize", layout);
       wrap.removeEventListener("mousemove", handleLeftGradient);
 
-      if (nextBtnTimer) {
-        clearTimeout(nextBtnTimer);
-        nextBtnTimer = null;
+      if (endButtonTimer) {
+        clearTimeout(endButtonTimer);
+        endButtonTimer = null;
       }
     };
   },

@@ -16,10 +16,6 @@ export default {
             <div id="overlays" class="overlays" aria-hidden="false"></div>
             <div id="popupLayer" class="room11-popup-layer"></div>
   
-            <div class="hud">
-              <button id="backBtn" class="hud-btn">Back</button>
-              <button id="debugBtn" class="hud-btn">Hotspots</button>
-            </div>
           </div>
         </section>
       `;
@@ -78,8 +74,6 @@ export default {
       const bg = root.querySelector("#bg");
       const overlays = root.querySelector("#overlays");
       const popupLayer = root.querySelector("#popupLayer");
-      const backBtn = root.querySelector("#backBtn");
-      const debugBtn = root.querySelector("#debugBtn");
   
       let scene = "coca1";
       let timers = [];
@@ -502,24 +496,29 @@ export default {
   
       function goToCoca12() {
         if (scene !== "coca11") return;
-  
+      
         scene = "coca12";
         setBG("./assets/bg/room11/coca12.png");
         clearOverlays();
+      
+        localStorage.setItem("room11_done", "1");
+      
+        window.dispatchEvent(
+          new CustomEvent("stage:end", {
+            detail: {
+              nextStage: "ending",
+              menuStage: "intro",
+              nextLabel: "Next",
+              menuLabel: "Back to Menu",
+            },
+          })
+        );
       }
-  
+      
       function handleResize() {
         layout();
       }
-  
-      backBtn.addEventListener("click", () => {
-        go("intro");
-      });
-  
-      debugBtn.addEventListener("click", () => {
-        wrap.classList.toggle("debug");
-      });
-  
+
       window.addEventListener("resize", handleResize);
       bg.addEventListener("load", layout);
   

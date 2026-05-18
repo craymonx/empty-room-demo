@@ -1,39 +1,33 @@
-/* Make sure the scene container is the positioning reference */
 .scene-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* avoids scrollbars from absolute elements */
+  overflow: hidden;
 }
 
-/* Background image fits any screen, letterboxing allowed */
 .bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* IMPORTANT for option B */
+  object-fit: contain;
   display: block;
 }
 
-/* JS will set left/top/width/height */
 .hotspot {
   position: absolute;
+  left: 0;
+  top: 0;
+  right: auto;
+  bottom: auto;
   background: transparent;
   border: 0;
   padding: 0;
-  inset: 0;
   z-index: 60;
-  pointer-events: auto;  
+  pointer-events: auto;
   cursor: pointer;
 }
 
-.bg.is-fading {
-  opacity: 0.15;
-  transition: opacity 180ms ease;
-}
-
-/* Overlays share the same coordinate space as bg */
 .overlays {
   position: absolute;
   inset: 0;
@@ -41,38 +35,11 @@
   z-index: 20;
 }
 
-.overlays.is-fading {
-  opacity: 0;
-  transition: opacity 150ms ease;
-}
-
-/* JS will set left/top/width/height for noodles too */
-.noodles-overlay {
-  position: absolute;
-  pointer-events: auto;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* JS will set left/top/width/height for pot dropzone too */
 .pot-dropzone {
   position: absolute;
   pointer-events: none;
 }
 
-/* Debug visualization */
-.debug-hotspots .hotspot {
-  outline: 2px solid rgba(255, 0, 0, 0.7);
-  background: rgba(255, 0, 0, 0.15);
-}
-
-.debug-hotspots .pot-dropzone {
-  outline: 2px dashed rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* Full-screen "click anywhere" layer */
 .click-anywhere {
   position: absolute;
   z-index: 10;
@@ -86,8 +53,8 @@
   pointer-events: auto;
 }
 
-/* Pot click hotspot (JS positions it) */
-.pot-click {
+.pot-click,
+.cup-click {
   position: absolute;
   background: transparent;
   border: 0;
@@ -96,9 +63,8 @@
   pointer-events: auto;
 }
 
-/* Shared draggable item styling */
 .item-overlay {
-  position: absolute;     /* JS sets left/top/width/height */
+  position: absolute;
   pointer-events: auto;
   touch-action: none;
   user-select: none;
@@ -109,18 +75,68 @@
 
 .item-overlay.is-dragging {
   cursor: grabbing;
+  z-index: 80;
 }
 
-/* Drop zone (invisible by default) */
+.item-overlay.used {
+  opacity: 0.45;
+}
+
 .glass-dropzone {
-  position: absolute;     /* JS sets left/top/width/height */
+  position: absolute;
   pointer-events: none;
 }
 
-/* Debug: visualize drop zone + items */
+.room1-left-return-slider {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 135px;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.72),
+    rgba(0, 0, 0, 0.38),
+    rgba(0, 0, 0, 0)
+  );
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 90;
+  opacity: 0.88;
+}
+
+.room1-left-return-slider:hover {
+  opacity: 1;
+}
+
+.room1-left-arrow {
+  position: absolute;
+  left: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 92px;
+  line-height: 1;
+  font-family: Arial, sans-serif;
+}
+
+/* Debug visualization */
+
+.debug-hotspots .hotspot {
+  outline: 2px solid rgba(255, 0, 0, 0.7);
+  background: rgba(255, 0, 0, 0.15);
+}
+
+.debug-hotspots .pot-dropzone {
+  outline: 2px dashed rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .debug-hotspots .glass-dropzone {
   outline: 2px dashed rgba(0, 255, 255, 0.9);
-  background: rgba(0, 255, 255, 0.10);
+  background: rgba(0, 255, 255, 0.1);
 }
 
 .debug-hotspots .item-overlay {
@@ -128,8 +144,12 @@
   background: rgba(255, 255, 0, 0.08);
 }
 
-/* Optional: show pot click area in debug mode */
-.debug-hotspots .pot-click {
+.debug-hotspots .pot-click,
+.debug-hotspots .cup-click {
   outline: 2px solid rgba(0, 255, 255, 0.8);
   background: rgba(0, 255, 255, 0.12);
+}
+
+.debug-hotspots .room1-left-return-slider {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
 }

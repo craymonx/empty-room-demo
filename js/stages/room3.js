@@ -14,10 +14,6 @@ export default {
             <div id="overlays" class="overlays" aria-hidden="false"></div>
             <div id="dialogLayer" class="room3-dialog-layer"></div>
   
-            <div class="hud">
-              <button id="backBtn" class="hud-btn">Back</button>
-              <button id="debugBtn" class="hud-btn">Hotspots</button>
-            </div>
           </div>
         </section>
       `;
@@ -26,8 +22,6 @@ export default {
       const bg = root.querySelector("#bg");
       const overlays = root.querySelector("#overlays");
       const dialogLayer = root.querySelector("#dialogLayer");
-      const backBtn = root.querySelector("#backBtn");
-      const debugBtn = root.querySelector("#debugBtn");
   
       let scene = "dirtyRoomStart";
       let debug = false;
@@ -656,9 +650,17 @@ export default {
         if (scene === "roomCleaned" && !endShown) {
             endShown = true;
             localStorage.setItem("room3_done", "1");
-            setTimeout(() => {
-              showEndGame();
-            }, 5000);
+
+            window.dispatchEvent(
+              new CustomEvent("stage:end", {
+                detail: {
+                  nextStage: "room4",
+                  menuStage: "intro",
+                  nextLabel: "Next",
+                  menuLabel: "Back to Menu",
+                },
+              })
+            );
           }
   
         function layout() {
@@ -726,13 +728,6 @@ export default {
           showImageError(`Failed to load image: ${src}`);
         };
       }
-  
-      backBtn.addEventListener("click", () => go("intro"));
-  
-      debugBtn.addEventListener("click", () => {
-        debug = !debug;
-        buildSceneHotspots();
-      });
   
       render();
     },

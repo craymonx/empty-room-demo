@@ -12,15 +12,11 @@ export default {
               draggable="false"
             />
   
-            <div class="hud">
-              <button id="backBtn" class="hud-btn">Back</button>
-            </div>
           </div>
         </section>
       `;
   
       const bg = root.querySelector("#bg");
-      const backBtn = root.querySelector("#backBtn");
   
       const slides = [
         "fns1.png",
@@ -45,7 +41,17 @@ export default {
   
       function finishRoom() {
         localStorage.setItem("room10_done", "1");
-        go("intro");
+      
+        window.dispatchEvent(
+          new CustomEvent("stage:end", {
+            detail: {
+              nextStage: "room11",
+              menuStage: "intro",
+              nextLabel: "Next",
+              menuLabel: "Back to Menu",
+            },
+          })
+        );
       }
   
       function startSlideshow() {
@@ -67,9 +73,6 @@ export default {
         }, 2000);
       }
   
-      backBtn.addEventListener("click", () => {
-        go("intro");
-      });
   
       // Start after first image is loaded
       if (bg.complete) {

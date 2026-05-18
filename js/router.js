@@ -1,7 +1,9 @@
 // /js/router.js
+import { hideStageEndButtons } from "./game-ui.js";
 
 const STAGES = new Map();
 let currentStageId = null;
+
 
 function setStageStyles(stageId) {
   const isRoom = /^room(\d+)$/i.test(stageId);
@@ -45,6 +47,9 @@ export function registerStages(stageObject) {
 }
 
 export function goToStage(nextStageId, payload = {}) {
+  hideStageEndButtons();
+document.body.classList.remove("debug");
+
   const root = document.getElementById("game-root");
   if (!root) throw new Error("#game-root not found.");
 

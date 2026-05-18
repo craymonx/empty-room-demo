@@ -15,10 +15,6 @@ export default {
           <div id="overlays" class="overlays" aria-hidden="false"></div>
           <div id="fxLayer" class="room4-fx-layer" aria-hidden="true"></div>
 
-          <div class="hud">
-            <button id="backBtn" class="hud-btn">Back</button>
-            <button id="debugBtn" class="hud-btn">Hotspots</button>
-          </div>
         </div>
       </section>
     `;
@@ -27,15 +23,12 @@ export default {
     const bg = root.querySelector("#bg");
     const overlays = root.querySelector("#overlays");
     const fxLayer = root.querySelector("#fxLayer");
-    const backBtn = root.querySelector("#backBtn");
-    const debugBtn = root.querySelector("#debugBtn");
 
     let scene = "campus";
     let destroyed = false;
     let debug = false;
     let rewinding = false;
     let beachEnded = false;
-    let endingShown = false;
 
     let jarEl = null;
     let cleanupJarEvents = null;
@@ -243,40 +236,6 @@ export default {
       }
     }
 
-    function showEndingDialog() {
-      if (endingShown) return;
-      endingShown = true;
-
-      const overlay = document.createElement("div");
-      overlay.className = "room4-ending-overlay";
-      overlay.innerHTML = `
-        <div class="room4-ending-card" role="dialog" aria-modal="true" aria-label="Ending dialog">
-          <h2 class="room4-ending-title">End</h2>
-          <div class="room4-ending-text">
-            <p>You returned to where it began,<br />but not as the same person.</p>
-          </div>
-          <div class="room4-ending-actions">
-            <button type="button" class="room4-ending-btn" id="room4EndingBtn">Back to intro</button>
-          </div>
-        </div>
-      `;
-
-      overlays.appendChild(overlay);
-
-      const btn = overlay.querySelector("#room4EndingBtn");
-
-      function onClose() {
-        localStorage.setItem("room4_done", "1");
-        go("intro");
-      }
-
-      btn.addEventListener("click", onClose);
-
-      cleanupSceneEvents.push(() => {
-        btn.removeEventListener("click", onClose);
-      });
-    }
-
     async function startDeteriorateSequence() {
       if (destroyed || scene !== "beach" || beachEnded) return;
 
@@ -349,23 +308,31 @@ export default {
       scene = "beach";
       rewinding = false;
       beachEnded = false;
-      endingShown = false;
       renderScene();
     }
 
     function goBackToBeach() {
-      clearTimers();
-      rewinding = false;
-      beachEnded = true;
-      scene = "beach";
-      renderScene();
+  clearTimers();
 
-      requestAnimationFrame(() => {
-        if (!destroyed && scene === "beach" && beachEnded) {
-          showEndingDialog();
-        }
-      });
-    }
+  rewinding = false;
+  beachEnded = true;
+  scene = "beach";
+
+  renderScene();
+
+  localStorage.setItem("room4_done", "1");
+
+  window.dispatchEvent(
+    new CustomEvent("stage:end", {
+      detail: {
+        nextStage: "room5",
+        menuStage: "intro",
+        nextLabel: "Next",
+        menuLabel: "Back to Menu",
+      },
+    })
+  );
+}
 
     function makeJar() {
       const el = document.createElement("img");
@@ -723,13 +690,6 @@ export default {
 
       renderDebugZone();
     }
-
-    backBtn.addEventListener("click", () => go("intro"));
-
-    debugBtn.addEventListener("click", () => {
-      debug = !debug;
-      renderDebugZone();
-    });
 
     bg.addEventListener("load", layout);
     window.addEventListener("resize", layout);

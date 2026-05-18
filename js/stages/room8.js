@@ -14,10 +14,6 @@ export default {
   
             <div id="room8Overlays" class="overlays"></div>
   
-            <div class="hud">
-              <button id="backBtn" class="hud-btn">Back</button>
-              <button id="debugBtn" class="hud-btn">Hotspots</button>
-            </div>
           </div>
         </section>
       `;
@@ -25,8 +21,6 @@ export default {
       const wrap = root.querySelector("#room8Wrap");
       const bg = root.querySelector("#room8Bg");
       const overlays = root.querySelector("#room8Overlays");
-      const backBtn = root.querySelector("#backBtn");
-      const debugBtn = root.querySelector("#debugBtn");
   
       const BASE_W = 1920;
       const BASE_H = 1080;
@@ -260,7 +254,17 @@ export default {
   
         nextBtn.addEventListener("click", () => {
           localStorage.setItem("room8_done", "1");
-          go("intro");
+
+          window.dispatchEvent(
+            new CustomEvent("stage:end", {
+              detail: {
+                nextStage: "room9",
+                menuStage: "intro",
+                nextLabel: "Next",
+                menuLabel: "Back to Menu",
+              },
+            })
+          );
         });
   
         overlays.appendChild(nextBtn);
@@ -342,14 +346,7 @@ export default {
       function layout() {
         render();
       }
-  
-      backBtn.addEventListener("click", () => go("intro"));
-  
-      debugBtn.addEventListener("click", () => {
-        debug = !debug;
-        render();
-      });
-  
+
       window.addEventListener("resize", layout);
       bg.addEventListener("load", () => requestAnimationFrame(layout));
   

@@ -15,11 +15,7 @@ export default {
             <div id="overlays" class="overlays" aria-hidden="false"></div>
             <div id="arrowLayer" class="room9-arrow-layer"></div>
             <div id="fxLayer" class="room9-fx-layer"></div>
-  
-            <div class="hud">
-              <button id="backBtn" class="hud-btn">Back</button>
-              <button id="debugBtn" class="hud-btn">Hotspots</button>
-            </div>
+
   
             <button id="nextBtn" class="room9-next-btn hidden">Next →</button>
           </div>
@@ -30,8 +26,6 @@ export default {
       const bg = root.querySelector("#bg");
       const overlays = root.querySelector("#overlays");
       const arrowLayer = root.querySelector("#arrowLayer");
-      const backBtn = root.querySelector("#backBtn");
-      const debugBtn = root.querySelector("#debugBtn");
       const nextBtn = root.querySelector("#nextBtn");
   
       const BASE_W = 1920;
@@ -378,8 +372,18 @@ for (const s of returnSeq) {
         scene = "main-room";
         overlays.innerHTML = "";
         arrowLayer.innerHTML = "";
-        localStorage.setItem("room9_done", "1");
-        nextBtn.classList.remove("hidden");
+        localStorage.setItem("room8_done", "1");
+
+        window.dispatchEvent(
+          new CustomEvent("stage:end", {
+            detail: {
+              nextStage: "room10",
+              menuStage: "intro",
+              nextLabel: "Next",
+              menuLabel: "Back to Menu",
+            },
+          })
+        );
       }
   
       function layout() {
@@ -394,20 +398,7 @@ for (const s of returnSeq) {
           placeRectOnImage(hotspot, RECTS.r61.house);
         }
       }
-  
-      backBtn.addEventListener("click", () => {
-        go("intro");
-      });
-  
-      debugBtn.addEventListener("click", () => {
-        debug = !debug;
-        renderScene();
-      });
-  
-      nextBtn.addEventListener("click", () => {
-        go("intro");
-      });
-  
+
       window.addEventListener("resize", layout);
       bg.addEventListener("load", layout);
   

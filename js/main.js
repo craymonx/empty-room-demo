@@ -1,4 +1,5 @@
 import { registerStages, goToStage } from "./router.js";
+import { setupStageUI } from "./game-ui.js";
 
 // Import stages
 import intro from "./stages/intro.js";
@@ -60,6 +61,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Register all stages ONCE
   registerStages({ intro, room1, room2, room3, room4, room5, room6, room7, room8, room9, room10, room11, ending});
 
+  setupStageUI({
+    go: goToStage,
+    defaultMenuStage: "intro",
+  });
   // Go to intro
   goToStage("intro");
 

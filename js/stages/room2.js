@@ -13,10 +13,6 @@ export default {
 
           <div id="overlays" class="overlays" aria-hidden="false"></div>
 
-          <div class="hud">
-            <button id="backBtn" class="hud-btn">Back</button>
-            <button id="debugBtn" class="hud-btn">Hotspots</button>
-          </div>
         </div>
       </section>
     `;
@@ -773,11 +769,16 @@ export default {
                           await wait(250);
                           localStorage.setItem("room2_done", "1");
 
-                          showCompletionPopup({
-                            title: "Room 2 cleared",
-                            message: "You are ready to unlock the next stage.",
-                            onContinue: () => go("intro"),
-                          });
+                          window.dispatchEvent(
+                            new CustomEvent("stage:end", {
+                              detail: {
+                                nextStage: "room3",
+                                menuStage: "intro",
+                                nextLabel: "Next",
+                                menuLabel: "Back to Menu",
+                              },
+                            })
+                          );
                         });
                       });
                     });
@@ -908,11 +909,6 @@ export default {
         },
       });
     }
-
-    root.querySelector("#backBtn").addEventListener("click", () => go("intro"));
-    root.querySelector("#debugBtn").addEventListener("click", () => {
-      sceneEl.classList.toggle("debug-hotspots");
-    });
 
     const onResize = () => layout();
     window.addEventListener("resize", onResize);

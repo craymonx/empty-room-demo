@@ -16,10 +16,6 @@ export default {
             <div id="fxLayer" class="room5-fx-layer" aria-hidden="true"></div>
             <div id="dialogLayer" class="room5-dialog-layer"></div>
   
-            <div class="hud">
-              <button id="backBtn" class="hud-btn">Back</button>
-              <button id="debugBtn" class="hud-btn">Hotspots</button>
-            </div>
           </div>
         </section>
       `;
@@ -29,15 +25,12 @@ export default {
       const overlays = root.querySelector("#overlays");
       const fxLayer = root.querySelector("#fxLayer");
       const dialogLayer = root.querySelector("#dialogLayer");
-      const backBtn = root.querySelector("#backBtn");
-      const debugBtn = root.querySelector("#debugBtn");
-  
+
       let currentScene = "bedroom";
       let activeHotspots = [];
       let loopTimer = null;
       let loopEndTimer = null;
       let zoomTimer = null;
-      let blackoutTimer = null;
       let destroyed = false;
   
       const RECTS = {
@@ -162,12 +155,6 @@ export default {
           hotspots: [],
           isDistortionLoop: true,
         },
-  
-        blackout: {
-          bg: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
-          hotspots: [],
-          isBlackoutScene: true,
-        },
       };
   
       function clearLoopTimer() {
@@ -191,18 +178,11 @@ export default {
         }
       }
   
-      function clearBlackoutTimer() {
-        if (blackoutTimer) {
-          clearTimeout(blackoutTimer);
-          blackoutTimer = null;
-        }
-      }
   
       function clearAllTimers() {
         clearLoopTimer();
         clearLoopEndTimer();
         clearZoomTimer();
-        clearBlackoutTimer();
       }
   
       function clearOverlays() {
@@ -218,30 +198,6 @@ export default {
   
       function clearDialog() {
         dialogLayer.innerHTML = "";
-      }
-  
-      function showEndingDialog() {
-        clearDialog();
-  
-        dialogLayer.innerHTML = `
-          <div class="room5-dialog-backdrop">
-            <div class="room5-dialog-box">
-              <div class="room5-dialog-text">
-                <p>Everything fades into darkness.</p>
-                <p>You can no longer tell whether this is an ending, or just another room.</p>
-              </div>
-              <div class="room5-dialog-actions">
-                <button id="room5EndingBtn" class="hud-btn">Continue</button>
-              </div>
-            </div>
-          </div>
-        `;
-  
-        const btn = dialogLayer.querySelector("#room5EndingBtn");
-        btn?.addEventListener("click", () => {
-          localStorage.setItem("room5_done", "1");
-          go("intro");
-        });
       }
   
       function getDrawnImageRect(imgEl) {
@@ -318,26 +274,39 @@ export default {
         clearOverlays();
         clearDialog();
         resetFxLayer();
-  
+      
         let frameIndex = 0;
         bg.src = DISTORTED_FRAMES[frameIndex];
-  
+      
         const relayout = () => layout();
         if (bg.complete) {
           relayout();
         } else {
           bg.onload = relayout;
         }
-  
+      
         loopTimer = setInterval(() => {
           if (destroyed || currentScene !== "distortedLoop") return;
+      
           frameIndex = (frameIndex + 1) % DISTORTED_FRAMES.length;
           bg.src = DISTORTED_FRAMES[frameIndex];
         }, 120);
-  
+      
         loopEndTimer = setTimeout(() => {
           if (destroyed || currentScene !== "distortedLoop") return;
-          setScene("blackout");
+      
+          localStorage.setItem("room5_done", "1");
+      
+          window.dispatchEvent(
+            new CustomEvent("stage:end", {
+              detail: {
+                nextStage: "room6",
+                menuStage: "intro",
+                nextLabel: "Next",
+                menuLabel: "Back to Menu",
+              },
+            })
+          );
         }, 10000);
       }
   
@@ -371,20 +340,6 @@ export default {
         }, 900);
       }
   
-      function playBlackoutEnding() {
-        clearAllTimers();
-        clearOverlays();
-        clearDialog();
-        resetFxLayer();
-  
-        bg.src = SCENES.blackout.bg;
-  
-        blackoutTimer = setTimeout(() => {
-          if (destroyed || currentScene !== "blackout") return;
-          showEndingDialog();
-        }, 600);
-      }
-  
       function renderScene() {
         clearAllTimers();
         resetFxLayer();
@@ -402,11 +357,6 @@ export default {
   
         if (scene.isDistortionLoop) {
           startDistortionLoop();
-          return;
-        }
-  
-        if (scene.isBlackoutScene) {
-          playBlackoutEnding();
           return;
         }
   
@@ -428,12 +378,6 @@ export default {
         currentScene = sceneName;
         renderScene();
       }
-  
-      backBtn.onclick = () => go("intro");
-  
-      debugBtn.onclick = () => {
-        root.classList.toggle("debug-hotspots");
-      };
   
       window.addEventListener("resize", layout);
   

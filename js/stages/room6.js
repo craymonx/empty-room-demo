@@ -13,10 +13,6 @@ export default {
   
             <div id="overlays" class="overlays" aria-hidden="false"></div>
   
-            <div class="hud">
-              <button id="backBtn" class="hud-btn">Back</button>
-              <button id="debugBtn" class="hud-btn">Hotspots</button>
-            </div>
           </div>
         </section>
       `;
@@ -24,8 +20,6 @@ export default {
       const wrap = root.querySelector("#room6Wrap");
       const bg = root.querySelector("#bg");
       const overlays = root.querySelector("#overlays");
-      const backBtn = root.querySelector("#backBtn");
-      const debugBtn = root.querySelector("#debugBtn");
   
       const BASE_W = 2560;
       const BASE_H = 1440;
@@ -313,13 +307,35 @@ export default {
         }
   
         if (scene === "wetRoom") {
-            setBg("./assets/bg/room6/wet-room.png");
-            makeNextButton();
-          }
+          setBg("./assets/bg/room6/wet-room.png");
+        
+          localStorage.setItem("room6_done", "1");
+        
+          window.dispatchEvent(
+            new CustomEvent("stage:end", {
+              detail: {
+                nextStage: "room7",
+                menuStage: "intro",
+                nextLabel: "Next",
+                menuLabel: "Back to Menu",
+              },
+            })
+          );
+        }
 
           function completeRoom6() {
             localStorage.setItem("room6_done", "1");
-            go("intro");
+
+            window.dispatchEvent(
+              new CustomEvent("stage:end", {
+                detail: {
+                  nextStage: "room7",
+                  menuStage: "intro",
+                  nextLabel: "Next",
+                  menuLabel: "Back to Menu",
+                },
+              })
+            );
           }
           
           function makeNextButton() {
@@ -334,13 +350,6 @@ export default {
             overlays.appendChild(nextBtn);
           }
       }
-  
-      backBtn.addEventListener("click", () => go("intro"));
-  
-      debugBtn.addEventListener("click", () => {
-        debug = !debug;
-        render();
-      });
   
       window.addEventListener("resize", layout);
   

@@ -206,3 +206,54 @@ body,
 #game-root {
   height: 100%;
 }
+
+.global-stage-ui {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.global-ui-btn {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  padding: 9px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.global-ui-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.global-ui-btn.hidden {
+  display: none;
+}
+
+/* Global hotspot debug mode */
+/* Global hotspot debug mode */
+body.debug .hotspot,
+body.debug .dropzone,
+body.debug .click-zone,
+body.debug [data-hotspot],
+body.debug .room3-hotspot,
+body.debug .room4-hotspot,
+body.debug .room6-hotspot,
+body.debug .room8-hotspot,
+body.debug .room9-hotspot,
+body.debug .room11-hotspot,
+body.debug .beer-dropzone,
+body.debug .glass-dropzone,
+body.debug .pot-dropzone,
+body.debug .sorting-zone {
+  outline: 2px solid rgba(255, 0, 0, 0.9) !important;
+  background: rgba(255, 0, 0, 0.2) !important;
+}
