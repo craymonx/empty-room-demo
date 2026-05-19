@@ -25,6 +25,30 @@ export default {
     let scene = "chatting";
     let cleanupDrag = null;
 
+    let room2Bgm = null;
+
+      function setupRoom2Bgm() {
+        room2Bgm = new Audio("./assets/audio/room2/2 static bgm.wav");
+        room2Bgm.loop = true;
+        room2Bgm.volume = 0.45;
+
+        const unlockAudio = () => {
+          room2Bgm.play().catch(() => {});
+          window.removeEventListener("pointerdown", unlockAudio);
+        };
+
+        room2Bgm.play().catch(() => {
+          window.addEventListener("pointerdown", unlockAudio, { once: true });
+        });
+      }
+
+      function stopRoom2Bgm() {
+        if (!room2Bgm) return;
+        room2Bgm.pause();
+        room2Bgm.currentTime = 0;
+        room2Bgm = null;
+      }
+
     const RECTS = {
       smoke: {
         smoke: { x: 1040, y: 275, w: 50, h: 80 },
@@ -336,6 +360,37 @@ export default {
       layout();
     }
 
+    async function crossfadeBg(nextSrc, duration = 900) {
+      const nextBg = document.createElement("img");
+      nextBg.src = nextSrc;
+      nextBg.className = "bg room2-crossfade-next";
+      nextBg.alt = "";
+      nextBg.draggable = false;
+    
+      wrap.insertBefore(nextBg, overlays);
+    
+      await new Promise((resolve) => {
+        if (nextBg.complete) return resolve();
+        nextBg.addEventListener("load", resolve, { once: true });
+      });
+    
+      requestAnimationFrame(() => {
+        nextBg.style.opacity = "1";
+      });
+    
+      await wait(duration);
+    
+      bg.src = nextSrc;
+    
+      await new Promise((resolve) => {
+        if (bg.complete) return resolve();
+        bg.addEventListener("load", resolve, { once: true });
+      });
+    
+      nextBg.remove();
+      layout();
+    }
+
     async function setBgInstant(nextSrc) {
       bg.src = nextSrc;
     
@@ -430,7 +485,7 @@ export default {
       if (layer) layer.remove();
     }
 
-    function showRpgDialog({ speaker, textLines, choices, onChoose }) {
+    function showRpgDialog({ textLines, choices, onChoose }) {
       const old = overlays.querySelector("#rpgDialog");
       if (old) old.remove();
     
@@ -441,20 +496,24 @@ export default {
         <div class="rpg-box rpg-box--dialog">
           <div class="rpg-text">${textLines.map((line) => `<div>${line}</div>`).join("")}</div>
         </div>
-        <div class="rpg-box rpg-box--choices">
-          ${choices
-            .map(
-              (choice, i) => `
+        ${
+          choices
+            ? `
+            <div class="rpg-box rpg-box--choices">
+              ${choices.map((choice, i) => `
                 <button class="rpg-choice ${i === 0 ? "is-active" : ""}" data-choice="${i}">
                   ${choice}
                 </button>
-              `
-            )
-            .join("")}
-        </div>
+              `).join("")}
+            </div>
+          `
+            : ""
+        }
       `;
     
       overlays.appendChild(box);
+    
+      if (!choices) return;
     
       const buttons = [...box.querySelectorAll(".rpg-choice")];
     
@@ -462,10 +521,9 @@ export default {
         btn.addEventListener("click", () => {
           buttons.forEach((b) => b.classList.remove("is-active"));
           btn.classList.add("is-active");
-      
+    
           const index = Number(btn.dataset.choice);
-      
-          // allow one visible frame before changing scene
+    
           setTimeout(() => {
             onChoose(index);
           }, 120);
@@ -669,6 +727,21 @@ export default {
       return Object.values(sortingState.items).every((item) => item.placed);
     }
 
+    function showBackSlider(onClick) {
+      const old = overlays.querySelector("#room2BackSlider");
+      if (old) old.remove();
+    
+      const slider = document.createElement("button");
+      slider.id = "room2BackSlider";
+      slider.className = "room2-back-slider";
+      slider.type = "button";
+      slider.innerHTML = `<span class="room2-back-arrow">‹</span>`;
+      slider.setAttribute("aria-label", "Go back");
+      slider.addEventListener("click", onClick);
+    
+      overlays.appendChild(slider);
+    }
+
     function startUtensilSortingGame() {
       scene = "utensilsScattered";
       clearOverlays();
@@ -731,6 +804,21 @@ export default {
                 clearOverlays();
                 await transitionBg("./assets/bg/room2/zoom-drawer.png");
 
+                showBackSlider(async () => {
+                  if (scene !== "drawerSorted") return;
+                
+                  scene = "drawerMessy";
+                  clearOverlays();
+                  await setBgInstant("./assets/bg/room2/drawer-messy.png");
+                
+                  showDrawerOpenHotspot(async () => {
+                    if (scene !== "drawerMessy") return;
+                
+                    await transitionBg("./assets/bg/room2/empty-drawer.png");
+                    startUtensilSortingGame();
+                  });
+                });
+
                 showLeftAreaHotspot2(async () => {
                   if (scene !== "drawerSorted") return;
 
@@ -757,7 +845,7 @@ export default {
 
                         scene = "mainViewStatic";
                         disableClickAnywhere();
-                        await transitionBg("./assets/bg/room2/main-view-static.png");
+                        await crossfadeBg("./assets/bg/room2/main-view-static.png", 700);
 
                         showRoomHotspot(async () => {
                           if (scene !== "mainViewStatic") return;
@@ -841,6 +929,15 @@ export default {
           clearOverlays();
           await transitionBg("./assets/bg/room2/full-cup.png");
 
+          showBackSlider(async () => {
+            if (scene !== "fullCup") return;
+          
+            scene = "emptyCup";
+            clearOverlays();
+            await setBgInstant("./assets/bg/room2/empty-cup.png");
+            startBeerGame();
+          });
+
           showLeftAreaHotspot(async () => {
             if (scene !== "fullCup") return;
 
@@ -878,7 +975,35 @@ export default {
     function startChatScene() {
       scene = "chatting";
       clearOverlays();
-
+    
+      const monologues = [
+        "Maybe they can’t see me",
+        "I don’t feel like making loud sound",
+        "It’s weird to just go, maybe I’ll make some tea first",
+        "Too late…I’ll look weird if I come out and go back right away",
+      ];
+    
+      async function goToSmokeScene() {
+        scene = "smoke";
+        clearOverlays();
+        await transitionBg("./assets/bg/room2/smoke.png");
+    
+        showSmokeHotspot(async () => {
+          if (scene !== "smoke") return;
+    
+          scene = "canSmoke";
+          clearOverlays();
+          await transitionBg("./assets/bg/room2/can-explode.png");
+    
+          showCanHotspot(async () => {
+            if (scene !== "canSmoke") return;
+    
+            await transitionBg("./assets/bg/room2/empty-cup.png");
+            startBeerGame();
+          });
+        });
+      }
+    
       showRpgDialog({
         textLines: ["There are some people talking. What would you do?"],
         choices: [
@@ -887,24 +1012,18 @@ export default {
           "Join their conversation",
           "Go back to bedroom",
         ],
-        onChoose: async () => {
-          scene = "smoke";
+        onChoose: async (index) => {
           clearOverlays();
-          await transitionBg("./assets/bg/room2/smoke.png");
-
-          showSmokeHotspot(async () => {
-            if (scene !== "smoke") return;
-
-            scene = "canSmoke";
-            clearOverlays();
-            await transitionBg("./assets/bg/room2/can-explode.png");
-
-            showCanHotspot(async () => {
-              if (scene !== "canSmoke") return;
-
-              await transitionBg("./assets/bg/room2/empty-cup.png");
-              startBeerGame();
-            });
+    
+          showRpgDialog({
+            textLines: [monologues[index]],
+          });
+    
+          enableClickAnywhere(async () => {
+            if (scene !== "chatting") return;
+    
+            disableClickAnywhere();
+            await goToSmokeScene();
           });
         },
       });
@@ -918,12 +1037,15 @@ export default {
     window.__room2Layout = layout;
     window.__room2SortingState = sortingState;
 
+    setupRoom2Bgm();
+    
     startChatScene();
     layout();
 
     this._room2Cleanup = () => {
       window.removeEventListener("resize", onResize);
       if (cleanupDrag) cleanupDrag();
+      stopRoom2Bgm();
       delete window.__room2Rects;
       delete window.__room2Layout;
       delete window.__room2SortingState;

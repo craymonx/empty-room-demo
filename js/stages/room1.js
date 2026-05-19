@@ -453,20 +453,6 @@ function startBgm() {
       layout();
     }
 
-    function showLeftReturnSlider(onClick) {
-      const old = overlays.querySelector("#leftReturnSlider");
-      if (old) old.remove();
-
-      const btn = document.createElement("button");
-      btn.id = "leftReturnSlider";
-      btn.className = "room1-left-return-slider";
-      btn.type = "button";
-      btn.setAttribute("aria-label", "Go back");
-      btn.innerHTML = `<span class="room1-left-arrow">‹</span>`;
-      btn.addEventListener("click", onClick);
-      overlays.appendChild(btn);
-    }
-
     function startGlassMixingGame() {
       scene = "glassMix";
       clearOverlays();
@@ -646,26 +632,15 @@ function startBgm() {
 
             await transitionBg("./assets/bg/room1/empty-pot.png");
 
-            showLeftReturnSlider(async () => {
+            showPotClickHotspot(async () => {
+              
               if (scene !== "emptyPot") return;
+              scene = "glassEmpty";
+              clearOverlays();
 
-              scene = "mainView";
+              await transitionBg("./assets/bg/room1/glass-empty.png");
+              startGlassMixingGame();
 
-              const slider = overlays.querySelector("#leftReturnSlider");
-              if (slider) slider.remove();
-
-              await transitionBg("./assets/bg/room1/projection.png");
-
-              enableClickAnywhere(async () => {
-                if (scene !== "mainView") return;
-
-                scene = "glassEmpty";
-                disableClickAnywhere();
-
-                await transitionBg("./assets/bg/room1/glass-empty.png");
-
-                startGlassMixingGame();
-              });
             });
           });
         },
@@ -708,10 +683,7 @@ function startBgm() {
         cleanupDrag();
         cleanupDrag = null;
       }
-      
-                  
-      bgm.pause();
-      bgm.currentTime = 0;
+    
 
       hideFakeChopstickCursor();
 
