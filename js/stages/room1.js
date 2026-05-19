@@ -453,6 +453,37 @@ function startBgm() {
       layout();
     }
 
+    function showRoom1Dialogue(text, onClose) {
+      const old = overlays.querySelector("#room1Dialogue");
+      if (old) old.remove();
+    
+      const box = document.createElement("div");
+      box.id = "room1Dialogue";
+      box.className = "room1-dialogue";
+    
+      box.innerHTML = `
+        <div class="room1-dialogue-text">
+          ${text}
+    
+          <button
+            type="button"
+            class="room1-dialogue-close"
+            id="room1DialogueClose"
+            aria-label="Close dialogue"
+          >
+            ×
+          </button>
+        </div>
+      `;
+    
+      overlays.appendChild(box);
+    
+      box.querySelector("#room1DialogueClose").addEventListener("click", () => {
+        box.remove();
+        onClose?.();
+      });
+    }
+
     function startGlassMixingGame() {
       scene = "glassMix";
       clearOverlays();
@@ -627,20 +658,19 @@ function startBgm() {
 
           showPotClickHotspot(async () => {
             if (scene !== "cooked") return;
-
+          
             scene = "emptyPot";
-
+          
+            clearOverlays();
+          
             await transitionBg("./assets/bg/room1/empty-pot.png");
-
-            showPotClickHotspot(async () => {
-              
-              if (scene !== "emptyPot") return;
+          
+            showRoom1Dialogue("I wanna drink something too…", async () => {
               scene = "glassEmpty";
-              clearOverlays();
-
+            
               await transitionBg("./assets/bg/room1/glass-empty.png");
+            
               startGlassMixingGame();
-
             });
           });
         },
@@ -652,7 +682,13 @@ function startBgm() {
       
       if (scene === "livingRoom") {
         scene = "kitchen";
-        await transitionBg("./assets/bg/room1/kitchen-close-up.png");
+      
+        await transitionBg("./assets/bg/room1/kitchen-main-view.png");
+      
+        showRoom1Dialogue("Kinda hungry, gonna cook something", () => {
+          layout();
+        });
+      
         layout();
         return;
       }
@@ -678,15 +714,18 @@ function startBgm() {
 
     this._room1Cleanup = () => {
       window.removeEventListener("resize", onResize);
-
+    
       if (cleanupDrag) {
         cleanupDrag();
         cleanupDrag = null;
       }
     
-
+      bgm.pause();
+      bgm.currentTime = 0;
+      bgmStarted = false;
+    
       hideFakeChopstickCursor();
-
+    
       if (chopstickEl) {
         chopstickEl.remove();
         chopstickEl = null;

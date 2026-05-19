@@ -34,9 +34,15 @@ export default {
     let freshenerDone = false;
     let endShown = false;
 
+    let zoomDoorDialogShown = false;
+    let guidelineAfterDialogShown = false;
+    let security1DialogShown = false;
+    let paper2DialogShown = false;
+
     const CORRECT_SECURITY_NUMBER = "20200813";
     const FRESHENER_REQUIRED_MS = 3000;
     const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm.wav";
+    const SPRAY_SRC = "./assets/audio/room3/spray.wav";
 
     function startBgm() {
       if (!room3Bgm) {
@@ -55,6 +61,12 @@ export default {
         window.addEventListener("click", unlockAudio, { once: true });
         window.addEventListener("pointerdown", unlockAudio, { once: true });
       });
+    }
+
+    function playSpraySound() {
+      const spray = new Audio(SPRAY_SRC);
+      spray.volume = 0.7;
+      spray.play().catch(() => {});
     }
 
     startBgm();
@@ -263,7 +275,12 @@ export default {
     }
 
     function openPaperPopup() {
-      openChecklistPopup("resident-guidelines.png");
+      openChecklistPopup("resident-guidelines.png", () => {
+        if (!guidelineAfterDialogShown) {
+          guidelineAfterDialogShown = true;
+          showMonologue("I guess I have to stay and call for help");
+        }
+      });
     }
 
     function openPhonePopup() {
@@ -468,6 +485,8 @@ Please do not leave a message.`,
       freshener.addEventListener("pointerdown", (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        playSpraySound();
     
         const rect = freshener.getBoundingClientRect();
     
@@ -678,17 +697,32 @@ Please do not leave a message.`,
 
       bg.onload = () => {
         buildSceneHotspots();
-
+      
         if (scene === "dirtyRoomStart" && !shownIntro) {
           shownIntro = true;
           showMonologue("What's that smell?");
         }
-
+      
+        if (scene === "zoomDoor" && !zoomDoorDialogShown) {
+          zoomDoorDialogShown = true;
+          showMonologue("So stinky… I should leave the room");
+        }
+      
+        if (scene === "security1" && !security1DialogShown) {
+          security1DialogShown = true;
+          showMonologue("Hey man, come on in.");
+        }
+      
         if (scene === "paper2") {
           enableFreshenerDrag();
+      
+          if (!paper2DialogShown) {
+            paper2DialogShown = true;
+            showMonologue("Wait, there’s an air freshener here");
+          }
         }
       };
-
+      
       bg.onerror = () => {
         console.error("Failed to load image:", src);
         showMonologue(`Failed to load image: ${src}`);

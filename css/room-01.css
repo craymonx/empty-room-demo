@@ -87,6 +87,47 @@
   pointer-events: none;
 }
 
+.room1-dialogue {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  width: min(760px, 92vw);
+  transform: translateX(-50%);
+  z-index: 120;
+  pointer-events: auto;
+  font-family: Arial, sans-serif;
+  color: #111;
+}
+
+.room1-dialogue-text {
+  position: relative;
+  background: #f4f4f4;
+  border: 3px double #111;
+  box-shadow: 0 0 0 2px #f4f4f4;
+  min-height: 58px;
+  padding: 14px 52px 14px 14px;
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.room1-dialogue-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: #111;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.room1-dialogue-close:hover {
+  opacity: 0.65;
+}
 /* Debug visualization */
 
 .debug-hotspots .hotspot {

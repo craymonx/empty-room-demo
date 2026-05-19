@@ -12,42 +12,40 @@ export default {
           />
 
           <div id="overlays" class="overlays" aria-hidden="false"></div>
-
         </div>
       </section>
     `;
 
-    const sceneEl = root.querySelector("#scene-room2");
     const wrap = root.querySelector("#room2Wrap");
     const bg = root.querySelector("#bg");
     const overlays = root.querySelector("#overlays");
 
     let scene = "chatting";
     let cleanupDrag = null;
-
     let room2Bgm = null;
 
-      function setupRoom2Bgm() {
-        room2Bgm = new Audio("./assets/audio/room2/2 static bgm.wav");
-        room2Bgm.loop = true;
-        room2Bgm.volume = 0.45;
+    function setupRoom2Bgm() {
+      room2Bgm = new Audio("./assets/audio/room2/2 static bgm.wav");
+      room2Bgm.loop = true;
+      room2Bgm.volume = 0.45;
 
-        const unlockAudio = () => {
-          room2Bgm.play().catch(() => {});
-          window.removeEventListener("pointerdown", unlockAudio);
-        };
-
-        room2Bgm.play().catch(() => {
-          window.addEventListener("pointerdown", unlockAudio, { once: true });
-        });
-      }
-
-      function stopRoom2Bgm() {
+      const unlockAudio = () => {
         if (!room2Bgm) return;
-        room2Bgm.pause();
-        room2Bgm.currentTime = 0;
-        room2Bgm = null;
-      }
+        room2Bgm.play().catch(() => {});
+        window.removeEventListener("pointerdown", unlockAudio);
+      };
+
+      room2Bgm.play().catch(() => {
+        window.addEventListener("pointerdown", unlockAudio, { once: true });
+      });
+    }
+
+    function stopRoom2Bgm() {
+      if (!room2Bgm) return;
+      room2Bgm.pause();
+      room2Bgm.currentTime = 0;
+      room2Bgm = null;
+    }
 
     const RECTS = {
       smoke: {
@@ -203,24 +201,14 @@ export default {
       if (scene === "smoke") {
         const smokeHotspot = overlays.querySelector("#smokeHotspot");
         if (smokeHotspot) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: smokeHotspot,
-            rectPx: RECTS.smoke.smoke,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: smokeHotspot, rectPx: RECTS.smoke.smoke });
         }
       }
 
       if (scene === "canSmoke") {
         const canHotspot = overlays.querySelector("#canHotspot");
         if (canHotspot) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: canHotspot,
-            rectPx: RECTS.canSmoke.can,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: canHotspot, rectPx: RECTS.canSmoke.can });
         }
       }
 
@@ -229,69 +217,39 @@ export default {
         const dropZone = overlays.querySelector("#beerDropzone");
 
         if (beer) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: beer,
-            rectPx: RECTS.emptyCup.beer,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: beer, rectPx: RECTS.emptyCup.beer });
         }
 
         if (dropZone) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: dropZone,
-            rectPx: RECTS.emptyCup.drop,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: dropZone, rectPx: RECTS.emptyCup.drop });
         }
       }
 
       if (scene === "fullCup") {
         const leftHotspot = overlays.querySelector("#leftAreaHotspot");
         if (leftHotspot) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: leftHotspot,
-            rectPx: RECTS.fullCup.leftArea,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: leftHotspot, rectPx: RECTS.fullCup.leftArea });
         }
       }
 
       if (scene === "stare1") {
         const counterHotspot = overlays.querySelector("#counterHotspot");
         if (counterHotspot) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: counterHotspot,
-            rectPx: RECTS.stare1.counter,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: counterHotspot, rectPx: RECTS.stare1.counter });
         }
       }
 
       if (scene === "kitchenCounter") {
         const drawerHotspot = overlays.querySelector("#drawerHotspot");
         if (drawerHotspot) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: drawerHotspot,
-            rectPx: RECTS.kitchenCounter.drawer,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: drawerHotspot, rectPx: RECTS.kitchenCounter.drawer });
         }
       }
 
       if (scene === "drawerMessy") {
         const drawerOpenHotspot = overlays.querySelector("#drawerOpenHotspot");
         if (drawerOpenHotspot) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: drawerOpenHotspot,
-            rectPx: RECTS.drawerMessy.drawerOpen,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: drawerOpenHotspot, rectPx: RECTS.drawerMessy.drawerOpen });
         }
       }
 
@@ -299,49 +257,27 @@ export default {
         ["forkZone", "spoonZone", "knifeZone"].forEach((zoneId) => {
           const zoneEl = overlays.querySelector(`#${zoneId}`);
           if (!zoneEl) return;
-
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: zoneEl,
-            rectPx: RECTS.sortingZones[zoneId],
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: zoneEl, rectPx: RECTS.sortingZones[zoneId] });
         });
 
         Object.keys(sortingState.items).forEach((id) => {
           const el = overlays.querySelector(`#${id}`);
           if (!el) return;
-
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: el,
-            rectPx: sortingState.items[id].currentRect,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: el, rectPx: sortingState.items[id].currentRect });
         });
       }
 
       if (scene === "stare2" || scene === "drawerSorted") {
         const leftHotspot2 = overlays.querySelector("#leftAreaHotspot2");
         if (leftHotspot2) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: leftHotspot2,
-            rectPx: RECTS.stare2.leftArea,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: leftHotspot2, rectPx: RECTS.stare2.leftArea });
         }
       }
 
       if (scene === "mainViewStatic") {
         const roomHotspot = overlays.querySelector("#roomHotspot");
         if (roomHotspot) {
-          placeRectOnImage({
-            imgEl: bg,
-            parentEl: wrap,
-            targetEl: roomHotspot,
-            rectPx: RECTS.mainViewStatic.room,
-          });
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: roomHotspot, rectPx: RECTS.mainViewStatic.room });
         }
       }
     }
@@ -366,39 +302,39 @@ export default {
       nextBg.className = "bg room2-crossfade-next";
       nextBg.alt = "";
       nextBg.draggable = false;
-    
+
       wrap.insertBefore(nextBg, overlays);
-    
+
       await new Promise((resolve) => {
         if (nextBg.complete) return resolve();
         nextBg.addEventListener("load", resolve, { once: true });
       });
-    
+
       requestAnimationFrame(() => {
         nextBg.style.opacity = "1";
       });
-    
+
       await wait(duration);
-    
+
       bg.src = nextSrc;
-    
+
       await new Promise((resolve) => {
         if (bg.complete) return resolve();
         bg.addEventListener("load", resolve, { once: true });
       });
-    
+
       nextBg.remove();
       layout();
     }
 
     async function setBgInstant(nextSrc) {
       bg.src = nextSrc;
-    
+
       await new Promise((resolve) => {
         if (bg.complete) return resolve();
         bg.addEventListener("load", resolve, { once: true });
       });
-    
+
       layout();
     }
 
@@ -488,7 +424,7 @@ export default {
     function showRpgDialog({ textLines, choices, onChoose }) {
       const old = overlays.querySelector("#rpgDialog");
       if (old) old.remove();
-    
+
       const box = document.createElement("div");
       box.id = "rpgDialog";
       box.className = "rpg-ui";
@@ -510,25 +446,45 @@ export default {
             : ""
         }
       `;
-    
+
       overlays.appendChild(box);
-    
+
       if (!choices) return;
-    
+
       const buttons = [...box.querySelectorAll(".rpg-choice")];
-    
+
       buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
           buttons.forEach((b) => b.classList.remove("is-active"));
           btn.classList.add("is-active");
-    
+
           const index = Number(btn.dataset.choice);
-    
+
           setTimeout(() => {
             onChoose(index);
           }, 120);
         });
       });
+    }
+
+    function showClosableDialog({ textLines, onClose }) {
+      showRpgDialog({ textLines });
+
+      const dialog = overlays.querySelector("#rpgDialog");
+      if (!dialog) return;
+
+      const closeBtn = document.createElement("button");
+      closeBtn.className = "rpg-close";
+      closeBtn.type = "button";
+      closeBtn.innerHTML = "×";
+      closeBtn.setAttribute("aria-label", "Close dialogue");
+
+      closeBtn.addEventListener("click", () => {
+        dialog.remove();
+        onClose?.();
+      });
+
+      dialog.appendChild(closeBtn);
     }
 
     function showSmokeHotspot(onClick) {
@@ -651,46 +607,6 @@ export default {
       layout();
     }
 
-    function showCompletionPopup({ title = "Completed!", message = "Next stage unlocked.", onContinue }) {
-      const old = wrap.querySelector("#completePopup");
-      if (old) old.remove();
-
-      const modal = document.createElement("div");
-      modal.id = "completePopup";
-      modal.className = "popup";
-      modal.innerHTML = `
-        <div class="popup-card" role="dialog" aria-modal="true">
-          <h3 class="popup-title">${title}</h3>
-          <p class="popup-msg">${message}</p>
-          <div class="popup-actions">
-            <button id="popupContinue" class="hud-btn" type="button">Back to Menu</button>
-          </div>
-        </div>
-      `;
-
-      modal.style.position = "absolute";
-      modal.style.inset = "0";
-      modal.style.zIndex = "9999";
-      modal.style.pointerEvents = "auto";
-
-      wrap.appendChild(modal);
-
-      const btn = modal.querySelector("#popupContinue");
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        modal.remove();
-        onContinue?.();
-      });
-
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-          modal.remove();
-          onContinue?.();
-        }
-      });
-    }
-
     function getZoneForType(type) {
       if (type === "fork") return overlays.querySelector("#forkZone");
       if (type === "spoon") return overlays.querySelector("#spoonZone");
@@ -730,7 +646,7 @@ export default {
     function showBackSlider(onClick) {
       const old = overlays.querySelector("#room2BackSlider");
       if (old) old.remove();
-    
+
       const slider = document.createElement("button");
       slider.id = "room2BackSlider";
       slider.className = "room2-back-slider";
@@ -738,8 +654,19 @@ export default {
       slider.innerHTML = `<span class="room2-back-arrow">‹</span>`;
       slider.setAttribute("aria-label", "Go back");
       slider.addEventListener("click", onClick);
-    
+
       overlays.appendChild(slider);
+    }
+
+    function resetSortingGame() {
+      sortingState.placedCounts.fork = 0;
+      sortingState.placedCounts.spoon = 0;
+      sortingState.placedCounts.knife = 0;
+
+      Object.values(sortingState.items).forEach((item) => {
+        item.placed = false;
+        item.currentRect = { ...item.baseRect };
+      });
     }
 
     function startUtensilSortingGame() {
@@ -806,15 +733,17 @@ export default {
 
                 showBackSlider(async () => {
                   if (scene !== "drawerSorted") return;
-                
+
+                  resetSortingGame();
                   scene = "drawerMessy";
                   clearOverlays();
                   await setBgInstant("./assets/bg/room2/drawer-messy.png");
-                
+
                   showDrawerOpenHotspot(async () => {
                     if (scene !== "drawerMessy") return;
-                
+
                     await transitionBg("./assets/bg/room2/empty-drawer.png");
+                    resetSortingGame();
                     startUtensilSortingGame();
                   });
                 });
@@ -845,28 +774,33 @@ export default {
 
                         scene = "mainViewStatic";
                         disableClickAnywhere();
-                        await crossfadeBg("./assets/bg/room2/main-view-static.png", 700);
+                        await crossfadeBg("./assets/bg/room2/main-view-static.png", 900);
 
-                        showRoomHotspot(async () => {
-                          if (scene !== "mainViewStatic") return;
+                        showClosableDialog({
+                          textLines: ["I’m gonna go back to my bedroom…"],
+                          onClose: () => {
+                            showRoomHotspot(async () => {
+                              if (scene !== "mainViewStatic") return;
 
-                          scene = "bedroom";
-                          clearOverlays();
-                          await transitionBg("./assets/bg/room2/bedroom-game2.png");
+                              scene = "bedroom";
+                              clearOverlays();
+                              await transitionBg("./assets/bg/room2/bedroom-game2.png");
 
-                          await wait(250);
-                          localStorage.setItem("room2_done", "1");
+                              await wait(250);
+                              localStorage.setItem("room2_done", "1");
 
-                          window.dispatchEvent(
-                            new CustomEvent("stage:end", {
-                              detail: {
-                                nextStage: "room3",
-                                menuStage: "intro",
-                                nextLabel: "Next",
-                                menuLabel: "Back to Menu",
-                              },
-                            })
-                          );
+                              window.dispatchEvent(
+                                new CustomEvent("stage:end", {
+                                  detail: {
+                                    nextStage: "room3",
+                                    menuStage: "intro",
+                                    nextLabel: "Next",
+                                    menuLabel: "Back to Menu",
+                                  },
+                                })
+                              );
+                            });
+                          },
                         });
                       });
                     });
@@ -929,44 +863,58 @@ export default {
           clearOverlays();
           await transitionBg("./assets/bg/room2/full-cup.png");
 
-          showBackSlider(async () => {
-            if (scene !== "fullCup") return;
-          
-            scene = "emptyCup";
-            clearOverlays();
-            await setBgInstant("./assets/bg/room2/empty-cup.png");
-            startBeerGame();
-          });
+          showClosableDialog({
+            textLines: ["Let's go back."],
+            onClose: () => {
+              showBackSlider(async () => {
+                if (scene !== "fullCup") return;
 
-          showLeftAreaHotspot(async () => {
-            if (scene !== "fullCup") return;
-
-            scene = "stare1";
-            clearOverlays();
-            await transitionBg("./assets/bg/room2/stare-1.png");
-
-            showCounterHotspot(async () => {
-              if (scene !== "stare1") return;
-
-              scene = "kitchenCounter";
-              clearOverlays();
-              await transitionBg("./assets/bg/room2/kitchen-countertop.png");
-
-              showDrawerHotspot(async () => {
-                if (scene !== "kitchenCounter") return;
-
-                scene = "drawerMessy";
+                scene = "emptyCup";
                 clearOverlays();
-                await transitionBg("./assets/bg/room2/drawer-messy.png");
+                await setBgInstant("./assets/bg/room2/empty-cup.png");
+                startBeerGame();
+              });
 
-                showDrawerOpenHotspot(async () => {
-                  if (scene !== "drawerMessy") return;
+              showLeftAreaHotspot(async () => {
+                if (scene !== "fullCup") return;
 
-                  await transitionBg("./assets/bg/room2/empty-drawer.png");
-                  startUtensilSortingGame();
+                scene = "stare1";
+                clearOverlays();
+                await transitionBg("./assets/bg/room2/stare-1.png");
+
+                showClosableDialog({
+                  textLines: [
+                    "Damn… why are they staring at me?",
+                    "I’m gonna pretend I’m going to the kitchen again...",
+                  ],
+                  onClose: () => {
+                    showCounterHotspot(async () => {
+                      if (scene !== "stare1") return;
+
+                      scene = "kitchenCounter";
+                      clearOverlays();
+                      await transitionBg("./assets/bg/room2/kitchen-countertop.png");
+
+                      showDrawerHotspot(async () => {
+                        if (scene !== "kitchenCounter") return;
+
+                        scene = "drawerMessy";
+                        clearOverlays();
+                        await transitionBg("./assets/bg/room2/drawer-messy.png");
+
+                        showDrawerOpenHotspot(async () => {
+                          if (scene !== "drawerMessy") return;
+
+                          await transitionBg("./assets/bg/room2/empty-drawer.png");
+                          resetSortingGame();
+                          startUtensilSortingGame();
+                        });
+                      });
+                    });
+                  },
                 });
               });
-            });
+            },
           });
         },
       });
@@ -975,35 +923,35 @@ export default {
     function startChatScene() {
       scene = "chatting";
       clearOverlays();
-    
+
       const monologues = [
         "Maybe they can’t see me",
         "I don’t feel like making loud sound",
         "It’s weird to just go, maybe I’ll make some tea first",
         "Too late…I’ll look weird if I come out and go back right away",
       ];
-    
+
       async function goToSmokeScene() {
         scene = "smoke";
         clearOverlays();
         await transitionBg("./assets/bg/room2/smoke.png");
-    
+
         showSmokeHotspot(async () => {
           if (scene !== "smoke") return;
-    
+
           scene = "canSmoke";
           clearOverlays();
           await transitionBg("./assets/bg/room2/can-explode.png");
-    
+
           showCanHotspot(async () => {
             if (scene !== "canSmoke") return;
-    
+
             await transitionBg("./assets/bg/room2/empty-cup.png");
             startBeerGame();
           });
         });
       }
-    
+
       showRpgDialog({
         textLines: ["There are some people talking. What would you do?"],
         choices: [
@@ -1014,14 +962,14 @@ export default {
         ],
         onChoose: async (index) => {
           clearOverlays();
-    
+
           showRpgDialog({
             textLines: [monologues[index]],
           });
-    
+
           enableClickAnywhere(async () => {
             if (scene !== "chatting") return;
-    
+
             disableClickAnywhere();
             await goToSmokeScene();
           });
@@ -1038,7 +986,6 @@ export default {
     window.__room2SortingState = sortingState;
 
     setupRoom2Bgm();
-    
     startChatScene();
     layout();
 
