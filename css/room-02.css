@@ -84,6 +84,7 @@
   line-height: 1;
   cursor: pointer;
   z-index: 50;
+  pointer-events: auto;
 }
 
 .rpg-choice:hover {
@@ -195,31 +196,6 @@
   cursor: pointer;
   z-index: 40;
 }
-
-  @media (max-width: 768px) {
-    .rpg-ui {
-      width: 92vw;
-      bottom: 4%;
-    }
-  
-    .rpg-speaker {
-      font-size: 20px;
-    }
-  
-    .rpg-text {
-      font-size: 18px;
-    }
-  
-    .rpg-box--choices {
-      grid-template-columns: 1fr;
-    }
-  
-    .rpg-choice {
-      font-size: 18px;
-    }
-
-    
-  }
 
   .room2-back-slider {
     position: absolute;

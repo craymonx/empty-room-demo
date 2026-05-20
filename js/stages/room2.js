@@ -469,22 +469,26 @@ export default {
 
     function showClosableDialog({ textLines, onClose }) {
       showRpgDialog({ textLines });
-
+    
       const dialog = overlays.querySelector("#rpgDialog");
       if (!dialog) return;
-
+    
+      const dialogBox = dialog.querySelector(".rpg-box--dialog");
+      if (!dialogBox) return;
+    
       const closeBtn = document.createElement("button");
       closeBtn.className = "rpg-close";
       closeBtn.type = "button";
       closeBtn.innerHTML = "×";
       closeBtn.setAttribute("aria-label", "Close dialogue");
-
-      closeBtn.addEventListener("click", () => {
+    
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
         dialog.remove();
         onClose?.();
       });
-
-      dialog.appendChild(closeBtn);
+    
+      dialogBox.appendChild(closeBtn);
     }
 
     function showSmokeHotspot(onClick) {
