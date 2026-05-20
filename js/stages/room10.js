@@ -19,17 +19,17 @@ export default {
       const bg = root.querySelector("#bg");
   
       const slides = [
-        "fns1.png",
-        "fns2.png",
-        "fns3.png",
-        "fns4.png",
-        "fns5.png",
-        "fns6.png",
-        "fns7.png",
-        "fns8.png",
-        "fns9.png",
-        "fns10.png",
-        "fns11.png",
+        "fns01.png",
+        "fns02.png",
+        "fns03.png",
+        "fns04.png",
+        "fns05.png",
+        "fns06.png",
+        "fns07.png",
+        "fns08.png",
+        "fns09.png",
+        "fns010.png",
+        "fns011.png",
       ];
   
       let index = 0;
