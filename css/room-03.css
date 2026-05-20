@@ -66,42 +66,76 @@
 
 .room3-monologue {
   position: absolute;
-  left: 50%;
-  bottom: 72px;
-  transform: translateX(-50%);
-  width: min(720px, calc(100% - 48px));
+  inset: 0;
   z-index: 80;
-  pointer-events: auto;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .room3-monologue__inner {
   position: relative;
-  padding: 10px 44px 10px 12px;
+  width: min(720px, calc(100vw - 36px));
+  max-width: 100%;
+  min-height: 78px;
+  box-sizing: border-box;
+  padding: 18px 58px 18px 18px;
   background: #f2f2f2;
   border: 4px double #111;
   color: #111;
-  min-height: 48px;
+  pointer-events: auto;
 }
 
 .room3-monologue__text {
   margin: 0;
   color: #111;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  line-height: 1.35;
+  font-size: clamp(15px, 2.8vw, 20px);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .room3-monologue__next {
   position: absolute;
   right: 12px;
-  bottom: 6px;
+  top: 10px;
+  width: 34px;
+  height: 34px;
   border: 0;
   background: transparent;
   color: #111;
-  font-size: 26px;
+  font-size: 32px;
   line-height: 1;
   cursor: pointer;
+  padding: 0;
+}
+
+@media (max-width: 600px) {
+  .room3-monologue {
+    padding: 14px;
+  }
+
+  .room3-monologue__inner {
+    width: calc(100vw - 28px);
+    min-height: 72px;
+    padding: 14px 48px 14px 14px;
+  }
+
+  .room3-monologue__text {
+    font-size: 15px;
+  }
+
+  .room3-monologue__next {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 30px;
+  }
 }
 
 .room3-paper-popup {

@@ -53,7 +53,7 @@ function startBgm() {
         kitchen: { x: 830, y: 200, w: 520, h: 330 },
       },
       kitchen: {
-        stove: { x: 500, y: 420, w: 420, h: 150 },
+        stove: { x: 830, y: 200, w: 520, h: 330 },
       },
       stove: {
         noodles: { x: 1000, y: 530, w: 120, h: 50 },

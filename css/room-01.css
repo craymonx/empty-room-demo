@@ -90,43 +90,83 @@
 .room1-dialogue {
   position: absolute;
   left: 50%;
-  bottom: 34px;
-  width: min(760px, 92vw);
+  bottom: max(28px, env(safe-area-inset-bottom));
   transform: translateX(-50%);
+
+  width: min(760px, calc(100vw - 36px));
+  max-width: calc(100vw - 36px);
+
   z-index: 120;
   pointer-events: auto;
+
   font-family: Arial, sans-serif;
   color: #111;
+
+  box-sizing: border-box;
 }
 
 .room1-dialogue-text {
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
+
+  min-height: 78px;
+
   background: #f4f4f4;
   border: 3px double #111;
   box-shadow: 0 0 0 2px #f4f4f4;
-  min-height: 58px;
-  padding: 14px 52px 14px 14px;
-  font-size: 18px;
+
+  padding: 18px 58px 18px 18px;
+
+  font-size: clamp(15px, 2.8vw, 22px);
   line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .room1-dialogue-close {
   position: absolute;
-  top: 8px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
+  top: 10px;
+  right: 12px;
+
+  width: 34px;
+  height: 34px;
+
   border: 0;
   background: transparent;
   color: #111;
-  font-size: 24px;
+
+  font-size: 32px;
   line-height: 1;
+
   cursor: pointer;
   padding: 0;
 }
 
 .room1-dialogue-close:hover {
   opacity: 0.65;
+}
+
+@media (max-width: 600px) {
+  .room1-dialogue {
+    width: calc(100vw - 28px);
+    max-width: calc(100vw - 28px);
+    bottom: max(14px, env(safe-area-inset-bottom));
+  }
+
+  .room1-dialogue-text {
+    min-height: 72px;
+    padding: 14px 48px 14px 14px;
+    font-size: 15px;
+  }
+
+  .room1-dialogue-close {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 30px;
+  }
 }
 /* Debug visualization */
 
