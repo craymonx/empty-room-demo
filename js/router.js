@@ -1,9 +1,16 @@
 // /js/router.js
 import { hideStageEndButtons } from "./game-ui.js";
 
+const STAGE_LOADERS = new Map();
 const STAGES = new Map();
+
 let currentStageId = null;
 
+function setLoading(isLoading) {
+  const el = document.getElementById("loading-screen");
+  if (!el) return;
+  el.classList.toggle("active", isLoading);
+}
 
 function setStageStyles(stageId) {
   const isRoom = /^room(\d+)$/i.test(stageId);
@@ -19,6 +26,7 @@ function setStageStyles(stageId) {
   // Extract room number safely
   const match = stageId.match(/^room(\d+)$/i);
   const num = match ? Number(match[1]) : NaN;
+
   if (!Number.isFinite(num) || num < 1 || num > 99) {
     console.warn(`Invalid room stageId "${stageId}" — skipping room CSS load.`);
     return;
@@ -28,58 +36,94 @@ function setStageStyles(stageId) {
   const file = `./css/room-${String(num).padStart(2, "0")}.css`;
 
   let link = document.getElementById(linkId);
+
   if (!link) {
     link = document.createElement("link");
     link.id = linkId;
     link.rel = "stylesheet";
     document.head.appendChild(link);
   }
+
   link.href = file;
 }
 
-export function registerStages(stageObject) {
-  Object.entries(stageObject).forEach(([id, stage]) => {
-    if (!stage || typeof stage.enter !== "function") {
-      throw new Error(`Stage "${id}" must provide an enter(ctx) function.`);
+export function registerStageLoaders(loaders) {
+  Object.entries(loaders).forEach(([id, loader]) => {
+    if (typeof loader !== "function") {
+      throw new Error(`Stage loader "${id}" must be a function.`);
     }
-    STAGES.set(id, stage);
+
+    STAGE_LOADERS.set(id, loader);
   });
 }
 
-export function goToStage(nextStageId, payload = {}) {
-  hideStageEndButtons();
-document.body.classList.remove("debug");
-
-  const root = document.getElementById("game-root");
-  if (!root) throw new Error("#game-root not found.");
-
-  const prevStage = currentStageId ? STAGES.get(currentStageId) : null;
-  const nextStage = STAGES.get(nextStageId);
-  if (!nextStage) throw new Error(`Stage "${nextStageId}" not registered.`);
-
-  // 1) swap CSS for the next stage
-  setStageStyles(nextStageId);
-
-  // 2) exit previous
-  if (prevStage && typeof prevStage.exit === "function") {
-    try {
-      prevStage.exit({ root });
-    } catch (e) {
-      console.warn(`Error during exit("${currentStageId}")`, e);
-    }
+async function loadStage(stageId) {
+  // If already loaded before, reuse it
+  if (STAGES.has(stageId)) {
+    return STAGES.get(stageId);
   }
 
-  // 3) enter next
-  currentStageId = nextStageId;
-  nextStage.enter({
-    root,
-    stageId: nextStageId,
-    payload,
-    go: (id, p = {}) => goToStage(id, p),
-  });
+  const loader = STAGE_LOADERS.get(stageId);
 
-  // Update hash for refresh/back button
-  location.hash = `#${nextStageId}`;
+  if (!loader) {
+    throw new Error(`Stage "${stageId}" not registered.`);
+  }
+
+  const module = await loader();
+  const stage = module.default;
+
+  if (!stage || typeof stage.enter !== "function") {
+    throw new Error(`Stage "${stageId}" must provide an enter(ctx) function.`);
+  }
+
+  STAGES.set(stageId, stage);
+
+  return stage;
+}
+
+export async function goToStage(nextStageId, payload = {}) {
+  hideStageEndButtons();
+  document.body.classList.remove("debug");
+
+  const root = document.getElementById("game-root");
+
+  if (!root) {
+    throw new Error("#game-root not found.");
+  }
+
+  setLoading(true);
+
+  try {
+    const prevStage = currentStageId ? STAGES.get(currentStageId) : null;
+    const nextStage = await loadStage(nextStageId);
+
+    // 1) swap CSS for the next stage
+    setStageStyles(nextStageId);
+
+    // 2) exit previous
+    if (prevStage && typeof prevStage.exit === "function") {
+      try {
+        prevStage.exit({ root });
+      } catch (e) {
+        console.warn(`Error during exit("${currentStageId}")`, e);
+      }
+    }
+
+    // 3) enter next
+    currentStageId = nextStageId;
+
+    nextStage.enter({
+      root,
+      stageId: nextStageId,
+      payload,
+      go: (id, p = {}) => goToStage(id, p),
+    });
+
+    // Update hash for refresh/back button
+    location.hash = `#${nextStageId}`;
+  } finally {
+    setLoading(false);
+  }
 }
 
 export function getCurrentStageId() {
@@ -87,14 +131,15 @@ export function getCurrentStageId() {
 }
 
 /**
- * Optional helper: start from URL hash if it matches a registered stage.
- * Usage: call this once in main.js after registerStages().
+ * Optional helper: start from URL hash if it matches a registered stage loader.
+ * Usage: call this once in main.js after registerStageLoaders().
  */
-export function startFromHash(fallbackStageId = "intro") {
+export async function startFromHash(fallbackStageId = "intro") {
   const hash = (location.hash || "").replace("#", "").trim();
-  if (hash && STAGES.has(hash)) {
-    goToStage(hash);
+
+  if (hash && STAGE_LOADERS.has(hash)) {
+    await goToStage(hash);
   } else {
-    goToStage(fallbackStageId);
+    await goToStage(fallbackStageId);
   }
 }

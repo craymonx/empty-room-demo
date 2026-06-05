@@ -1,20 +1,5 @@
-import { registerStages, goToStage } from "./router.js";
+import { registerStageLoaders, goToStage } from "./router.js";
 import { setupStageUI } from "./game-ui.js";
-
-// Import stages
-import intro from "./stages/intro.js";
-import room1 from "./stages/room1.js";
-import room2 from "./stages/room2.js";
-import room3 from "./stages/room3.js";
-import room4 from "./stages/room4.js";
-import room5 from "./stages/room5.js";
-import room6 from "./stages/room6.js";
-import room7 from "./stages/room7.js";
-import room8 from "./stages/room8.js";
-import room9 from "./stages/room9.js";
-import room10 from "./stages/room10.js";
-import room11 from "./stages/room11.js";
-import ending from "./stages/ending.js";
 
 function setLoading(isLoading) {
   const el = document.getElementById("loading-screen");
@@ -22,62 +7,69 @@ function setLoading(isLoading) {
   el.classList.toggle("active", isLoading);
 }
 
-function wait(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
 function nextFrame() {
-  return new Promise((r) => requestAnimationFrame(() => r()));
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
 }
 
 // Wait for images inside a container to finish loading
 async function waitForImages(container) {
   if (!container) return;
+
   const imgs = Array.from(container.querySelectorAll("img"));
+
   const pending = imgs
     .filter((img) => !img.complete)
     .map(
       (img) =>
         new Promise((resolve) => {
           img.addEventListener("load", resolve, { once: true });
-          img.addEventListener("error", resolve, { once: true }); // don't block forever
+          img.addEventListener("error", resolve, { once: true });
         })
     );
 
-  if (pending.length) await Promise.all(pending);
+  if (pending.length) {
+    await Promise.all(pending);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
   const root = document.getElementById("game-root");
-  if (!root) throw new Error("#game-root not found. Check index.html");
+  if (!root) {
+    throw new Error("#game-root not found. Check index.html");
+  }
 
-  // Show loading ASAP
   setLoading(true);
 
-  // Prevent "flash" on fast loads
-  const MIN_LOADING_MS = 700;
-  const start = performance.now();
-
-  // Register all stages ONCE
-  registerStages({ intro, room1, room2, room3, room4, room5, room6, room7, room8, room9, room10, room11, ending});
+  // Register stage loaders instead of importing all rooms immediately
+  registerStageLoaders({
+    intro: () => import("./stages/intro.js"),
+    room1: () => import("./stages/room1.js"),
+    room2: () => import("./stages/room2.js"),
+    room3: () => import("./stages/room3.js"),
+    room4: () => import("./stages/room4.js"),
+    room5: () => import("./stages/room5.js"),
+    room6: () => import("./stages/room6.js"),
+    room7: () => import("./stages/room7.js"),
+    room8: () => import("./stages/room8.js"),
+    room9: () => import("./stages/room9.js"),
+    room10: () => import("./stages/room10.js"),
+    room11: () => import("./stages/room11.js"),
+    ending: () => import("./stages/ending.js"),
+  });
 
   setupStageUI({
     go: goToStage,
     defaultMenuStage: "intro",
   });
-  // Go to intro
-  goToStage("intro");
+
+  // Wait for intro module to load and render
+  await goToStage("intro");
 
   // Let intro render at least one frame
   await nextFrame();
 
-  // If intro injects images, wait for them
+  // Wait for intro image(s), but not the whole game
   await waitForImages(root);
 
-  // Ensure minimum display time
-  const elapsed = performance.now() - start;
-  if (elapsed < MIN_LOADING_MS) await wait(MIN_LOADING_MS - elapsed);
-
-  // Hide loading
   setLoading(false);
 });
