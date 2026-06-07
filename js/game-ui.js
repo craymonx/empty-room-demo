@@ -1,5 +1,3 @@
-// /js/game-ui.js
-
 let currentGo = null;
 let nextStageName = null;
 let menuStageName = "intro";

@@ -1,4 +1,4 @@
-import { registerStageLoaders, goToStage } from "./router.js";
+import { registerStageLoaders, goToStage, startFromHash } from "./router.js";
 import { setupStageUI } from "./game-ui.js";
 
 function setLoading(isLoading) {
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Wait for intro module to load and render
-  await goToStage("intro");
+  await startFromHash("intro");
 
   // Let intro render at least one frame
   await nextFrame();

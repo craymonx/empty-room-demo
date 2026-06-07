@@ -6,7 +6,7 @@ export default {
           <div class="scene-inner" id="room10Wrap">
             <img
               id="bg"
-              src="./assets/bg/room10/FNS1.png"
+              src="./assets/bg/room10/fns01.png"
               class="bg room10-bg"
               alt="Foreign Night Sea"
               draggable="false"
