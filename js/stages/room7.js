@@ -73,7 +73,7 @@ export default {
         <div class="scene-inner" id="room7Wrap">
           <img
             id="bg"
-            src="./assets/bg/room7/main.png"
+            src="./assets/bg/room7/main.webp"
             class="bg"
             alt="Room 7 scene"
             draggable="false"
@@ -355,19 +355,19 @@ export default {
         clearEndButtonTimer();
       }
 
-      if (scene === "main") bg.src = "./assets/bg/room7/main.png";
-      if (scene === "mainSteam") bg.src = "./assets/bg/room7/main-steam.png";
-      if (scene === "kitchenCounter") bg.src = "./assets/bg/room7/kitchen-counter.png";
-      if (scene === "angryDog") bg.src = "./assets/bg/room7/angry-dog.png";
-      if (scene === "dogVomit") bg.src = "./assets/bg/room7/dog-vomit.png";
-      if (scene === "coffee") bg.src = "./assets/bg/room7/coffee.png";
-      if (scene === "coffeeFinished") bg.src = "./assets/bg/room7/coffee-finished.png";
-      if (scene === "soundwave") bg.src = "./assets/bg/room7/soundwave.png";
-      if (scene === "radio") bg.src = "./assets/bg/room7/radio.png";
-      if (scene === "radioLimbs") bg.src = "./assets/bg/room7/radio-limbs.png";
+      if (scene === "main") bg.src = "./assets/bg/room7/main.webp";
+      if (scene === "mainSteam") bg.src = "./assets/bg/room7/main-steam.webp";
+      if (scene === "kitchenCounter") bg.src = "./assets/bg/room7/kitchen-counter.webp";
+      if (scene === "angryDog") bg.src = "./assets/bg/room7/angry-dog.webp";
+      if (scene === "dogVomit") bg.src = "./assets/bg/room7/dog-vomit.webp";
+      if (scene === "coffee") bg.src = "./assets/bg/room7/coffee.webp";
+      if (scene === "coffeeFinished") bg.src = "./assets/bg/room7/coffee-finished.webp";
+      if (scene === "soundwave") bg.src = "./assets/bg/room7/soundwave.webp";
+      if (scene === "radio") bg.src = "./assets/bg/room7/radio.webp";
+      if (scene === "radioLimbs") bg.src = "./assets/bg/room7/radio-limbs.webp";
 
       if (scene === "emptyRoom") {
-        bg.src = "./assets/bg/room7/empty-room.png";
+        bg.src = "./assets/bg/room7/empty-room.webp";
         resetEmptyRoomState();
       }
 
@@ -404,7 +404,7 @@ export default {
 
       if (scene === "kitchenCounter") {
         addImageOverlay(
-          "./assets/props/room7/cup-empty.png",
+          "./assets/props/room7/cup-empty.webp",
           RECTS.kitchenCounter.cupEmpty,
           "room7-cup-empty",
           true

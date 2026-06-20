@@ -6,7 +6,7 @@ export default {
         <div class="scene-inner" id="room4Wrap">
           <img
             id="bg"
-            src="./assets/bg/room4/campus.png"
+            src="./assets/bg/room4/campus.webp"
             class="bg"
             alt="Room 4 scene"
             draggable="false"
@@ -63,8 +63,8 @@ export default {
     const sinkGlasses = {
       glassL: {
         key: "glassL",
-        fullSrc: "./assets/props/room4/glass-l.png",
-        emptySrc: "./assets/props/room4/glass-l-empty.png",
+        fullSrc: "./assets/props/room4/glass-l.webp",
+        emptySrc: "./assets/props/room4/glass-l-empty.webp",
         rect: RECTS.glassL,
         emptyRect: RECTS.glassLEmpty,
         emptied: false,
@@ -73,8 +73,8 @@ export default {
       },
       glassM: {
         key: "glassM",
-        fullSrc: "./assets/props/room4/glass-m.png",
-        emptySrc: "./assets/props/room4/glass-m-empty.png",
+        fullSrc: "./assets/props/room4/glass-m.webp",
+        emptySrc: "./assets/props/room4/glass-m-empty.webp",
         rect: RECTS.glassM,
         emptyRect: RECTS.glassMEmpty,
         emptied: false,
@@ -83,8 +83,8 @@ export default {
       },
       glassR: {
         key: "glassR",
-        fullSrc: "./assets/props/room4/glass-r.png",
-        emptySrc: "./assets/props/room4/glass-r-empty.png",
+        fullSrc: "./assets/props/room4/glass-r.webp",
+        emptySrc: "./assets/props/room4/glass-r-empty.webp",
         rect: RECTS.glassR,
         emptyRect: RECTS.glassREmpty,
         emptied: false,
@@ -298,7 +298,7 @@ export default {
       await wait(700);
       if (destroyed) return;
 
-      bg.src = "./assets/bg/room4/beach.png";
+      bg.src = "./assets/bg/room4/beach.webp";
 
       fxLayer.innerHTML = `<div class="room4-fade room4-fade-in"></div>`;
       await wait(900);
@@ -336,7 +336,7 @@ export default {
 
     function makeJar() {
       const el = document.createElement("img");
-      el.src = "./assets/props/room4/glass-jar-table.png";
+      el.src = "./assets/props/room4/glass-jar-table.webp";
       el.alt = "Glass jar";
       el.draggable = false;
       el.className = "room4-jar";
@@ -563,12 +563,12 @@ export default {
       clearOverlays();
 
       if (scene === "campus") {
-        bg.src = "./assets/bg/room4/campus.png";
+        bg.src = "./assets/bg/room4/campus.webp";
         cleanupJarEvents = makeJar();
       }
 
       if (scene === "beach") {
-        bg.src = "./assets/bg/room4/beach.png";
+        bg.src = "./assets/bg/room4/beach.webp";
 
         if (!beachEnded) {
           const cleanupHotspot = makeHotspot(
@@ -583,7 +583,7 @@ export default {
       }
 
       if (scene === "deteriorate1") {
-        bg.src = "./assets/bg/room4/deteriorate-1.png";
+        bg.src = "./assets/bg/room4/deteriorate-1.webp";
 
         if (rewinding) {
           const cleanupHotspot = makeHotspot(
@@ -596,11 +596,11 @@ export default {
       }
 
       if (scene === "deteriorate2") {
-        bg.src = "./assets/bg/room4/deteriorate-2.png";
+        bg.src = "./assets/bg/room4/deteriorate-2.webp";
       }
 
       if (scene === "deteriorate3") {
-        bg.src = "./assets/bg/room4/deteriorate-3.png";
+        bg.src = "./assets/bg/room4/deteriorate-3.webp";
 
         if (!rewinding) {
           const cleanupHotspot = makeHotspot(
@@ -613,7 +613,7 @@ export default {
       }
 
       if (scene === "sink") {
-        bg.src = "./assets/bg/room4/sink.png";
+        bg.src = "./assets/bg/room4/sink.webp";
 
         Object.values(sinkGlasses).forEach((glass) => {
           const cleanup = makeSinkGlass(glass);
@@ -622,7 +622,7 @@ export default {
       }
 
       if (scene === "sinkWater") {
-        bg.src = "./assets/bg/room4/sink-water.png";
+        bg.src = "./assets/bg/room4/sink-water.webp";
 
         Object.values(sinkGlasses).forEach((glass) => {
           makeOverlayImage(

@@ -6,7 +6,7 @@ export default {
           <div class="scene-inner" id="room8Wrap">
             <img
               id="room8Bg"
-              src="./assets/bg/room8/main-cloudy.png"
+              src="./assets/bg/room8/main-cloudy.webp"
               class="bg"
               alt="Room 8 scene"
               draggable="false"
@@ -31,17 +31,17 @@ export default {
   
       const ASSETS = {
         bg: {
-          mainCloudy: "./assets/bg/room8/main-cloudy.png",
-          sunnyWaterLeak: "./assets/bg/room8/sunny-water-leak.png",
-          dried: "./assets/bg/room8/dried.png",
-          cloudyDried: "./assets/bg/room8/cloudy-dried.png",
-          cloudyWaterLeak: "./assets/bg/room8/cloudy-water-leak.png",
-          driedNight: "./assets/bg/room8/dried-night.png",
+          mainCloudy: "./assets/bg/room8/main-cloudy.webp",
+          sunnyWaterLeak: "./assets/bg/room8/sunny-water-leak.webp",
+          dried: "./assets/bg/room8/dried.webp",
+          cloudyDried: "./assets/bg/room8/cloudy-dried.webp",
+          cloudyWaterLeak: "./assets/bg/room8/cloudy-water-leak.webp",
+          driedNight: "./assets/bg/room8/dried-night.webp",
         },
         props: {
-          mop: "./assets/props/room8/mop.png",
-          sprayFull: "./assets/props/room8/spray-bottle-full.png",
-          sprayHalf: "./assets/props/room8/spray-bottle-half.png",
+          mop: "./assets/props/room8/mop.webp",
+          sprayFull: "./assets/props/room8/spray-bottle-full.webp",
+          sprayHalf: "./assets/props/room8/spray-bottle-half.webp",
         },
       };
   

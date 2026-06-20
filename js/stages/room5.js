@@ -74,13 +74,13 @@ export default {
 
   
       const DISTORTED_FRAMES = [
-        "./assets/bg/room5/distorted-1.png",
-        "./assets/bg/room5/distorted-2.png",
-        "./assets/bg/room5/distorted-3.png",
-        "./assets/bg/room5/distorted-4.png",
-        "./assets/bg/room5/distorted-5.png",
-        "./assets/bg/room5/distorted-6.png",
-        "./assets/bg/room5/distorted-7.png",
+        "./assets/bg/room5/distorted-1.webp",
+        "./assets/bg/room5/distorted-2.webp",
+        "./assets/bg/room5/distorted-3.webp",
+        "./assets/bg/room5/distorted-4.webp",
+        "./assets/bg/room5/distorted-5.webp",
+        "./assets/bg/room5/distorted-6.webp",
+        "./assets/bg/room5/distorted-7.webp",
       ];
   
       const SCENES = {
@@ -90,62 +90,62 @@ export default {
         },
   
         mainView: {
-          bg: "./assets/bg/room5/main-view.png",
+          bg: "./assets/bg/room5/main-view.webp",
           hotspots: [{ rect: RECTS.mainView.zone1, next: "close1", label: "Zoom in" }],
         },
   
         close1: {
-          bg: "./assets/bg/room5/close-1.png",
+          bg: "./assets/bg/room5/close-1.webp",
           hotspots: [{ rect: RECTS.close1.zone1, next: "close2", label: "Zoom in closer" }],
         },
   
         close2: {
-          bg: "./assets/bg/room5/close-2.png",
+          bg: "./assets/bg/room5/close-2.webp",
           hotspots: [{ rect: RECTS.close2.zone1, next: "close3", label: "Zoom in closer again" }],
         },
   
         close3: {
-          bg: "./assets/bg/room5/close-3.png",
+          bg: "./assets/bg/room5/close-3.webp",
           hotspots: [{ rect: RECTS.close3.zone1, next: "kitchenCounter", label: "Go to kitchen counter" }],
         },
   
         kitchenCounter: {
-          bg: "./assets/bg/room5/kitchen-counter.png",
+          bg: "./assets/bg/room5/kitchen-counter.webp",
           hotspots: [{ rect: RECTS.kitchenCounter.zone1, next: "pillBottle", label: "Inspect bottle" }],
         },
   
         pillBottle: {
-          bg: "./assets/bg/room5/pill-bottle.png",
+          bg: "./assets/bg/room5/pill-bottle.webp",
           hotspots: [{ rect: RECTS.pillBottle.zone1, next: "openBottle", label: "Open bottle" }],
         },
   
         openBottle: {
-          bg: "./assets/bg/room5/open-bottle.png",
+          bg: "./assets/bg/room5/open-bottle.webp",
           hotspots: [{ rect: RECTS.openBottle.zone1, next: "blackLiquid", label: "Inspect opened bottle" }],
         },
   
         blackLiquid: {
-          bg: "./assets/bg/room5/black-liquid.png",
+          bg: "./assets/bg/room5/black-liquid.webp",
           hotspots: [{ rect: RECTS.blackLiquid.zone1, next: "emptyBottle", label: "Continue" }],
         },
   
         emptyBottle: {
-          bg: "./assets/bg/room5/empty-bottle.png",
+          bg: "./assets/bg/room5/empty-bottle.webp",
           hotspots: [{ rect: RECTS.emptyBottle.zone1, next: "emptyBottleTop", label: "Continue" }],
         },
   
         emptyBottleTop: {
-          bg: "./assets/bg/room5/empty-bottle-top.png",
+          bg: "./assets/bg/room5/empty-bottle-top.webp",
           hotspots: [{ rect: RECTS.emptyBottleTop.zone1, next: "vortexRoom", label: "Continue" }],
         },
   
         vortexRoom: {
-          bg: "./assets/bg/room5/vortex-room.png",
+          bg: "./assets/bg/room5/vortex-room.webp",
           hotspots: [{ rect: RECTS.vortexRoom.zone1, next: "vortexZoom", label: "Enter distortion" }],
         },
   
         vortexZoom: {
-          bg: "./assets/bg/room5/vortex-room.png",
+          bg: "./assets/bg/room5/vortex-room.webp",
           hotspots: [],
           isZoomTransition: true,
         },
@@ -320,7 +320,7 @@ export default {
         fxLayer.innerHTML = `
           <div class="room5-zoom-shell">
             <img
-              src="./assets/bg/room5/vortex-room.png"
+              src="./assets/bg/room5/vortex-room.webp"
               alt=""
               class="room5-zoom-img"
               draggable="false"

@@ -6,7 +6,7 @@ export default {
           <div class="scene-inner" id="room10Wrap">
             <img
               id="bg"
-              src="./assets/bg/room10/fns01.png"
+              src="./assets/bg/room10/fns01.webp"
               class="bg room10-bg"
               alt="Foreign Night Sea"
               draggable="false"
@@ -19,17 +19,17 @@ export default {
       const bg = root.querySelector("#bg");
   
       const slides = [
-        "fns01.png",
-        "fns02.png",
-        "fns03.png",
-        "fns04.png",
-        "fns05.png",
-        "fns06.png",
-        "fns07.png",
-        "fns08.png",
-        "fns09.png",
-        "fns010.png",
-        "fns011.png",
+        "fns01.webp",
+        "fns02.webp",
+        "fns03.webp",
+        "fns04.webp",
+        "fns05.webp",
+        "fns06.webp",
+        "fns07.webp",
+        "fns08.webp",
+        "fns09.webp",
+        "fns010.webp",
+        "fns011.webp",
       ];
   
       let index = 0;

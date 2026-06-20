@@ -5,7 +5,7 @@ export default {
           <div class="scene-inner" id="room6Wrap">
             <img
               id="bg"
-              src="./assets/bg/room6/fog-forest.png"
+              src="./assets/bg/room6/fog-forest.webp"
               class="bg"
               alt="Room 6 scene"
               draggable="false"
@@ -43,10 +43,10 @@ export default {
       };
   
       const SPIRIT_SEQUENCE = [
-        "./assets/bg/room6/furniture-flying.png",
-        "./assets/bg/room6/spirits.png",
-        "./assets/bg/room6/spirits-rush.png",
-        "./assets/bg/room6/spirits-rush-2.png",
+        "./assets/bg/room6/furniture-flying.webp",
+        "./assets/bg/room6/spirits.webp",
+        "./assets/bg/room6/spirits-rush.webp",
+        "./assets/bg/room6/spirits-rush-2.webp",
       ];
   
       function clearTimers() {
@@ -166,7 +166,7 @@ export default {
   
       function makeShovel() {
         shovelEl = document.createElement("img");
-        shovelEl.src = "./assets/props/room6/shovel.png";
+        shovelEl.src = "./assets/props/room6/shovel.webp";
         shovelEl.className = "room6-shovel";
         shovelEl.draggable = false;
   
@@ -254,13 +254,13 @@ export default {
         clearOverlays();
   
         if (scene === "fogForest") {
-          setBg("./assets/bg/room6/fog-forest.png");
+          setBg("./assets/bg/room6/fog-forest.webp");
           makeShovel();
           makeDebugRect(RECTS.fogForest.digZone);
         }
   
         if (scene === "lake") {
-          setBg("./assets/bg/room6/lake.png");
+          setBg("./assets/bg/room6/lake.webp");
   
           makeHotspot(
             RECTS.lake.middleZone,
@@ -275,7 +275,7 @@ export default {
         }
   
         if (scene === "burningBush") {
-          setBg("./assets/bg/room6/burning-bush.png");
+          setBg("./assets/bg/room6/burning-bush.webp");
   
           makeHotspot(
             RECTS.burningBush.middleZone,
@@ -290,7 +290,7 @@ export default {
         }
   
         if (scene === "roomOverlay") {
-          setBg("./assets/bg/room6/room-overlay.png");
+          setBg("./assets/bg/room6/room-overlay.webp");
   
           delay(() => {
             scene = "spiritSequence";
@@ -307,7 +307,7 @@ export default {
         }
   
         if (scene === "wetRoom") {
-          setBg("./assets/bg/room6/wet-room.png");
+          setBg("./assets/bg/room6/wet-room.webp");
         
           localStorage.setItem("room6_done", "1");
         

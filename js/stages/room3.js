@@ -7,7 +7,7 @@ export default {
         <div class="scene-inner" id="room3Wrap">
           <img
             id="bg"
-            src="./assets/bg/room3/dirty-room.png"
+            src="./assets/bg/room3/dirty-room.webp"
             class="bg"
             alt="Room 3 scene"
             draggable="false"
@@ -120,16 +120,16 @@ export default {
     };
 
     const BG_MAP = {
-      dirtyRoomStart: "./assets/bg/room3/dirty-room.png",
-      dirtyRoomAfterGuideline: "./assets/bg/room3/dirty-room.png",
-      zoomDoor: "./assets/bg/room3/zoom-door.png",
-      security1: "./assets/bg/room3/security-1.png",
-      inspect1: "./assets/bg/room3/inspect-1.png",
-      inspect2: "./assets/bg/room3/inspect-2.png",
-      paper1: "./assets/bg/room3/paper-1.png",
-      security2: "./assets/bg/room3/security-2.png",
-      paper2: "./assets/bg/room3/paper-2.png",
-      roomCleaned: "./assets/bg/room3/room-cleaned.png",
+      dirtyRoomStart: "./assets/bg/room3/dirty-room.webp",
+      dirtyRoomAfterGuideline: "./assets/bg/room3/dirty-room.webp",
+      zoomDoor: "./assets/bg/room3/zoom-door.webp",
+      security1: "./assets/bg/room3/security-1.webp",
+      inspect1: "./assets/bg/room3/inspect-1.webp",
+      inspect2: "./assets/bg/room3/inspect-2.webp",
+      paper1: "./assets/bg/room3/paper-1.webp",
+      security2: "./assets/bg/room3/security-2.webp",
+      paper2: "./assets/bg/room3/paper-2.webp",
+      roomCleaned: "./assets/bg/room3/room-cleaned.webp",
     };
 
     function addCleanup(fn) {
@@ -241,7 +241,7 @@ export default {
       if (display) display.textContent = value || "";
     }
 
-    function openChecklistPopup(fileName = "checklist-1.png", onClose) {
+    function openChecklistPopup(fileName = "checklist-1.webp", onClose) {
       clearDialog();
 
       const popup = document.createElement("div");
@@ -275,7 +275,7 @@ export default {
     }
 
     function openPaperPopup() {
-      openChecklistPopup("resident-guidelines.png", () => {
+      openChecklistPopup("resident-guidelines.webp", () => {
         if (!guidelineAfterDialogShown) {
           guidelineAfterDialogShown = true;
           showMonologue("I guess I have to stay and call for help");
@@ -403,7 +403,7 @@ Please do not leave a message.`,
 
     function enableFreshenerDrag() {
       const freshener = document.createElement("img");
-      freshener.src = "./assets/props/room3/freshener.png";
+      freshener.src = "./assets/props/room3/freshener.webp";
       freshener.alt = "Air freshener";
       freshener.className = "room3-freshener";
       freshener.draggable = false;
@@ -618,7 +618,7 @@ Please do not leave a message.`,
       if (scene === "paper1") {
         items.push(
           makeHotspot("paper", RECTS.paper1.paper, () => {
-            openChecklistPopup("checklist-1.png", () => {
+            openChecklistPopup("checklist-1.webp", () => {
               scene = "security2";
               render();
             });
@@ -639,7 +639,7 @@ Please do not leave a message.`,
         [1, 2, 3, 4, 5].forEach((num) => {
           items.push(
             makeHotspot(`paper-${num}`, RECTS.paper2[`paper${num}`], () => {
-              openChecklistPopup(`checklist-${num}.png`);
+              openChecklistPopup(`checklist-${num}.webp`);
             })
           );
         });

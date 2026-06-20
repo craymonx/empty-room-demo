@@ -5,7 +5,7 @@ export default {
         <div class="scene-inner" id="room1Wrap">
           <img
             id="bg"
-            src="./assets/bg/room1/living-room-main-view.png"
+            src="./assets/bg/room1/living-room-main-view.webp"
             class="bg"
             alt="Room 1 scene"
             draggable="false"
@@ -117,7 +117,7 @@ function startBgm() {
 
       chopstickEl = document.createElement("img");
       chopstickEl.id = "fakeCursorChopstick";
-      chopstickEl.src = "./assets/props/room1/chopsticks.png";
+      chopstickEl.src = "./assets/props/room1/chopsticks.webp";
       chopstickEl.alt = "";
       chopstickEl.setAttribute("aria-hidden", "true");
       chopstickEl.style.position = "fixed";
@@ -496,17 +496,17 @@ function startBgm() {
       const items = [
         {
           id: "ketchup",
-          src: "./assets/props/room1/game-ketchup.png",
+          src: "./assets/props/room1/game-ketchup.webp",
           alt: "Ketchup",
         },
         {
           id: "dishsoap",
-          src: "./assets/props/room1/game-dishsoap.png",
+          src: "./assets/props/room1/game-dishsoap.webp",
           alt: "Dish soap",
         },
         {
           id: "whiskey",
-          src: "./assets/props/room1/game-whisky.png",
+          src: "./assets/props/room1/game-whisky.webp",
           alt: "Whiskey",
         },
       ];
@@ -516,10 +516,10 @@ function startBgm() {
       const cleaners = [];
 
       function bgForCount(n) {
-        if (n === 1) return "./assets/bg/room1/glass-1_3-full.png";
-        if (n === 2) return "./assets/bg/room1/glass-half-full.png";
-        if (n === 3) return "./assets/bg/room1/glass-full.png";
-        return "./assets/bg/room1/glass-empty.png";
+        if (n === 1) return "./assets/bg/room1/glass-1_3-full.webp";
+        if (n === 2) return "./assets/bg/room1/glass-half-full.webp";
+        if (n === 3) return "./assets/bg/room1/glass-full.webp";
+        return "./assets/bg/room1/glass-empty.webp";
       }
 
       async function handleSuccessfulDrop(itemEl) {
@@ -555,7 +555,7 @@ function startBgm() {
             const cup = overlays.querySelector("#cupClickHotspot");
             if (cup) cup.remove();
 
-            await transitionBg("./assets/bg/room1/glass-empty.png");
+            await transitionBg("./assets/bg/room1/glass-empty.webp");
 
             enableClickAnywhere(async () => {
               if (scene !== "glassEmptyAfterMix") return;
@@ -627,7 +627,7 @@ function startBgm() {
     function createStoveSceneOverlays() {
       const noodles = document.createElement("img");
       noodles.id = "noodles";
-      noodles.src = "./assets/props/room1/game-noodles.png";
+      noodles.src = "./assets/props/room1/game-noodles.webp";
       noodles.alt = "Noodles";
       noodles.className = "item-overlay draggable";
       noodles.draggable = false;
@@ -652,7 +652,7 @@ function startBgm() {
 
           scene = "cooked";
 
-          await transitionBg("./assets/bg/room1/cooked-noodles.png");
+          await transitionBg("./assets/bg/room1/cooked-noodles.webp");
 
           clearOverlays();
 
@@ -663,12 +663,12 @@ function startBgm() {
           
             clearOverlays();
           
-            await transitionBg("./assets/bg/room1/empty-pot.png");
+            await transitionBg("./assets/bg/room1/empty-pot.webp");
           
             showRoom1Dialogue("I wanna drink something too…", async () => {
               scene = "glassEmpty";
             
-              await transitionBg("./assets/bg/room1/glass-empty.png");
+              await transitionBg("./assets/bg/room1/glass-empty.webp");
             
               startGlassMixingGame();
             });
@@ -683,7 +683,7 @@ function startBgm() {
       if (scene === "livingRoom") {
         scene = "kitchen";
       
-        await transitionBg("./assets/bg/room1/kitchen-main-view.png");
+        await transitionBg("./assets/bg/room1/kitchen-main-view.webp");
       
         showRoom1Dialogue("Kinda hungry, gonna cook something", () => {
           layout();
@@ -697,7 +697,7 @@ function startBgm() {
 
       scene = "stove";
 
-      await transitionBg("./assets/bg/room1/empty-pot-boiling.png");
+      await transitionBg("./assets/bg/room1/empty-pot-boiling.webp");
 
       stoveBtn.style.display = "none";
       clearOverlays();

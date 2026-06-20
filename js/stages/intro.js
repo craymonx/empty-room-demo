@@ -56,7 +56,7 @@ export default {
         <div class="scene-inner">
           <img
             class="bg"
-            src="./assets/bg/game-main-view.png"
+            src="./assets/bg/game-main-view.webp"
             alt="Intro"
             draggable="false"
           >

@@ -6,7 +6,7 @@ export default {
           <div class="scene-inner" id="room9Wrap">
             <img
               id="bg"
-              src="./assets/bg/room9/main-room.png"
+              src="./assets/bg/room9/main-room.webp"
               class="bg room9-bg"
               alt="Room 9 scene"
               draggable="false"
@@ -119,31 +119,31 @@ export default {
       };
   
       const FILES = {
-        "main-room": "main-room.png",
-        "fog-4": "fog-4.png",
-        "fog-3": "fog-3.png",
-        "fog-2": "fog-2.png",
-        "fog-1": "fog-1.png",
-        "fog-boat": "fog-boat.png",
-        further: "further.png",
-        l1: "l1.png",
-        l2: "l2.png",
-        l3: "l3.png",
-        l4: "l4.png",
-        l5: "l5.png",
-        m: "m.png",
-        r1: "r1.png",
-        r2: "r2.png",
-        r3: "r3.png",
-        r4: "r4.png",
-        r5: "r5.png",
-        r6: "r6.png",
-        r61: "r61.png",
-        r62: "r62.png",
-        shore: "shore-forest.png",
-        "bush-boat": "bush-boat.png",
-        bush: "bush.png",
-        "bush-fog": "bush-fog.png",
+        "main-room": "main-room.webp",
+        "fog-4": "fog-4.webp",
+        "fog-3": "fog-3.webp",
+        "fog-2": "fog-2.webp",
+        "fog-1": "fog-1.webp",
+        "fog-boat": "fog-boat.webp",
+        further: "further.webp",
+        l1: "l1.webp",
+        l2: "l2.webp",
+        l3: "l3.webp",
+        l4: "l4.webp",
+        l5: "l5.webp",
+        m: "m.webp",
+        r1: "r1.webp",
+        r2: "r2.webp",
+        r3: "r3.webp",
+        r4: "r4.webp",
+        r5: "r5.webp",
+        r6: "r6.webp",
+        r61: "r61.webp",
+        r62: "r62.webp",
+        shore: "shore-forest.webp",
+        "bush-boat": "bush-boat.webp",
+        bush: "bush.webp",
+        "bush-fog": "bush-fog.webp",
       };
   
       function clearTimers() {

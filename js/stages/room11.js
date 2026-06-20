@@ -7,7 +7,7 @@ export default {
           <div class="scene-inner" id="room11Wrap">
             <img
               id="bg"
-              src="./assets/bg/room11/coca1.png"
+              src="./assets/bg/room11/coca1.webp"
               class="bg"
               alt="Room 11 scene"
               draggable="false"
@@ -286,7 +286,7 @@ export default {
   
       function renderCoca1() {
         scene = "coca1";
-        setBG("./assets/bg/room11/coca1.png");
+        setBG("./assets/bg/room11/coca1.webp");
         popupLayer.innerHTML = "";
         showHotspot("start", "Continue", goToCoca2);
       }
@@ -297,7 +297,7 @@ export default {
         unlockAudio();
   
         scene = "coca2";
-        setBG("./assets/bg/room11/coca2.png");
+        setBG("./assets/bg/room11/coca2.webp");
         showHotspot("full", "Continue", goToCoca3);
       }
   
@@ -307,7 +307,7 @@ export default {
         unlockAudio();
   
         scene = "coca3";
-        setBG("./assets/bg/room11/coca3.png");
+        setBG("./assets/bg/room11/coca3.webp");
         clearOverlays();
   
         addTimer(goToAlarm, 3000);
@@ -364,7 +364,7 @@ export default {
         if (scene !== "alarmClosed") return;
   
         scene = "tv1";
-        setBG("./assets/bg/room11/tv1.png");
+        setBG("./assets/bg/room11/tv1.webp");
         showHotspot("tv-screen", "Continue TV scene", goToTv2);
       }
   
@@ -372,7 +372,7 @@ export default {
         if (scene !== "tv1") return;
   
         scene = "tv2";
-        setBG("./assets/bg/room11/tv2.png");
+        setBG("./assets/bg/room11/tv2.webp");
         clearOverlays();
   
         addTimer(goToTv3, 2000);
@@ -382,7 +382,7 @@ export default {
         if (scene !== "tv2") return;
   
         scene = "tv3";
-        setBG("./assets/bg/room11/tv3.png");
+        setBG("./assets/bg/room11/tv3.webp");
   
         showRpgDialog(
           "You must leave now, you are not supposed to be here!",
@@ -422,7 +422,7 @@ export default {
         if (scene !== "afterKnockDialog") return;
   
         scene = "door1";
-        setBG("./assets/bg/room11/door1.png");
+        setBG("./assets/bg/room11/door1.webp");
         showHotspot("lock", "Lock the door", goToDoor2);
       }
   
@@ -430,7 +430,7 @@ export default {
         if (scene !== "door1") return;
   
         scene = "door2";
-        setBG("./assets/bg/room11/door2.png");
+        setBG("./assets/bg/room11/door2.webp");
         clearOverlays();
   
         showLeftSlider(goToCoca5);
@@ -464,7 +464,7 @@ export default {
         if (scene !== "coca7") return;
   
         scene = "coca8";
-        setBG("./assets/bg/room11/coca8.png");
+        setBG("./assets/bg/room11/coca8.webp");
         showHotspot("coca9-next", "Continue", goToCoca9);
       }
   
@@ -472,7 +472,7 @@ export default {
         if (scene !== "coca8") return;
   
         scene = "coca9";
-        setBG("./assets/bg/room11/coca9.png");
+        setBG("./assets/bg/room11/coca9.webp");
         clearOverlays();
   
         showLeftSlider(goToCoca10);
@@ -482,7 +482,7 @@ export default {
         if (scene !== "coca9") return;
   
         scene = "coca10";
-        setBG("./assets/bg/room11/coca10.png");
+        setBG("./assets/bg/room11/coca10.webp");
         showHotspot("coca10-next", "Continue", goToCoca11);
       }
   
@@ -490,7 +490,7 @@ export default {
         if (scene !== "coca10") return;
   
         scene = "coca11";
-        setBG("./assets/bg/room11/coca11.png");
+        setBG("./assets/bg/room11/coca11.webp");
         showHotspot("coca11-next", "Continue", goToCoca12);
       }
   
@@ -498,7 +498,7 @@ export default {
         if (scene !== "coca11") return;
       
         scene = "coca12";
-        setBG("./assets/bg/room11/coca12.png");
+        setBG("./assets/bg/room11/coca12.webp");
         clearOverlays();
       
         localStorage.setItem("room11_done", "1");

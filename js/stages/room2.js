@@ -5,7 +5,7 @@ export default {
         <div class="scene-inner" id="room2Wrap">
           <img
             id="bg"
-            src="./assets/bg/room2/chatting.png"
+            src="./assets/bg/room2/chatting.webp"
             class="bg"
             alt="Room 2 scene"
             draggable="false"
@@ -113,20 +113,20 @@ export default {
       },
 
       sortingItems: {
-        fork1: { type: "fork", src: "./assets/props/room2/fork-1.png", x: 800, y: 700, w: 90, h: 580, r: -120 },
-        fork2: { type: "fork", src: "./assets/props/room2/fork-2.png", x: 1290, y: 795, w: 90, h: 580, r: -50 },
-        fork3: { type: "fork", src: "./assets/props/room2/fork-3.png", x: 1010, y: 775, w: 90, h: 580, r: -130 },
-        fork4: { type: "fork", src: "./assets/props/room2/fork-4.png", x: 1320, y: 800, w: 90, h: 580, r: -290 },
+        fork1: { type: "fork", src: "./assets/props/room2/fork-1.webp", x: 800, y: 700, w: 90, h: 580, r: -120 },
+        fork2: { type: "fork", src: "./assets/props/room2/fork-2.webp", x: 1290, y: 795, w: 90, h: 580, r: -50 },
+        fork3: { type: "fork", src: "./assets/props/room2/fork-3.webp", x: 1010, y: 775, w: 90, h: 580, r: -130 },
+        fork4: { type: "fork", src: "./assets/props/room2/fork-4.webp", x: 1320, y: 800, w: 90, h: 580, r: -290 },
 
-        spoon1: { type: "spoon", src: "./assets/props/room2/spoon-1.png", x: 1220, y: 790, w: 90, h: 580, r: -120 },
-        spoon2: { type: "spoon", src: "./assets/props/room2/spoon-2.png", x: 820, y: 675, w: 90, h: 580, r: -300 },
-        spoon3: { type: "spoon", src: "./assets/props/room2/spoon-3.png", x: 1020, y: 700, w: 90, h: 580, r: -250 },
-        spoon4: { type: "spoon", src: "./assets/props/room2/spoon-4.png", x: 1550, y: 580, w: 90, h: 580, r: -50 },
+        spoon1: { type: "spoon", src: "./assets/props/room2/spoon-1.webp", x: 1220, y: 790, w: 90, h: 580, r: -120 },
+        spoon2: { type: "spoon", src: "./assets/props/room2/spoon-2.webp", x: 820, y: 675, w: 90, h: 580, r: -300 },
+        spoon3: { type: "spoon", src: "./assets/props/room2/spoon-3.webp", x: 1020, y: 700, w: 90, h: 580, r: -250 },
+        spoon4: { type: "spoon", src: "./assets/props/room2/spoon-4.webp", x: 1550, y: 580, w: 90, h: 580, r: -50 },
 
-        knife1: { type: "knife", src: "./assets/props/room2/knife-1.png", x: 760, y: 720, w: 90, h: 580, r: -270 },
-        knife2: { type: "knife", src: "./assets/props/room2/knife-2.png", x: 1210, y: 830, w: 90, h: 580, r: -20 },
-        knife3: { type: "knife", src: "./assets/props/room2/knife-3.png", x: 1200, y: 515, w: 90, h: 580, r: -110 },
-        knife4: { type: "knife", src: "./assets/props/room2/knife-4.png", x: 1570, y: 635, w: 90, h: 580, r: -230 },
+        knife1: { type: "knife", src: "./assets/props/room2/knife-1.webp", x: 760, y: 720, w: 90, h: 580, r: -270 },
+        knife2: { type: "knife", src: "./assets/props/room2/knife-2.webp", x: 1210, y: 830, w: 90, h: 580, r: -20 },
+        knife3: { type: "knife", src: "./assets/props/room2/knife-3.webp", x: 1200, y: 515, w: 90, h: 580, r: -110 },
+        knife4: { type: "knife", src: "./assets/props/room2/knife-4.webp", x: 1570, y: 635, w: 90, h: 580, r: -230 },
       },
     };
 
@@ -733,7 +733,7 @@ export default {
               if (allSortingPlaced()) {
                 scene = "drawerSorted";
                 clearOverlays();
-                await transitionBg("./assets/bg/room2/zoom-drawer.png");
+                await transitionBg("./assets/bg/room2/zoom-drawer.webp");
 
                 showBackSlider(async () => {
                   if (scene !== "drawerSorted") return;
@@ -741,12 +741,12 @@ export default {
                   resetSortingGame();
                   scene = "drawerMessy";
                   clearOverlays();
-                  await setBgInstant("./assets/bg/room2/drawer-messy.png");
+                  await setBgInstant("./assets/bg/room2/drawer-messy.webp");
 
                   showDrawerOpenHotspot(async () => {
                     if (scene !== "drawerMessy") return;
 
-                    await transitionBg("./assets/bg/room2/empty-drawer.png");
+                    await transitionBg("./assets/bg/room2/empty-drawer.webp");
                     resetSortingGame();
                     startUtensilSortingGame();
                   });
@@ -757,28 +757,28 @@ export default {
 
                   scene = "stare2";
                   clearOverlays();
-                  await setBgInstant("./assets/bg/room2/stare-2.png");
+                  await setBgInstant("./assets/bg/room2/stare-2.webp");
 
                   enableClickAnywhere(async () => {
                     if (scene !== "stare2") return;
 
                     scene = "stand";
                     disableClickAnywhere();
-                    await setBgInstant("./assets/bg/room2/stare-stand.png");
+                    await setBgInstant("./assets/bg/room2/stare-stand.webp");
 
                     enableClickAnywhere(async () => {
                       if (scene !== "stand") return;
 
                       scene = "standFront";
                       disableClickAnywhere();
-                      await setBgInstant("./assets/bg/room2/stare-stand-front.png");
+                      await setBgInstant("./assets/bg/room2/stare-stand-front.webp");
 
                       enableClickAnywhere(async () => {
                         if (scene !== "standFront") return;
 
                         scene = "mainViewStatic";
                         disableClickAnywhere();
-                        await crossfadeBg("./assets/bg/room2/main-view-static.png", 900);
+                        await crossfadeBg("./assets/bg/room2/main-view-static.webp", 900);
 
                         showClosableDialog({
                           textLines: ["I’m gonna go back to my bedroom…"],
@@ -788,7 +788,7 @@ export default {
 
                               scene = "bedroom";
                               clearOverlays();
-                              await transitionBg("./assets/bg/room2/bedroom-game2.png");
+                              await transitionBg("./assets/bg/room2/bedroom-game2.webp");
 
                               await wait(250);
                               localStorage.setItem("room2_done", "1");
@@ -840,7 +840,7 @@ export default {
 
       const beer = document.createElement("img");
       beer.id = "beer";
-      beer.src = "./assets/props/room2/game-beer.png";
+      beer.src = "./assets/props/room2/game-beer.webp";
       beer.alt = "Beer";
       beer.className = "item-overlay draggable";
       beer.draggable = false;
@@ -865,7 +865,7 @@ export default {
 
           scene = "fullCup";
           clearOverlays();
-          await transitionBg("./assets/bg/room2/full-cup.png");
+          await transitionBg("./assets/bg/room2/full-cup.webp");
 
           showClosableDialog({
             textLines: ["Let's go back."],
@@ -875,7 +875,7 @@ export default {
 
                 scene = "emptyCup";
                 clearOverlays();
-                await setBgInstant("./assets/bg/room2/empty-cup.png");
+                await setBgInstant("./assets/bg/room2/empty-cup.webp");
                 startBeerGame();
               });
 
@@ -884,7 +884,7 @@ export default {
 
                 scene = "stare1";
                 clearOverlays();
-                await transitionBg("./assets/bg/room2/stare-1.png");
+                await transitionBg("./assets/bg/room2/stare-1.webp");
 
                 showClosableDialog({
                   textLines: [
@@ -897,19 +897,19 @@ export default {
 
                       scene = "kitchenCounter";
                       clearOverlays();
-                      await transitionBg("./assets/bg/room2/kitchen-countertop.png");
+                      await transitionBg("./assets/bg/room2/kitchen-countertop.webp");
 
                       showDrawerHotspot(async () => {
                         if (scene !== "kitchenCounter") return;
 
                         scene = "drawerMessy";
                         clearOverlays();
-                        await transitionBg("./assets/bg/room2/drawer-messy.png");
+                        await transitionBg("./assets/bg/room2/drawer-messy.webp");
 
                         showDrawerOpenHotspot(async () => {
                           if (scene !== "drawerMessy") return;
 
-                          await transitionBg("./assets/bg/room2/empty-drawer.png");
+                          await transitionBg("./assets/bg/room2/empty-drawer.webp");
                           resetSortingGame();
                           startUtensilSortingGame();
                         });
@@ -938,19 +938,19 @@ export default {
       async function goToSmokeScene() {
         scene = "smoke";
         clearOverlays();
-        await transitionBg("./assets/bg/room2/smoke.png");
+        await transitionBg("./assets/bg/room2/smoke.webp");
 
         showSmokeHotspot(async () => {
           if (scene !== "smoke") return;
 
           scene = "canSmoke";
           clearOverlays();
-          await transitionBg("./assets/bg/room2/can-explode.png");
+          await transitionBg("./assets/bg/room2/can-explode.webp");
 
           showCanHotspot(async () => {
             if (scene !== "canSmoke") return;
 
-            await transitionBg("./assets/bg/room2/empty-cup.png");
+            await transitionBg("./assets/bg/room2/empty-cup.webp");
             startBeerGame();
           });
         });
