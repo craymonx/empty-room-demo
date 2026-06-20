@@ -50,21 +50,21 @@ function startBgm() {
 
     const RECTS = {
       livingRoom: {
-        kitchen: { x: 830, y: 200, w: 520, h: 330 },
+        kitchen: { x: 930, y: 200, w: 520, h: 330 },
       },
       kitchen: {
-        stove: { x: 830, y: 200, w: 520, h: 330 },
+        stove: { x: 930, y: 200, w: 520, h: 330 },
       },
       stove: {
-        noodles: { x: 1000, y: 530, w: 120, h: 50 },
-        pot: { x: 640, y: 320, w: 200, h: 250 },
+        noodles: { x: 1100, y: 690, w: 120, h: 50 },
+        pot: { x: 780, y: 450, w: 200, h: 250 },
       },
       glass: {
-        ketchup: { x: 944, y: 370, w: 76, h: 220 },
-        dishsoap: { x: 1135, y: 370, w: 89, h: 228 },
-        whiskey: { x: 1025, y: 370, w: 92, h: 224 },
-        drop: { x: 500, y: 360, w: 120, h: 130 },
-        cup: { x: 500, y: 360, w: 120, h: 200 },
+        ketchup: { x: 1144, y: 470, w: 76, h: 220 },
+        dishsoap: { x: 1335, y: 470, w: 89, h: 228 },
+        whiskey: { x: 1225, y: 470, w: 92, h: 224 },
+        drop: { x: 600, y: 500, w: 120, h: 150 },
+        cup: { x: 600, y: 500, w: 120, h: 150 },
       },
     };
 
