@@ -49,58 +49,60 @@ export default {
 
     const RECTS = {
       smoke: {
-        smoke: { x: 1040, y: 275, w: 50, h: 80 },
+        smoke: { x: 1250, y: 350, w: 50, h: 80 },
       },
 
       canSmoke: {
-        can: { x: 1150, y: 700, w: 200, h: 450 },
+        can: { x: 650, y: 450, w: 200, h: 350 },
       },
 
       emptyCup: {
-        beer: { x: 1160, y: 790, w: 160, h: 360 },
-        drop: { x: 1520, y: 975, w: 275, h: 225 },
+        beer: { x: 690, y: 465, w: 85, h: 200 },
+        drop: { x: 1050, y: 500, w: 475, h: 225 },
       },
 
       fullCup: {
-        leftArea: { x: 50, y: 100, w: 750, h: 1500 },
+        leftArea: { x: 0, y: 0, w: 750, h: 1500 },
       },
 
       stare1: {
-        counter: { x: 750, y: 60, w: 600, h: 450 },
+        counter: { x: 950, y: 90, w: 600, h: 480 },
       },
 
       kitchenCounter: {
-        drawer: { x: 880, y: 1250, w: 950, h: 240 },
+        drawer: { x: 480, y: 750, w: 950, h: 220 },
       },
 
       drawerMessy: {
-        drawerOpen: { x: 750, y: 1200, w: 1150, h: 350 },
+        drawerOpen: { x: 480, y: 750, w: 950, h: 220 },
       },
 
       sortingZones: {
-        forkZone: { x: 625, y: 600, w: 450, h: 700 },
-        spoonZone: { x: 1125, y: 600, w: 450, h: 700 },
-        knifeZone: { x: 1625, y: 600, w: 450, h: 700 },
+        forkZone:  { x: 315, y: 430, w: 250, h: 320 },
+        spoonZone: { x: 605, y: 430, w: 250, h: 320 },
+        knifeZone: { x: 890, y: 430, w: 270, h: 320 },
       },
 
       sortingSlots: {
         forks: [
-          { x: 635, y: 700, w: 90, h: 580, r: 0 },
-          { x: 745, y: 700, w: 90, h: 580, r: 0 },
-          { x: 855, y: 700, w: 90, h: 580, r: 0 },
-          { x: 965, y: 700, w: 90, h: 580, r: 0 },
+          { x: 330, y: 455, w: 55, h: 330, r: 0 },
+          { x: 375, y: 455, w: 55, h: 330, r: 0 },
+          { x: 420, y: 455, w: 55, h: 330, r: 0 },
+          { x: 465, y: 455, w: 55, h: 330, r: 0 },
         ],
+      
         spoons: [
-          { x: 1135, y: 700, w: 90, h: 580, r: 0 },
-          { x: 1245, y: 700, w: 90, h: 580, r: 0 },
-          { x: 1355, y: 700, w: 90, h: 580, r: 0 },
-          { x: 1465, y: 700, w: 90, h: 580, r: 0 },
+          { x: 625, y: 455, w: 55, h: 330, r: 0 },
+          { x: 670, y: 455, w: 55, h: 330, r: 0 },
+          { x: 715, y: 455, w: 55, h: 330, r: 0 },
+          { x: 760, y: 455, w: 55, h: 330, r: 0 },
         ],
+      
         knives: [
-          { x: 1635, y: 700, w: 90, h: 580, r: 0 },
-          { x: 1745, y: 700, w: 90, h: 580, r: 0 },
-          { x: 1855, y: 700, w: 90, h: 580, r: 0 },
-          { x: 1965, y: 700, w: 90, h: 580, r: 0 },
+          { x: 910, y: 455, w: 55, h: 330, r: 0 },
+          { x: 955, y: 455, w: 55, h: 330, r: 0 },
+          { x: 1000, y: 455, w: 55, h: 330, r: 0 },
+          { x: 1045, y: 455, w: 55, h: 330, r: 0 },
         ],
       },
 
@@ -113,20 +115,116 @@ export default {
       },
 
       sortingItems: {
-        fork1: { type: "fork", src: "./assets/props/room2/fork-1.webp", x: 800, y: 700, w: 90, h: 580, r: -120 },
-        fork2: { type: "fork", src: "./assets/props/room2/fork-2.webp", x: 1290, y: 795, w: 90, h: 580, r: -50 },
-        fork3: { type: "fork", src: "./assets/props/room2/fork-3.webp", x: 1010, y: 775, w: 90, h: 580, r: -130 },
-        fork4: { type: "fork", src: "./assets/props/room2/fork-4.webp", x: 1320, y: 800, w: 90, h: 580, r: -290 },
-
-        spoon1: { type: "spoon", src: "./assets/props/room2/spoon-1.webp", x: 1220, y: 790, w: 90, h: 580, r: -120 },
-        spoon2: { type: "spoon", src: "./assets/props/room2/spoon-2.webp", x: 820, y: 675, w: 90, h: 580, r: -300 },
-        spoon3: { type: "spoon", src: "./assets/props/room2/spoon-3.webp", x: 1020, y: 700, w: 90, h: 580, r: -250 },
-        spoon4: { type: "spoon", src: "./assets/props/room2/spoon-4.webp", x: 1550, y: 580, w: 90, h: 580, r: -50 },
-
-        knife1: { type: "knife", src: "./assets/props/room2/knife-1.webp", x: 760, y: 720, w: 90, h: 580, r: -270 },
-        knife2: { type: "knife", src: "./assets/props/room2/knife-2.webp", x: 1210, y: 830, w: 90, h: 580, r: -20 },
-        knife3: { type: "knife", src: "./assets/props/room2/knife-3.webp", x: 1200, y: 515, w: 90, h: 580, r: -110 },
-        knife4: { type: "knife", src: "./assets/props/room2/knife-4.webp", x: 1570, y: 635, w: 90, h: 580, r: -230 },
+        fork1: {
+          type: "fork",
+          src: "./assets/props/room2/fork-1.webp",
+          x: 800,
+          y: 700,
+          w: 90,
+          h: 580,
+          r: -120,
+        },
+        fork2: {
+          type: "fork",
+          src: "./assets/props/room2/fork-2.webp",
+          x: 1290,
+          y: 795,
+          w: 90,
+          h: 580,
+          r: -50,
+        },
+        fork3: {
+          type: "fork",
+          src: "./assets/props/room2/fork-3.webp",
+          x: 1010,
+          y: 775,
+          w: 90,
+          h: 580,
+          r: -130,
+        },
+        fork4: {
+          type: "fork",
+          src: "./assets/props/room2/fork-4.webp",
+          x: 1320,
+          y: 800,
+          w: 90,
+          h: 580,
+          r: -290,
+        },
+      
+        spoon1: {
+          type: "spoon",
+          src: "./assets/props/room2/spoon-1.webp",
+          x: 1220,
+          y: 790,
+          w: 90,
+          h: 580,
+          r: -120,
+        },
+        spoon2: {
+          type: "spoon",
+          src: "./assets/props/room2/spoon-2.webp",
+          x: 820,
+          y: 675,
+          w: 90,
+          h: 580,
+          r: -300,
+        },
+        spoon3: {
+          type: "spoon",
+          src: "./assets/props/room2/spoon-3.webp",
+          x: 1020,
+          y: 700,
+          w: 90,
+          h: 580,
+          r: -250,
+        },
+        spoon4: {
+          type: "spoon",
+          src: "./assets/props/room2/spoon-4.webp",
+          x: 1550,
+          y: 580,
+          w: 90,
+          h: 580,
+          r: -50,
+        },
+      
+        knife1: {
+          type: "knife",
+          src: "./assets/props/room2/knife-1.webp",
+          x: 760,
+          y: 720,
+          w: 90,
+          h: 580,
+          r: -270,
+        },
+        knife2: {
+          type: "knife",
+          src: "./assets/props/room2/knife-2.webp",
+          x: 1210,
+          y: 830,
+          w: 90,
+          h: 580,
+          r: -20,
+        },
+        knife3: {
+          type: "knife",
+          src: "./assets/props/room2/knife-3.webp",
+          x: 1200,
+          y: 515,
+          w: 90,
+          h: 580,
+          r: -110,
+        },
+        knife4: {
+          type: "knife",
+          src: "./assets/props/room2/knife-4.webp",
+          x: 1570,
+          y: 635,
+          w: 90,
+          h: 580,
+          r: -230,
+        },
       },
     };
 
