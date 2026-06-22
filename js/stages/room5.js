@@ -32,43 +32,46 @@ export default {
       let loopEndTimer = null;
       let zoomTimer = null;
       let destroyed = false;
+
+      const COORD_W = 2800;
+      const COORD_H = 1800;
   
       const RECTS = {
         bedroom: {
-          zone1: { x: 1020, y: 80, w: 680, h: 950 },
+          zone1: { x: 1480, y: 130, w: 980, h: 1500 },
         },
         mainView: {
-          zone1: { x: 1900, y: 730, w: 480, h: 280 },
+          zone1: { x: 2050, y: 750, w: 480, h: 440 },
         },
         close1: {
-          zone1: { x: 1700, y: 580, w: 520, h: 450 },
+          zone1: { x: 1700, y: 560, w: 650, h: 700 },
         },
         close2: {
           zone1: { x: 1550, y: 400, w: 850, h: 800 },
         },
         close3: {
-          zone1: { x: 1000, y: 200, w: 1350, h: 1300 },
+          zone1: { x: 1000, y: 200, w: 1350, h: 1500 },
         },
         kitchenCounter: {
           zone1: { x: 640, y: 0, w: 1020, h: 400 },
         },
         pillBottle: {
-          zone1: { x: 1130, y: 650, w: 270, h: 400 },
+          zone1: { x: 1130, y: 650, w: 270, h: 550 },
         },
         openBottle: {
-          zone1: { x: 1130, y: 650, w: 270, h: 400 },
+          zone1: { x: 1130, y: 650, w: 270, h: 550 },
         },
         blackLiquid: {
-          zone1: { x: 730, y: 100, w: 1200, h: 1200 },
+          zone1: { x: 730, y: 100, w: 1350, h: 1450 },
         },
         emptyBottle: {
-          zone1: { x: 730, y: 100, w: 1200, h: 1200 },
+          zone1: { x: 730, y: 100, w: 1350, h: 1450 },
         },
         emptyBottleTop: {
-          zone1: { x: 730, y: 100, w: 1200, h: 1200 },
+          zone1: { x: 730, y: 100, w: 1350, h: 1450 },
         },
         vortexRoom: {
-          zone1: { x: 730, y: 100, w: 1200, h: 1200 },
+          zone1: { x: 730, y: 100, w: 1350, h: 1450 },
         },
       };
 
@@ -202,48 +205,43 @@ export default {
   
       function getDrawnImageRect(imgEl) {
         const wrapRect = wrap.getBoundingClientRect();
-        const imgRect = imgEl.getBoundingClientRect();
-  
-        const naturalW = imgEl.naturalWidth || 1;
-        const naturalH = imgEl.naturalHeight || 1;
+      
+        const naturalW = imgEl.naturalWidth || COORD_W;
+        const naturalH = imgEl.naturalHeight || COORD_H;
         const naturalRatio = naturalW / naturalH;
-  
-        const boxW = imgRect.width;
-        const boxH = imgRect.height;
-        const boxRatio = boxW / boxH;
-  
-        let drawnW, drawnH, offsetX, offsetY;
-  
-        if (boxRatio > naturalRatio) {
-          drawnH = boxH;
-          drawnW = drawnH * naturalRatio;
-          offsetX = (boxW - drawnW) / 2;
-          offsetY = 0;
-        } else {
-          drawnW = boxW;
+      
+        const wrapRatio = wrapRect.width / wrapRect.height;
+      
+        let drawnW;
+        let drawnH;
+        let left;
+        let top;
+      
+        if (naturalRatio > wrapRatio) {
+          drawnW = wrapRect.width;
           drawnH = drawnW / naturalRatio;
-          offsetX = 0;
-          offsetY = (boxH - drawnH) / 2;
+          left = 0;
+          top = (wrapRect.height - drawnH) / 2;
+        } else {
+          drawnH = wrapRect.height;
+          drawnW = drawnH * naturalRatio;
+          top = 0;
+          left = (wrapRect.width - drawnW) / 2;
         }
-  
+      
         return {
-          left: imgRect.left - wrapRect.left + offsetX,
-          top: imgRect.top - wrapRect.top + offsetY,
+          left,
+          top,
           width: drawnW,
           height: drawnH,
-          naturalWidth: naturalW,
-          naturalHeight: naturalH,
         };
       }
   
       function placeRectOnImage(el, rect, imgDrawRect) {
-        const scaleX = imgDrawRect.width / imgDrawRect.naturalWidth;
-        const scaleY = imgDrawRect.height / imgDrawRect.naturalHeight;
-  
-        el.style.left = `${imgDrawRect.left + rect.x * scaleX}px`;
-        el.style.top = `${imgDrawRect.top + rect.y * scaleY}px`;
-        el.style.width = `${rect.w * scaleX}px`;
-        el.style.height = `${rect.h * scaleY}px`;
+        el.style.left = `${imgDrawRect.left + (rect.x / COORD_W) * imgDrawRect.width}px`;
+        el.style.top = `${imgDrawRect.top + (rect.y / COORD_H) * imgDrawRect.height}px`;
+        el.style.width = `${(rect.w / COORD_W) * imgDrawRect.width}px`;
+        el.style.height = `${(rect.h / COORD_H) * imgDrawRect.height}px`;
       }
   
       function createHotspot({ rect, next, label }) {
@@ -360,17 +358,23 @@ export default {
           return;
         }
   
+        bg.onload = () => {
+          layout();
+        };
+        
+        bg.onerror = () => {
+          console.error("Failed to load Room 5 image:", scene.bg);
+        };
+        
         bg.src = scene.bg;
-  
+        
         for (const hotspot of scene.hotspots) {
           createHotspot(hotspot);
         }
-  
-        const relayout = () => layout();
-        if (bg.complete) {
-          relayout();
-        } else {
-          bg.onload = relayout;
+        
+        // Handles cached images
+        if (bg.complete && bg.naturalWidth > 0) {
+          layout();
         }
       }
   

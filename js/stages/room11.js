@@ -247,19 +247,26 @@ export default {
   
       function showLeftSlider(callback) {
         overlays.innerHTML = `
-          <div class="room11-left-gradient is-visible"></div>
-  
+          <div class="room11-left-gradient" aria-hidden="true">
+            <div class="room11-left-arrow"></div>
+          </div>
+      
           <button
             class="room11-left-click-zone"
+            type="button"
             aria-label="Go back"
-          >
-            <span class="room11-left-arrow">←</span>
-          </button>
+          ></button>
         `;
-  
-        overlays
-          .querySelector(".room11-left-click-zone")
-          .addEventListener("click", callback);
+      
+        const gradient = overlays.querySelector(".room11-left-gradient");
+        const clickZone = overlays.querySelector(".room11-left-click-zone");
+      
+        clickZone.addEventListener("click", callback);
+      
+        // Let browser render hidden state first, then animate in
+        requestAnimationFrame(() => {
+          gradient.classList.add("is-visible");
+        });
       }
   
       function showPlantHotspots() {
@@ -526,13 +533,18 @@ export default {
   
       this.exit = () => {
         clearTimers();
+      
         window.removeEventListener("resize", handleResize);
-  
+        bg.removeEventListener("load", layout);
+      
         stopAudio(alarmAudio);
         stopAudio(knockAudio);
-  
+      
         alarmAudio = null;
         knockAudio = null;
+      
+        clearOverlays();
+        popupLayer.innerHTML = "";
       };
     },
   

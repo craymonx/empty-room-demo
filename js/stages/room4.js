@@ -15,6 +15,9 @@ export default {
           <div id="overlays" class="overlays" aria-hidden="false"></div>
           <div id="fxLayer" class="room4-fx-layer" aria-hidden="true"></div>
 
+          <div id="leftGradient" class="room4-left-gradient" aria-hidden="true">
+            <div class="room4-left-arrow"></div>
+          </div>
         </div>
       </section>
     `;
@@ -23,6 +26,7 @@ export default {
     const bg = root.querySelector("#bg");
     const overlays = root.querySelector("#overlays");
     const fxLayer = root.querySelector("#fxLayer");
+    const leftGradient = root.querySelector("#leftGradient");
 
     let scene = "campus";
     let destroyed = false;
@@ -552,6 +556,12 @@ export default {
       renderScene();
     }
 
+    function updateLeftGradient() {
+      if (!leftGradient) return;
+    
+      leftGradient.classList.toggle("is-visible", scene === "sinkWater");
+    }
+
     function renderScene() {
       if (cleanupJarEvents) {
         cleanupJarEvents();
@@ -643,6 +653,7 @@ export default {
       }
 
       renderDebugZone();
+      updateLeftGradient();
     }
 
     function layout() {

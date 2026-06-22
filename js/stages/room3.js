@@ -41,8 +41,76 @@ export default {
 
     const CORRECT_SECURITY_NUMBER = "20200813";
     const FRESHENER_REQUIRED_MS = 3000;
+
     const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm.wav";
     const SPRAY_SRC = "./assets/audio/room3/spray.wav";
+
+    // IMPORTANT:
+    // All Room 3 coordinates below are based on the original 2800 × 1800 image size.
+    // Keep this fixed even after resizing/compressing the actual WebP images.
+    const COORD_W = 2800;
+    const COORD_H = 1800;
+
+    const RECTS = {
+      dirtyRoomStart: {
+        door: { x: 2600, y: 300, w: 320, h: 900 },
+      },
+
+      zoomDoor: {
+        door: { x: 700, y: 0, w: 1300, h: 1800 },
+        paper: { x: 1100, y: 375, w: 590, h: 900 },
+        returnLeft: { x: 0, y: 0, w: 260, h: 1800 },
+      },
+
+      dirtyRoomAfterGuideline: {
+        phone: { x: 375, y: 920, w: 80, h: 20 },
+        backToZoomDoor: { x: 2500, y: 270, w: 320, h: 900 },
+      },
+
+      security1: {
+        security: { x: 2300, y: 350, w: 300, h: 800 },
+      },
+
+      inspect1: {
+        toInspect2: { x: 1700, y: 550, w: 350, h: 650 },
+      },
+
+      inspect2: {
+        next: { x: 0, y: 0, w: 2800, h: 1800 },
+      },
+
+      paper1: {
+        paper: { x: 1310, y: 1360, w: 325, h: 190 },
+      },
+
+      security2: {
+        security: { x: 850, y: 1075, w: 800, h: 450 },
+      },
+
+      paper2: {
+        freshenerStart: { x: 200, y: 800, w: 50, h: 150 },
+        paper1: { x: 520, y: 1430, w: 300, h: 220 },
+        paper2: { x: 1280, y: 1180, w: 330, h: 190 },
+        paper3: { x: 1280, y: 1380, w: 300, h: 180 },
+        paper4: { x: 1600, y: 1300, w: 230, h: 130 },
+        paper5: { x: 1600, y: 1440, w: 250, h: 190 },
+      },
+
+      roomCleaned: {},
+    };
+
+    const BG_MAP = {
+      dirtyRoomStart: "./assets/bg/room3/dirty-room.webp",
+      dirtyRoomAfterGuideline: "./assets/bg/room3/dirty-room.webp",
+      zoomDoor: "./assets/bg/room3/zoom-door.webp",
+      security1: "./assets/bg/room3/security-1.webp",
+      inspect1: "./assets/bg/room3/inspect-1.webp",
+      inspect2: "./assets/bg/room3/inspect-2.webp",
+      paper1: "./assets/bg/room3/paper-1.webp",
+      security2: "./assets/bg/room3/security-2.webp",
+      paper2: "./assets/bg/room3/paper-2.webp",
+      roomCleaned: "./assets/bg/room3/room-cleaned.webp",
+    };
 
     function startBgm() {
       if (!room3Bgm) {
@@ -68,69 +136,6 @@ export default {
       spray.volume = 0.7;
       spray.play().catch(() => {});
     }
-
-    startBgm();
-
-    const RECTS = {
-      dirtyRoomStart: {
-        door: { x: 2400, y: 200, w: 320, h: 900 },
-      },
-
-      zoomDoor: {
-        door: { x: 700, y: 0, w: 1300, h: 1580 },
-        paper: { x: 1100, y: 375, w: 520, h: 690 },
-        returnLeft: { x: 0, y: 0, w: 260, h: 1800 },
-      },
-
-      dirtyRoomAfterGuideline: {
-        phone: { x: 375, y: 800, w: 80, h: 20 },
-        backToZoomDoor: { x: 2400, y: 200, w: 320, h: 900 },
-      },
-
-      security1: {
-        security: { x: 2300, y: 350, w: 300, h: 800 },
-      },
-
-      inspect1: {
-        toInspect2: { x: 1650, y: 500, w: 330, h: 540 },
-      },
-
-      inspect2: {
-        next: { x: 0, y: 0, w: 2800, h: 1800 },
-      },
-
-      paper1: {
-        paper: { x: 1250, y: 1170, w: 325, h: 150 },
-      },
-
-      security2: {
-        security: { x: 850, y: 1075, w: 800, h: 450 },
-      },
-
-      paper2: {
-        freshenerStart: { x: 200, y: 675, w: 50, h: 150 },
-        paper1: { x: 520, y: 1220, w: 300, h: 180 },
-        paper2: { x: 1280, y: 1000, w: 330, h: 190 },
-        paper3: { x: 1280, y: 1200, w: 300, h: 180 },
-        paper4: { x: 1550, y: 1120, w: 200, h: 100 },
-        paper5: { x: 1600, y: 1250, w: 200, h: 190 },
-      },
-
-      roomCleaned: {},
-    };
-
-    const BG_MAP = {
-      dirtyRoomStart: "./assets/bg/room3/dirty-room.webp",
-      dirtyRoomAfterGuideline: "./assets/bg/room3/dirty-room.webp",
-      zoomDoor: "./assets/bg/room3/zoom-door.webp",
-      security1: "./assets/bg/room3/security-1.webp",
-      inspect1: "./assets/bg/room3/inspect-1.webp",
-      inspect2: "./assets/bg/room3/inspect-2.webp",
-      paper1: "./assets/bg/room3/paper-1.webp",
-      security2: "./assets/bg/room3/security-2.webp",
-      paper2: "./assets/bg/room3/paper-2.webp",
-      roomCleaned: "./assets/bg/room3/room-cleaned.webp",
-    };
 
     function addCleanup(fn) {
       cleanupFns.push(fn);
@@ -173,15 +178,20 @@ export default {
         left = (wrapRect.width - drawW) / 2;
       }
 
-      return { left, top, width: drawW, height: drawH };
+      return {
+        left,
+        top,
+        width: drawW,
+        height: drawH,
+      };
     }
 
-    function placeRectOnImage(rect, drawnRect, naturalW, naturalH) {
+    function placeRectOnImage(rect, drawnRect) {
       return {
-        left: drawnRect.left + (rect.x / naturalW) * drawnRect.width,
-        top: drawnRect.top + (rect.y / naturalH) * drawnRect.height,
-        width: (rect.w / naturalW) * drawnRect.width,
-        height: (rect.h / naturalH) * drawnRect.height,
+        left: drawnRect.left + (rect.x / COORD_W) * drawnRect.width,
+        top: drawnRect.top + (rect.y / COORD_H) * drawnRect.height,
+        width: (rect.w / COORD_W) * drawnRect.width,
+        height: (rect.h / COORD_H) * drawnRect.height,
       };
     }
 
@@ -238,7 +248,9 @@ export default {
 
     function renderPhoneDisplay(value) {
       const display = dialogLayer.querySelector(".room3-phone__display-text");
-      if (display) display.textContent = value || "";
+      if (display) {
+        display.textContent = value || "";
+      }
     }
 
     function openChecklistPopup(fileName = "checklist-1.webp", onClose) {
@@ -333,7 +345,7 @@ export default {
 
       function showPhoneError(message) {
         clearDialog();
-      
+
         showMonologue(message, () => {
           openPhonePopup();
         });
@@ -407,51 +419,43 @@ Please do not leave a message.`,
       freshener.alt = "Air freshener";
       freshener.className = "room3-freshener";
       freshener.draggable = false;
-    
+
       const drawnRect = getDrawnImageRect(bg);
-      const naturalW = bg.naturalWidth || 1;
-      const naturalH = bg.naturalHeight || 1;
-    
-      const startPlaced = placeRectOnImage(
-        RECTS.paper2.freshenerStart,
-        drawnRect,
-        naturalW,
-        naturalH
-      );
-    
+      const startPlaced = placeRectOnImage(RECTS.paper2.freshenerStart, drawnRect);
+
       let x = startPlaced.left;
       let y = startPlaced.top;
       let dragging = false;
       let pointerId = null;
       let offsetX = 0;
       let offsetY = 0;
-    
+
       freshener.style.left = `${x}px`;
       freshener.style.top = `${y}px`;
       freshener.style.width = `${startPlaced.width}px`;
       freshener.style.height = `${startPlaced.height}px`;
-    
+
       function applyPos() {
         freshener.style.left = `${x}px`;
         freshener.style.top = `${y}px`;
       }
-    
+
       function finishIfReady() {
         if (freshenerDone) return;
-    
+
         const liveDragMs =
           freshenerDragMs +
           (freshenerDragStartTs !== null
             ? performance.now() - freshenerDragStartTs
             : 0);
-    
+
         if (liveDragMs >= FRESHENER_REQUIRED_MS) {
           freshenerDone = true;
           scene = "roomCleaned";
           render();
         }
       }
-    
+
       function stopDragAccounting() {
         if (freshenerDragStartTs !== null) {
           freshenerDragMs += performance.now() - freshenerDragStartTs;
@@ -459,65 +463,65 @@ Please do not leave a message.`,
           finishIfReady();
         }
       }
-    
+
       function onPointerMove(e) {
         if (!dragging || e.pointerId !== pointerId) return;
-    
+
         const wrapRect = wrap.getBoundingClientRect();
-    
+
         x = e.clientX - wrapRect.left - offsetX;
         y = e.clientY - wrapRect.top - offsetY;
-    
+
         applyPos();
         finishIfReady();
       }
-    
+
       function onPointerUp(e) {
         if (e.pointerId !== pointerId) return;
-    
+
         dragging = false;
         pointerId = null;
-    
+
         stopDragAccounting();
         freshener.classList.remove("is-dragging");
       }
-    
+
       freshener.addEventListener("pointerdown", (e) => {
         e.preventDefault();
         e.stopPropagation();
 
         playSpraySound();
-    
+
         const rect = freshener.getBoundingClientRect();
-    
+
         offsetX = e.clientX - rect.left;
         offsetY = e.clientY - rect.top;
-    
+
         dragging = true;
         pointerId = e.pointerId;
-    
+
         if (freshenerDragStartTs === null) {
           freshenerDragStartTs = performance.now();
         }
-    
+
         freshener.classList.add("is-dragging");
-    
+
         try {
           freshener.setPointerCapture(pointerId);
         } catch {}
       });
-    
+
       window.addEventListener("pointermove", onPointerMove);
       window.addEventListener("pointerup", onPointerUp);
       window.addEventListener("pointercancel", onPointerUp);
-    
+
       addCleanup(() => {
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("pointerup", onPointerUp);
         window.removeEventListener("pointercancel", onPointerUp);
         stopDragAccounting();
       });
-    
+
       overlays.appendChild(freshener);
     }
 
@@ -662,14 +666,11 @@ Please do not leave a message.`,
         );
       }
 
-      const naturalW = bg.naturalWidth || 1;
-      const naturalH = bg.naturalHeight || 1;
-
       function layout() {
         const drawnRect = getDrawnImageRect(bg);
 
         items.forEach(({ el, rect }) => {
-          const placed = placeRectOnImage(rect, drawnRect, naturalW, naturalH);
+          const placed = placeRectOnImage(rect, drawnRect);
 
           el.style.left = `${placed.left}px`;
           el.style.top = `${placed.top}px`;
@@ -693,42 +694,49 @@ Please do not leave a message.`,
       clearDialog();
 
       const src = BG_MAP[scene];
-      bg.src = src;
 
       bg.onload = () => {
         buildSceneHotspots();
-      
+
         if (scene === "dirtyRoomStart" && !shownIntro) {
           shownIntro = true;
           showMonologue("What's that smell?");
         }
-      
+
         if (scene === "zoomDoor" && !zoomDoorDialogShown) {
           zoomDoorDialogShown = true;
           showMonologue("So stinky… I should leave the room");
         }
-      
+
         if (scene === "security1" && !security1DialogShown) {
           security1DialogShown = true;
           showMonologue("Hey man, come on in.");
         }
-      
+
         if (scene === "paper2") {
           enableFreshenerDrag();
-      
+
           if (!paper2DialogShown) {
             paper2DialogShown = true;
             showMonologue("Wait, there’s an air freshener here");
           }
         }
       };
-      
+
       bg.onerror = () => {
         console.error("Failed to load image:", src);
         showMonologue(`Failed to load image: ${src}`);
       };
+
+      bg.src = src;
+
+      // Handles cached images where onload may not fire normally
+      if (bg.complete && bg.naturalWidth > 0) {
+        bg.onload();
+      }
     }
 
+    startBgm();
     render();
   },
 
