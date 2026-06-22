@@ -34,19 +34,20 @@ export default {
     let chopstickTracking = false;
 
     const bgm = new Audio("./assets/audio/room1/cooking at 1 am bgm.wav");
-bgm.loop = true;
-bgm.volume = 0.45;
+    bgm.loop = true;
+    bgm.volume = 0.45;
 
-let bgmStarted = false;
+    let bgmStarted = false;
 
-function startBgm() {
-  if (bgmStarted) return;
-  bgmStarted = true;
+    function startBgm() {
+      if (bgmStarted) return;
 
-  bgm.play().catch(() => {
-    // Browser blocked autoplay until user interaction.
-  });
-}
+      bgmStarted = true;
+
+      bgm.play().catch(() => {
+        bgmStarted = false;
+      });
+    }
 
     const RECTS = {
       livingRoom: {
@@ -109,7 +110,12 @@ function startBgm() {
       const cx = dRect.left + dRect.width / 2;
       const cy = dRect.top + dRect.height / 2;
 
-      return cx >= zRect.left && cx <= zRect.right && cy >= zRect.top && cy <= zRect.bottom;
+      return (
+        cx >= zRect.left &&
+        cx <= zRect.right &&
+        cy >= zRect.top &&
+        cy <= zRect.bottom
+      );
     }
 
     function ensureChopstick() {
@@ -138,7 +144,9 @@ function startBgm() {
 
       const offsetX = 8;
       const offsetY = -10;
-      chopstickEl.style.transform = `translate(${clientX + offsetX}px, ${clientY + offsetY}px) rotate(-20deg)`;
+      chopstickEl.style.transform = `translate(${clientX + offsetX}px, ${
+        clientY + offsetY
+      }px) rotate(-20deg)`;
     }
 
     function handleChopstickPointerMove(e) {
@@ -148,20 +156,27 @@ function startBgm() {
 
     function showFakeChopstickCursor() {
       ensureChopstick();
+
       chopstickTracking = true;
       chopstickEl.style.display = "block";
+
       document.body.style.cursor = "none";
       wrap.style.cursor = "none";
+
+      window.removeEventListener("pointermove", handleChopstickPointerMove);
       window.addEventListener("pointermove", handleChopstickPointerMove);
     }
 
     function hideFakeChopstickCursor() {
       chopstickTracking = false;
+
       window.removeEventListener("pointermove", handleChopstickPointerMove);
+
       document.body.style.cursor = "";
       wrap.style.cursor = "";
 
       if (!chopstickEl) return;
+
       chopstickEl.style.display = "none";
       chopstickEl.style.transform = "translate(-9999px, -9999px)";
     }
@@ -308,8 +323,10 @@ function startBgm() {
 
         dragging = true;
         el.setPointerCapture?.(e.pointerId);
+
         startX = e.clientX;
         startY = e.clientY;
+
         el.classList.add("is-dragging");
         onStart?.(e);
       }
@@ -365,8 +382,10 @@ function startBgm() {
 
         dragging = true;
         el.setPointerCapture?.(e.pointerId);
+
         startX = e.clientX;
         startY = e.clientY;
+
         el.classList.add("is-dragging");
       }
 
@@ -405,22 +424,39 @@ function startBgm() {
       };
     }
 
-    function enableClickAnywhere(handler) {
-      const old = overlays.querySelector("#clickAnywhere");
-      if (old) old.remove();
-
-      const layer = document.createElement("button");
-      layer.id = "clickAnywhere";
-      layer.className = "click-anywhere";
-      layer.type = "button";
-      layer.setAttribute("aria-label", "Continue");
-      layer.addEventListener("click", handler);
-      overlays.appendChild(layer);
+    function showBackPlate(onClick) {
+      hideBackPlate();
+    
+      const gradient = document.createElement("div");
+      gradient.id = "room1LeftGradient";
+      gradient.className = "room1-left-gradient";
+    
+      gradient.innerHTML = `
+        <div class="room1-left-arrow"></div>
+      `;
+    
+      const clickZone = document.createElement("button");
+      clickZone.id = "room1LeftClickZone";
+      clickZone.className = "room1-left-click-zone";
+      clickZone.type = "button";
+      clickZone.setAttribute("aria-label", "Go back");
+    
+      clickZone.addEventListener("click", onClick);
+    
+      overlays.appendChild(gradient);
+      overlays.appendChild(clickZone);
+    
+      requestAnimationFrame(() => {
+        gradient.classList.add("is-visible");
+      });
     }
-
-    function disableClickAnywhere() {
-      const layer = overlays.querySelector("#clickAnywhere");
-      if (layer) layer.remove();
+    
+    function hideBackPlate() {
+      const gradient = overlays.querySelector("#room1LeftGradient");
+      const clickZone = overlays.querySelector("#room1LeftClickZone");
+    
+      if (gradient) gradient.remove();
+      if (clickZone) clickZone.remove();
     }
 
     function showPotClickHotspot(onClick) {
@@ -432,6 +468,7 @@ function startBgm() {
       btn.className = "hotspot pot-click";
       btn.type = "button";
       btn.setAttribute("aria-label", "Pot");
+
       btn.addEventListener("click", onClick);
       overlays.appendChild(btn);
 
@@ -447,6 +484,7 @@ function startBgm() {
       btn.className = "hotspot cup-click";
       btn.type = "button";
       btn.setAttribute("aria-label", "Cup");
+
       btn.addEventListener("click", onClick);
       overlays.appendChild(btn);
 
@@ -456,15 +494,15 @@ function startBgm() {
     function showRoom1Dialogue(text, onClose) {
       const old = overlays.querySelector("#room1Dialogue");
       if (old) old.remove();
-    
+
       const box = document.createElement("div");
       box.id = "room1Dialogue";
       box.className = "room1-dialogue";
-    
+
       box.innerHTML = `
         <div class="room1-dialogue-text">
           ${text}
-    
+
           <button
             type="button"
             class="room1-dialogue-close"
@@ -475,13 +513,42 @@ function startBgm() {
           </button>
         </div>
       `;
-    
+
       overlays.appendChild(box);
-    
+
       box.querySelector("#room1DialogueClose").addEventListener("click", () => {
         box.remove();
         onClose?.();
       });
+    }
+
+    async function finishRoom1AfterGlass() {
+      if (scene !== "glassEmptyAfterMix") return;
+
+      scene = "distortionAfterMix";
+      hideBackPlate();
+
+      ["ketchup", "dishsoap", "whiskey"].forEach((id) => {
+        const el = overlays.querySelector(`#${id}`);
+        if (el) el.remove();
+      });
+
+      await transitionBg("./assets/bg/room1/vision-distorted-gif.gif");
+
+      await wait(2500);
+
+      localStorage.setItem("room1_done", "1");
+
+      window.dispatchEvent(
+        new CustomEvent("stage:end", {
+          detail: {
+            nextStage: "room2",
+            menuStage: "intro",
+            nextLabel: "Next",
+            menuLabel: "Back to Menu",
+          },
+        })
+      );
     }
 
     function startGlassMixingGame() {
@@ -512,13 +579,15 @@ function startBgm() {
       ];
 
       const used = new Set();
-      let filledCount = 0;
       const cleaners = [];
+
+      let filledCount = 0;
 
       function bgForCount(n) {
         if (n === 1) return "./assets/bg/room1/glass-1_3-full.webp";
         if (n === 2) return "./assets/bg/room1/glass-half-full.webp";
         if (n === 3) return "./assets/bg/room1/glass-full.webp";
+
         return "./assets/bg/room1/glass-empty.webp";
       }
 
@@ -536,69 +605,43 @@ function startBgm() {
         await transitionBg(bgForCount(filledCount));
         layout();
 
-        if (filledCount >= 3) {
-          await wait(200);
+        if (filledCount < 3) return;
 
-          scene = "glassPostMix";
-          disableClickAnywhere();
+        await wait(200);
 
-          items.forEach(({ id }) => {
-            const it = overlays.querySelector(`#${id}`);
-            if (it) it.style.pointerEvents = "none";
-          });
+        scene = "glassPostMix";
 
-          showCupClickHotspot(async () => {
-            if (scene !== "glassPostMix") return;
+        items.forEach(({ id }) => {
+          const it = overlays.querySelector(`#${id}`);
+          if (it) it.style.pointerEvents = "none";
+        });
 
-            scene = "glassEmptyAfterMix";
+        showCupClickHotspot(async () => {
+          if (scene !== "glassPostMix") return;
 
-            const cup = overlays.querySelector("#cupClickHotspot");
-            if (cup) cup.remove();
+          scene = "glassEmptyAfterMix";
 
-            await transitionBg("./assets/bg/room1/glass-empty.webp");
+          const cup = overlays.querySelector("#cupClickHotspot");
+          if (cup) cup.remove();
 
-            enableClickAnywhere(async () => {
-              if (scene !== "glassEmptyAfterMix") return;
-            
-              scene = "distortionAfterMix";
-              disableClickAnywhere();
-            
-              ["ketchup", "dishsoap", "whiskey"].forEach((id) => {
-                const el = overlays.querySelector(`#${id}`);
-                if (el) el.remove();
-              });
-            
-              await transitionBg("./assets/bg/room1/vision-distorted-gif.gif");
-            
-              await wait(2500);
-            
-              localStorage.setItem("room1_done", "1");
-            
-              window.dispatchEvent(
-                new CustomEvent("stage:end", {
-                  detail: {
-                    nextStage: "room2",
-                    menuStage: "intro",
-                    nextLabel: "Next",
-                    menuLabel: "Back to Menu",
-                  },
-                })
-              );
-            });
-          });
+          await transitionBg("./assets/bg/room1/glass-empty.webp");
 
-          layout();
-        }
+          showBackPlate(finishRoom1AfterGlass);
+        });
+
+        layout();
       }
 
       items.forEach(({ id, src, alt }) => {
         const el = document.createElement("img");
+
         el.id = id;
         el.src = src;
         el.alt = alt;
         el.className = "item-overlay draggable";
         el.draggable = false;
         el.style.transform = "translate(0px, 0px)";
+
         overlays.appendChild(el);
 
         const cleanup = makeDraggableMulti({
@@ -631,6 +674,7 @@ function startBgm() {
       noodles.alt = "Noodles";
       noodles.className = "item-overlay draggable";
       noodles.draggable = false;
+      noodles.style.transform = "translate(0px, 0px)";
 
       const potZone = document.createElement("div");
       potZone.id = "potDropzone";
@@ -640,7 +684,6 @@ function startBgm() {
       overlays.appendChild(potZone);
       overlays.appendChild(noodles);
 
-      noodles.style.transform = "translate(0px, 0px)";
       layout();
 
       cleanupDrag = makeDraggable({
@@ -658,18 +701,18 @@ function startBgm() {
 
           showPotClickHotspot(async () => {
             if (scene !== "cooked") return;
-          
+
             scene = "emptyPot";
-          
+
             clearOverlays();
-          
+
             await transitionBg("./assets/bg/room1/empty-pot.webp");
-          
+
             showRoom1Dialogue("I wanna drink something too…", async () => {
               scene = "glassEmpty";
-            
+
               await transitionBg("./assets/bg/room1/glass-empty.webp");
-            
+
               startGlassMixingGame();
             });
           });
@@ -677,18 +720,18 @@ function startBgm() {
       });
     }
 
-    stoveBtn.addEventListener("click", async () => {
+    async function handleStoveButtonClick() {
       startBgm();
-      
+
       if (scene === "livingRoom") {
         scene = "kitchen";
-      
+
         await transitionBg("./assets/bg/room1/kitchen-main-view.webp");
-      
+
         showRoom1Dialogue("Kinda hungry, gonna cook something", () => {
           layout();
         });
-      
+
         layout();
         return;
       }
@@ -700,32 +743,41 @@ function startBgm() {
       await transitionBg("./assets/bg/room1/empty-pot-boiling.webp");
 
       stoveBtn.style.display = "none";
+
       clearOverlays();
       createStoveSceneOverlays();
       layout();
-    });
+    }
 
     const onResize = () => layout();
 
+    stoveBtn.addEventListener("click", handleStoveButtonClick);
     window.addEventListener("resize", onResize);
+    window.addEventListener("pointerdown", startBgm, { once: true });
+    window.addEventListener("keydown", startBgm, { once: true });
+
     bg.addEventListener("load", layout, { once: false });
 
     layout();
+    startBgm();
 
     this._room1Cleanup = () => {
+      stoveBtn.removeEventListener("click", handleStoveButtonClick);
       window.removeEventListener("resize", onResize);
-    
+      window.removeEventListener("pointerdown", startBgm);
+      window.removeEventListener("keydown", startBgm);
+
       if (cleanupDrag) {
         cleanupDrag();
         cleanupDrag = null;
       }
-    
+
       bgm.pause();
       bgm.currentTime = 0;
       bgmStarted = false;
-    
+
       hideFakeChopstickCursor();
-    
+
       if (chopstickEl) {
         chopstickEl.remove();
         chopstickEl = null;

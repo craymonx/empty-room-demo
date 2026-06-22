@@ -42,7 +42,7 @@ export default {
     const CORRECT_SECURITY_NUMBER = "20200813";
     const FRESHENER_REQUIRED_MS = 3000;
 
-    const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm.wav";
+    const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm 2.wav";
     const SPRAY_SRC = "./assets/audio/room3/spray.wav";
 
     // IMPORTANT:
@@ -406,7 +406,7 @@ Please do not leave a message.`,
           return;
         }
 
-        showPhoneError("The number you have called is not existed.");
+        showPhoneError("The number you have dialed does not exist.");
       });
 
       dialogLayer.appendChild(popup);
@@ -718,7 +718,7 @@ Please do not leave a message.`,
 
           if (!paper2DialogShown) {
             paper2DialogShown = true;
-            showMonologue("Wait, there’s an air freshener here");
+            showMonologue("How many more inspections do I need… Wait, there’s an air freshener here");
           }
         }
       };

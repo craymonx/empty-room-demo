@@ -25,7 +25,7 @@ export default {
     let room2Bgm = null;
 
     function setupRoom2Bgm() {
-      room2Bgm = new Audio("./assets/audio/room2/2 static bgm.wav");
+      room2Bgm = new Audio("./assets/audio/room2/2 static bgm 2.wav");
       room2Bgm.loop = true;
       room2Bgm.volume = 0.45;
 
@@ -748,16 +748,24 @@ export default {
     function showBackSlider(onClick) {
       const old = overlays.querySelector("#room2BackSlider");
       if (old) old.remove();
-
+    
       const slider = document.createElement("button");
       slider.id = "room2BackSlider";
-      slider.className = "room2-back-slider";
+      slider.className = "room2-left-gradient";
       slider.type = "button";
-      slider.innerHTML = `<span class="room2-back-arrow">‹</span>`;
+      slider.innerHTML = `<span class="room2-left-arrow"></span>`;
       slider.setAttribute("aria-label", "Go back");
-      slider.addEventListener("click", onClick);
-
+    
+      slider.addEventListener("click", async () => {
+        slider.disabled = true;
+        await onClick?.();
+      });
+    
       overlays.appendChild(slider);
+    
+      requestAnimationFrame(() => {
+        slider.classList.add("is-visible");
+      });
     }
 
     function resetSortingGame() {
@@ -881,16 +889,16 @@ export default {
                         showClosableDialog({
                           textLines: ["I’m gonna go back to my bedroom…"],
                           onClose: () => {
-                            showRoomHotspot(async () => {
+                            showBackSlider(async () => {
                               if (scene !== "mainViewStatic") return;
-
+                        
                               scene = "bedroom";
                               clearOverlays();
                               await transitionBg("./assets/bg/room2/bedroom-game2.webp");
-
+                        
                               await wait(250);
                               localStorage.setItem("room2_done", "1");
-
+                        
                               window.dispatchEvent(
                                 new CustomEvent("stage:end", {
                                   detail: {

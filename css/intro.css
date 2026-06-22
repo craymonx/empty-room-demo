@@ -1,47 +1,108 @@
-/* Intro overlay card */
+/* Intro interactive main page */
 
-.intro-card {
-  position: absolute;
-  left: 50%;
-  bottom: max(24px, env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  z-index: 20;
-
-  width: min(760px, calc(100vw - 32px));
-  max-height: calc(100vh - 48px);
-  overflow-y: auto;
-
-  box-sizing: border-box;
+#scene-intro .scene-inner {
+  position: relative;
 }
 
-.intro-card-inner {
-  width: 100%;
-  box-sizing: border-box;
+.intro-hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
 
-  padding: 18px 20px;
-  border-radius: 16px;
+.intro-hotspot {
+  position: absolute;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Turn this on temporarily when testing hotspot positions */
+/*
+.intro-hotspot {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+*/
+
+.intro-hotspot:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Popup panel */
+
+.intro-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+  box-sizing: border-box;
 
   background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(4px);
 }
 
-@media (max-width: 600px) {
-  .intro-card {
-    width: calc(100vw - 24px);
-    bottom: max(14px, env(safe-area-inset-bottom));
-    max-height: calc(100vh - 28px);
-  }
-
-  .intro-card-inner {
-    padding: 14px;
-  }
-}
-.intro-actions {
+.intro-panel.is-open {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
+}
+
+.intro-panel-inner {
+  position: relative;
+
+  width: min(620px, calc(100vw - 32px));
+  max-height: min(760px, calc(100vh - 48px));
+  overflow-y: auto;
+
+  padding: 24px;
+  box-sizing: border-box;
+  border-radius: 18px;
+
+  color: #fff;
+  background: rgba(8, 10, 12, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.intro-panel-inner h1 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  letter-spacing: 0.02em;
+}
+
+.intro-panel-inner p {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.intro-panel-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.intro-panel-close:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 /* Room list layout */
@@ -65,21 +126,21 @@
   padding: 10px 14px;
   border-radius: 10px;
 
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fff;
 
   cursor: pointer;
-  transition: background .2s ease, transform .1s ease;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .room-item:hover {
-  background: rgba(255,255,255,.15);
+  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
 }
 
 .room-item.locked {
-  opacity: .5;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -87,20 +148,89 @@
   font-size: 14px;
 }
 
+/* Coding style content */
+
+.code-card {
+  padding: 16px;
+  border-radius: 14px;
+
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.code-card p {
+  margin: 0 0 6px;
+}
+
+.code-key {
+  color: #9ad7ff;
+}
+
+.code-value {
+  color: #f1d18a;
+}
+
+/* Linktree style links */
+
+.linktree-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.linktree-list a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+
+  border-radius: 12px;
+
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.linktree-list a:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 600px) {
-  .intro-card {
-    padding:
-      14px
-      12px
-      max(14px, env(safe-area-inset-bottom));
+  .intro-panel {
+    padding: 14px;
   }
 
-  .intro-card-inner {
-    padding: 14px;
-    border-radius: 14px;
+  .intro-panel-inner {
+    width: calc(100vw - 28px);
+    max-height: calc(100vh - 28px);
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .intro-panel-inner h1 {
+    font-size: 22px;
   }
 
   .room-item {
     padding: 10px 12px;
+  }
+
+  .code-card {
+    font-size: 12px;
+    overflow-x: auto;
   }
 }
