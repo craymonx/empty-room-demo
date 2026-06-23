@@ -3,11 +3,29 @@
   --hud-border: rgba(255, 255, 255, 0.08);
   --text: #eaeaea;
 
-  --room-max-width: 1440px; /* one knob for ALL rooms */
+  --room-max-width: 1440px;
   --room-bg: #000;
+
+  /* Shared room dialogue and back-button UI */
+  --room-ui-font: "Calibri", Arial, Helvetica, sans-serif;
+  --room-ui-text: #111;
+  --room-ui-panel: #f2f2f2;
+  --room-ui-border: #111;
+  --room-ui-overlay: rgba(0, 0, 0, 0.42);
+  --room-ui-width: 760px;
+  --room-ui-x: 16px;
+  --room-ui-x-mobile: 12px;
+  --room-ui-bottom: 24px;
+  --room-ui-bottom-mobile: 84px;
+  --room-ui-dialog-z: 120;
+  --room-ui-backplate-z: 90;
+  --room-ui-backplate-width: 34%;
+  --room-ui-backplate-width-mobile: 42%;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 /* Loading overlay */
 #loading-screen {
@@ -18,7 +36,7 @@
   align-items: center;
   justify-content: center;
 
-  background: rgba(0,0,0,0.92);
+  background: rgba(0, 0, 0, 0.92);
   color: #fff;
   font-size: 18px;
   letter-spacing: 0.2px;
@@ -28,27 +46,31 @@
   transition: opacity 300ms ease;
 }
 
-/* Use your existing .active to show it */
 #loading-screen.active {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Optional: small spinner */
 #loading-screen::after {
   content: "";
   width: 18px;
   height: 18px;
   margin-left: 10px;
-  border: 2px solid rgba(255,255,255,0.35);
+  border: 2px solid rgba(255, 255, 255, 0.35);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-html, body {
+html,
+body,
+#game-root {
   height: 100%;
 }
 
@@ -56,11 +78,18 @@ body {
   margin: 0;
   background: var(--room-bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
   overflow: hidden;
 }
 
-/* Full screen stage container */
+/* Shared stage */
 .scene {
   position: relative;
   width: 100%;
@@ -73,23 +102,26 @@ body {
   align-items: stretch;
 }
 
-/* New inner canvas that has the capped width */
 .scene-inner {
   position: relative;
   width: 100%;
-  max-width: var(--room-max-width);   /* <- change once for all rooms */
+  max-width: var(--room-max-width);
   height: 100%;
   overflow: hidden;
   background: #000;
 }
 
-/* Background image fills scene */
 .bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /*
+   * Preserve each room's original artwork ratio.
+   * Room 1's stylesheet previously supplied this globally because it was
+   * permanently loaded; keep the behavior here now that room CSS is swapped.
+   */
+  object-fit: contain;
   object-position: center;
   z-index: 0;
 
@@ -97,7 +129,6 @@ body {
   -webkit-user-drag: none;
 }
 
-/* Base hotspot */
 .hotspot {
   position: absolute;
   cursor: pointer;
@@ -108,13 +139,12 @@ body {
   z-index: 5;
 }
 
-/* Debug helper: add class "debug-hotspots" on .scene to visualize hotspots */
 .scene.debug-hotspots .hotspot {
   background: rgba(255, 255, 255, 0.12);
   outline: 1px solid rgba(255, 255, 255, 0.35);
 }
 
-/* Optional HUD */
+/* Shared HUD and completion UI */
 .hud {
   position: absolute;
   top: 16px;
@@ -153,13 +183,19 @@ body {
   padding: 16px 18px;
   border-radius: 16px;
 
-  background: rgba(0,0,0,.45);
-  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(6px);
 }
 
-.intro-card h1 { margin: 0 0 8px; }
-.intro-card p { margin: 0 0 14px; opacity: .9; }
+.intro-card h1 {
+  margin: 0 0 8px;
+}
+
+.intro-card p {
+  margin: 0 0 14px;
+  opacity: 0.9;
+}
 
 .intro-actions {
   display: flex;
@@ -167,14 +203,13 @@ body {
   flex-wrap: wrap;
 }
 
-/* Completion popup */
 .popup {
   position: absolute;
   inset: 0;
   z-index: 9999;
   display: grid;
   place-items: center;
-  background: rgba(0,0,0,.55);
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(4px);
 }
 
@@ -182,7 +217,7 @@ body {
   width: min(520px, calc(100% - 32px));
   padding: 16px 18px;
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .popup-title {
@@ -192,7 +227,7 @@ body {
 
 .popup-msg {
   margin: 0 0 14px;
-  opacity: .9;
+  opacity: 0.9;
 }
 
 .popup-actions {
@@ -201,12 +236,7 @@ body {
   gap: 10px;
 }
 
-html,
-body,
-#game-root {
-  height: 100%;
-}
-
+/* Persistent stage controls */
 .global-stage-ui {
   position: fixed;
   top: 24px;
@@ -239,7 +269,6 @@ body,
 }
 
 /* Global hotspot debug mode */
-/* Global hotspot debug mode */
 body.debug .hotspot,
 body.debug .dropzone,
 body.debug .click-zone,
@@ -256,4 +285,504 @@ body.debug .pot-dropzone,
 body.debug .sorting-zone {
   outline: 2px solid rgba(255, 0, 0, 0.9) !important;
   background: rgba(255, 0, 0, 0.2) !important;
+}
+
+/* Shared room dialogues */
+.rpg-ui,
+.room3-monologue {
+  position: absolute;
+  inset: 0;
+  z-index: var(--room-ui-dialog-z);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+  padding: 0 var(--room-ui-x)
+    calc(var(--room-ui-bottom) + env(safe-area-inset-bottom));
+  pointer-events: none;
+  font-family: var(--room-ui-font);
+}
+
+.room1-dialogue,
+.room11-rpg-dialog {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--room-ui-bottom) + env(safe-area-inset-bottom));
+  z-index: var(--room-ui-dialog-z);
+  width: min(var(--room-ui-width), calc(100vw - 36px));
+  max-width: calc(100vw - 36px);
+  transform: translateX(-50%);
+  color: var(--room-ui-text);
+  font-family: var(--room-ui-font);
+  pointer-events: auto;
+}
+
+.rpg-box,
+.room1-dialogue-text,
+.room3-monologue__inner,
+.room11-rpg-dialog {
+  position: relative;
+  width: min(var(--room-ui-width), 100%);
+  min-height: 96px;
+  padding: 14px 54px 14px 16px;
+  border: 3px solid var(--room-ui-border);
+  background: var(--room-ui-panel);
+  box-shadow:
+    inset 0 0 0 2px var(--room-ui-panel),
+    inset 0 0 0 4px var(--room-ui-border);
+  color: var(--room-ui-text);
+  image-rendering: pixelated;
+  pointer-events: auto;
+}
+
+.room11-rpg-dialog {
+  position: absolute;
+}
+
+.rpg-text,
+.room1-dialogue-text,
+.room3-monologue__text,
+.room11-rpg-text {
+  color: var(--room-ui-text);
+  font-family: var(--room-ui-font);
+  font-size: clamp(17px, 3vw, 26px);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.room3-monologue__text {
+  margin: 0;
+}
+
+.rpg-speaker,
+.room11-rpg-name {
+  margin-bottom: 10px;
+  font-family: var(--room-ui-font);
+  font-size: clamp(18px, 3.4vw, 28px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rpg-close,
+.room1-dialogue-close,
+.room3-monologue__next,
+.room11-rpg-next {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 50;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--room-ui-text);
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.rpg-close:hover,
+.room1-dialogue-close:hover,
+.room3-monologue__next:hover,
+.room11-rpg-next:hover {
+  opacity: 0.65;
+}
+
+.room11-rpg-name {
+  display: block;
+  padding: 0;
+  background: transparent;
+  color: var(--room-ui-text);
+}
+
+.room11-rpg-text {
+  margin: 0;
+  padding-right: 30px;
+}
+
+.room11-rpg-next {
+  overflow: hidden;
+  text-indent: -9999px;
+}
+
+.room11-rpg-next::after {
+  content: "›";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-indent: 0;
+}
+
+.rpg-box--dialog {
+  position: relative;
+}
+
+.rpg-box--choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.rpg-choice {
+  position: relative;
+  min-height: 38px;
+  padding: 4px 4px 4px 28px;
+  border: 0;
+  appearance: none;
+  background: transparent;
+  color: var(--room-ui-text);
+  font-family: var(--room-ui-font);
+  font-size: clamp(16px, 2.7vw, 24px);
+  font-weight: 300;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rpg-choice:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Shared modal dialogue surfaces */
+.room3-paper-popup__backdrop,
+.room3-phone-popup__backdrop,
+.room5-dialog-backdrop {
+  background: var(--room-ui-overlay);
+  backdrop-filter: blur(3px);
+}
+
+.room5-dialog-box {
+  width: min(680px, calc(100vw - 32px));
+  padding: 20px;
+  border: 3px solid var(--room-ui-border);
+  border-radius: 0;
+  background: var(--room-ui-panel);
+  box-shadow:
+    inset 0 0 0 2px var(--room-ui-panel),
+    inset 0 0 0 4px var(--room-ui-border);
+  color: var(--room-ui-text);
+  font-family: var(--room-ui-font);
+}
+
+.room5-dialog-text {
+  font-size: clamp(17px, 3vw, 24px);
+  line-height: 1.25;
+}
+
+.room5-dialog-text p {
+  line-height: inherit;
+}
+
+.room5-dialog-actions .global-ui-btn,
+.room5-dialog-actions button {
+  min-height: 40px;
+  border: 2px solid var(--room-ui-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--room-ui-text);
+  font-family: var(--room-ui-font);
+  font-size: 16px;
+  backdrop-filter: none;
+}
+
+/* Shared left return/back plates */
+.room1-left-gradient,
+.room2-left-gradient,
+.room3-hotspot--return-left,
+.room4-left-gradient,
+.room7-left-gradient,
+.room11-left-gradient {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: var(--room-ui-backplate-z);
+  width: var(--room-ui-backplate-width);
+  height: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.72),
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0)
+  );
+  opacity: 0;
+  transform: translateX(-55%);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.room1-left-gradient,
+.room4-left-gradient,
+.room7-left-gradient,
+.room11-left-gradient {
+  pointer-events: none;
+}
+
+.room2-left-gradient,
+.room3-hotspot--return-left {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.room1-left-gradient.is-visible,
+.room2-left-gradient.is-visible,
+.room3-hotspot--return-left.is-visible,
+.room4-left-gradient.is-visible,
+.room7-left-gradient.is-visible,
+.room11-left-gradient.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.room1-left-arrow,
+.room2-left-arrow,
+.room4-left-arrow,
+.room7-left-arrow,
+.room11-left-arrow {
+  position: absolute;
+  left: clamp(42px, 6vw, 72px);
+  top: 50%;
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-50%);
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+}
+
+.room1-left-arrow::before,
+.room2-left-arrow::before,
+.room4-left-arrow::before,
+.room7-left-arrow::before,
+.room11-left-arrow::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 17px;
+  width: 15px;
+  height: 15px;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.9);
+  border-left: 3px solid rgba(255, 255, 255, 0.9);
+  transform: rotate(45deg);
+}
+
+.room1-left-gradient.is-visible .room1-left-arrow,
+.room2-left-gradient.is-visible .room2-left-arrow,
+.room4-left-gradient.is-visible .room4-left-arrow,
+.room7-left-gradient.is-visible .room7-left-arrow,
+.room11-left-gradient.is-visible .room11-left-arrow {
+  animation: roomUiLeftArrowPulse 1.35s ease-in-out infinite;
+}
+
+@keyframes roomUiLeftArrowPulse {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform: translateY(-50%) translateX(-8px);
+    opacity: 1;
+  }
+}
+
+.room1-left-click-zone,
+.room11-left-click-zone {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: calc(var(--room-ui-backplate-z) + 1);
+  width: var(--room-ui-backplate-width);
+  height: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Room 3 uses one hotspot for both the plate and click target. */
+#scene-room3 .room3-hotspot.room3-hotspot--return-left {
+  left: 0 !important;
+  top: 0 !important;
+  width: var(--room-ui-backplate-width) !important;
+  height: 100% !important;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.72),
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+#scene-room3 .room3-hotspot.room3-hotspot--return-left::after {
+  content: "";
+  position: absolute;
+  left: clamp(42px, 6vw, 72px);
+  top: 50%;
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-50%);
+  backdrop-filter: blur(5px);
+}
+
+#scene-room3 .room3-hotspot.room3-hotspot--return-left::before {
+  content: "";
+  position: absolute;
+  left: calc(clamp(42px, 6vw, 72px) + 21px);
+  top: calc(50% - 10px);
+  z-index: 1;
+  width: 15px;
+  height: 15px;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.9);
+  border-left: 3px solid rgba(255, 255, 255, 0.9);
+  transform: rotate(45deg);
+}
+
+#scene-room3 .room3-hotspot.room3-hotspot--return-left.is-visible::after {
+  animation: room3LeftArrowPlatePulse 1.35s ease-in-out infinite;
+}
+
+#scene-room3 .room3-hotspot.room3-hotspot--return-left.is-visible::before {
+  animation: room3LeftArrowChevronPulse 1.35s ease-in-out infinite;
+}
+
+@keyframes room3LeftArrowPlatePulse {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform: translateY(-50%) translateX(-8px);
+    opacity: 1;
+  }
+}
+
+@keyframes room3LeftArrowChevronPulse {
+  0%,
+  100% {
+    transform: translateX(0) rotate(45deg);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform: translateX(-8px) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .rpg-ui,
+  .room3-monologue {
+    gap: 8px;
+    padding-right: var(--room-ui-x-mobile);
+    padding-bottom: calc(
+      var(--room-ui-bottom-mobile) + env(safe-area-inset-bottom)
+    );
+    padding-left: var(--room-ui-x-mobile);
+  }
+
+  .room1-dialogue,
+  .room11-rpg-dialog {
+    bottom: calc(var(--room-ui-bottom-mobile) + env(safe-area-inset-bottom));
+    width: calc(100vw - 28px);
+    max-width: calc(100vw - 28px);
+  }
+
+  .rpg-box,
+  .room1-dialogue-text,
+  .room3-monologue__inner,
+  .room11-rpg-dialog {
+    width: 100%;
+    min-height: 76px;
+    padding: 12px 48px 12px 14px;
+  }
+
+  .rpg-box--choices {
+    grid-template-columns: 1fr;
+  }
+
+  .rpg-choice {
+    padding-left: 20px;
+  }
+
+  .rpg-close,
+  .room1-dialogue-close,
+  .room3-monologue__next,
+  .room11-rpg-next {
+    top: 8px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 28px;
+  }
+
+  .room1-left-gradient,
+  .room2-left-gradient,
+  .room3-hotspot--return-left,
+  .room4-left-gradient,
+  .room7-left-gradient,
+  .room11-left-gradient,
+  .room1-left-click-zone,
+  .room11-left-click-zone {
+    width: var(--room-ui-backplate-width-mobile);
+  }
+
+  #scene-room3 .room3-hotspot.room3-hotspot--return-left {
+    width: var(--room-ui-backplate-width) !important;
+  }
+
+  .room1-left-arrow,
+  .room2-left-arrow,
+  .room4-left-arrow,
+  .room7-left-arrow,
+  .room11-left-arrow {
+    left: clamp(28px, 9vw, 52px);
+    width: 48px;
+    height: 48px;
+  }
+
+  .room1-left-arrow::before,
+  .room2-left-arrow::before,
+  .room4-left-arrow::before,
+  .room7-left-arrow::before,
+  .room11-left-arrow::before {
+    left: 19px;
+    top: 15px;
+  }
+
+  #scene-room3 .room3-hotspot.room3-hotspot--return-left::after {
+    left: clamp(28px, 9vw, 52px);
+    width: 48px;
+    height: 48px;
+  }
+
+  #scene-room3 .room3-hotspot.room3-hotspot--return-left::before {
+    left: calc(clamp(28px, 9vw, 52px) + 19px);
+    top: calc(50% - 9px);
+  }
+}
+
+@media (max-width: 768px) and (max-height: 520px) {
+  :root {
+    --room-ui-bottom-mobile: 56px;
+  }
 }

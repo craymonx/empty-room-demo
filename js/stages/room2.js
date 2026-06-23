@@ -844,23 +844,6 @@ export default {
                 showBackSlider(async () => {
                   if (scene !== "drawerSorted") return;
 
-                  resetSortingGame();
-                  scene = "drawerMessy";
-                  clearOverlays();
-                  await setBgInstant("./assets/bg/room2/drawer-messy.webp");
-
-                  showDrawerOpenHotspot(async () => {
-                    if (scene !== "drawerMessy") return;
-
-                    await transitionBg("./assets/bg/room2/empty-drawer.webp");
-                    resetSortingGame();
-                    startUtensilSortingGame();
-                  });
-                });
-
-                showLeftAreaHotspot2(async () => {
-                  if (scene !== "drawerSorted") return;
-
                   scene = "stare2";
                   clearOverlays();
                   await setBgInstant("./assets/bg/room2/stare-2.webp");
@@ -977,15 +960,6 @@ export default {
             textLines: ["Let's go back."],
             onClose: () => {
               showBackSlider(async () => {
-                if (scene !== "fullCup") return;
-
-                scene = "emptyCup";
-                clearOverlays();
-                await setBgInstant("./assets/bg/room2/empty-cup.webp");
-                startBeerGame();
-              });
-
-              showLeftAreaHotspot(async () => {
                 if (scene !== "fullCup") return;
 
                 scene = "stare1";

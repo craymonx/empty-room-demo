@@ -44,7 +44,9 @@ function setStageStyles(stageId) {
     document.head.appendChild(link);
   }
 
-  link.href = file;
+  if (link.getAttribute("href") !== file) {
+    link.href = file;
+  }
 }
 
 export function registerStageLoaders(loaders) {

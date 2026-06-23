@@ -2,74 +2,6 @@ export default {
   enter({ root, go }) {
     root.innerHTML = `
       <section class="scene" id="scene-room7">
-        <style>
-          .room7-left-gradient {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 34%;
-            height: 100%;
-            background: linear-gradient(
-              90deg,
-              rgba(0, 0, 0, 0.72),
-              rgba(0, 0, 0, 0.42),
-              rgba(0, 0, 0, 0)
-            );
-            opacity: 0;
-            transform: translateX(-55%);
-            transition: opacity 0.35s ease, transform 0.35s ease;
-            pointer-events: none;
-            z-index: 6;
-          }
-
-          .room7-left-gradient.is-visible {
-            opacity: 1;
-            transform: translateX(0);
-          }
-
-          .room7-left-arrow {
-            position: absolute;
-            left: 72px;
-            top: 50%;
-            width: 54px;
-            height: 54px;
-            transform: translateY(-50%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(5px);
-          }
-
-          .room7-left-arrow::before {
-            content: "";
-            position: absolute;
-            left: 21px;
-            top: 17px;
-            width: 15px;
-            height: 15px;
-            border-left: 3px solid rgba(255, 255, 255, 0.9);
-            border-bottom: 3px solid rgba(255, 255, 255, 0.9);
-            transform: rotate(45deg);
-          }
-
-          .room7-left-gradient.is-visible .room7-left-arrow {
-            animation: room7LeftArrowPulse 1.35s ease-in-out infinite;
-          }
-
-          @keyframes room7LeftArrowPulse {
-            0%, 100% {
-              transform: translateY(-50%) translateX(0);
-              opacity: 0.65;
-            }
-
-            50% {
-              transform: translateY(-50%) translateX(-8px);
-              opacity: 1;
-            }
-          }
-
-        </style>
-
         <div class="scene-inner" id="room7Wrap">
           <img
             id="bg"
@@ -206,7 +138,12 @@ export default {
       return btn;
     }
 
-    function addImageOverlay(src, rect, className = "room7-prop", draggable = false) {
+    function addImageOverlay(
+      src,
+      rect,
+      className = "room7-prop",
+      draggable = false,
+    ) {
       const img = document.createElement("img");
       img.src = src;
       img.className = className;
@@ -226,8 +163,6 @@ export default {
       return img;
     }
 
-    
-
     function clearEndButtonTimer() {
       if (endButtonTimer) {
         clearTimeout(endButtonTimer);
@@ -243,10 +178,10 @@ export default {
     function handleEmptyRoomClick() {
       if (emptyRoomClickCount >= 2) {
         setScene("burningBushFlash");
-    
+
         endButtonTimer = setTimeout(() => {
           localStorage.setItem("room7_done", "1");
-    
+
           window.dispatchEvent(
             new CustomEvent("stage:end", {
               detail: {
@@ -255,13 +190,13 @@ export default {
                 nextLabel: "Next",
                 menuLabel: "Back to Menu",
               },
-            })
+            }),
           );
         }, 5000);
-    
+
         return;
       }
-    
+
       emptyRoomClickCount += 1;
       layout();
     }
@@ -270,20 +205,20 @@ export default {
       const elBox = el.getBoundingClientRect();
       const centerX = elBox.left + elBox.width / 2;
       const centerY = elBox.top + elBox.height / 2;
-    
+
       const wrapBox = wrap.getBoundingClientRect();
       const imgRect = getDrawnImageRect(bg);
-    
+
       const scaleX = imgRect.width / BASE_W;
       const scaleY = imgRect.height / BASE_H;
-    
+
       const zone = {
         left: wrapBox.left + imgRect.left + zoneRect.x * scaleX,
         top: wrapBox.top + imgRect.top + zoneRect.y * scaleY,
         right: wrapBox.left + imgRect.left + (zoneRect.x + zoneRect.w) * scaleX,
         bottom: wrapBox.top + imgRect.top + (zoneRect.y + zoneRect.h) * scaleY,
       };
-    
+
       return (
         centerX >= zone.left &&
         centerX <= zone.right &&
@@ -357,11 +292,13 @@ export default {
 
       if (scene === "main") bg.src = "./assets/bg/room7/main.webp";
       if (scene === "mainSteam") bg.src = "./assets/bg/room7/main-steam.webp";
-      if (scene === "kitchenCounter") bg.src = "./assets/bg/room7/kitchen-counter.webp";
+      if (scene === "kitchenCounter")
+        bg.src = "./assets/bg/room7/kitchen-counter.webp";
       if (scene === "angryDog") bg.src = "./assets/bg/room7/angry-dog.webp";
       if (scene === "dogVomit") bg.src = "./assets/bg/room7/dog-vomit.webp";
       if (scene === "coffee") bg.src = "./assets/bg/room7/coffee.webp";
-      if (scene === "coffeeFinished") bg.src = "./assets/bg/room7/coffee-finished.webp";
+      if (scene === "coffeeFinished")
+        bg.src = "./assets/bg/room7/coffee-finished.webp";
       if (scene === "soundwave") bg.src = "./assets/bg/room7/soundwave.webp";
       if (scene === "radio") bg.src = "./assets/bg/room7/radio.webp";
       if (scene === "radioLimbs") bg.src = "./assets/bg/room7/radio-limbs.webp";
@@ -379,7 +316,6 @@ export default {
       layout();
     }
 
-    
     function layout() {
       clearOverlays();
 
@@ -390,7 +326,7 @@ export default {
         addHotspot(
           RECTS.main.steamZone,
           () => setScene("mainSteam"),
-          "Go to steam scene"
+          "Go to steam scene",
         );
       }
 
@@ -398,7 +334,7 @@ export default {
         addHotspot(
           RECTS.mainSteam.counterZone,
           () => setScene("kitchenCounter"),
-          "Go to kitchen counter"
+          "Go to kitchen counter",
         );
       }
 
@@ -407,21 +343,17 @@ export default {
           "./assets/props/room7/cup-empty.webp",
           RECTS.kitchenCounter.cupEmpty,
           "room7-cup-empty",
-          true
+          true,
         );
 
-        addHotspot(
-          RECTS.kitchenCounter.dogZone,
-          () => {},
-          "Dog zone"
-        );
+        addHotspot(RECTS.kitchenCounter.dogZone, () => {}, "Dog zone");
       }
 
       if (scene === "dogVomit") {
         addHotspot(
           RECTS.dogVomit.coffeeZone,
           () => setScene("coffee"),
-          "Go to coffee"
+          "Go to coffee",
         );
       }
 
@@ -429,7 +361,7 @@ export default {
         addHotspot(
           RECTS.coffee.finishZone,
           () => setScene("coffeeFinished"),
-          "Finish coffee"
+          "Finish coffee",
         );
       }
 
@@ -437,7 +369,7 @@ export default {
         addHotspot(
           RECTS.coffeeFinished.leftZone,
           () => setScene("soundwave"),
-          "Go to soundwave"
+          "Go to soundwave",
         );
       }
 
@@ -445,7 +377,7 @@ export default {
         addHotspot(
           RECTS.soundwave.radioZone,
           () => setScene("radio"),
-          "Go to radio"
+          "Go to radio",
         );
       }
 
@@ -453,7 +385,7 @@ export default {
         addHotspot(
           RECTS.radio.limbsZone,
           () => setScene("radioLimbs"),
-          "Show radio limbs"
+          "Show radio limbs",
         );
       }
 
@@ -461,7 +393,7 @@ export default {
         addHotspot(
           RECTS.radioLimbs.leftZone,
           () => setScene("emptyRoom"),
-          "Go to empty room"
+          "Go to empty room",
         );
       }
 
@@ -469,14 +401,14 @@ export default {
         addHotspot(
           RECTS.emptyRoom.fullScreen,
           handleEmptyRoomClick,
-          "Empty room interaction"
+          "Empty room interaction",
         );
 
         if (emptyRoomClickCount >= 1) {
           addImageOverlay(
             "./assets/props/room7/boxes.gif",
             RECTS.emptyRoom.boxesGif,
-            "room7-boxes-gif"
+            "room7-boxes-gif",
           );
         }
 
@@ -484,7 +416,7 @@ export default {
           addImageOverlay(
             "./assets/props/room7/painting.gif",
             RECTS.emptyRoom.paintingGif,
-            "room7-painting-gif"
+            "room7-painting-gif",
           );
         }
       }

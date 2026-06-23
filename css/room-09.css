@@ -20,7 +20,10 @@
 
 /* Smooth transition */
 .room9-bg {
-  transition: opacity 0.45s ease, filter 0.45s ease, transform 0.45s ease;
+  transition:
+    opacity 0.45s ease,
+    filter 0.45s ease,
+    transform 0.45s ease;
 }
 
 .room9-bg.is-changing {
@@ -39,86 +42,89 @@
 
 /* Arrows */
 .room9-nav-arrow {
-    position: absolute;
-    width: 76px;
-    height: 76px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 255, 255, 0.55);
-    background: rgba(255, 255, 255, 0.22);
-    cursor: pointer;
-    pointer-events: auto;
-    backdrop-filter: blur(2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
-    transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
-    opacity: 0.95;
-  }
-  
-  .room9-nav-arrow::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 30px;
-    height: 22px;
-    transform: translate(-50%, -50%);
-    background: rgba(40, 40, 40, 0.78);
-    clip-path: polygon(50% 0%, 100% 100%, 50% 72%, 0% 100%);
-  }
-  
-  .room9-nav-arrow:hover {
-    background: rgba(255, 255, 255, 0.34);
-    opacity: 1;
-  }
-  
-  .room9-nav-arrow.forward {
-    left: 50%;
-    top: 66%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .room9-nav-arrow.forward:hover {
-    transform: translate(-50%, -50%) scale(1.08);
-  }
-  
-  .room9-nav-arrow.back {
-    left: 50%;
-    top: 78%;
-    transform: translate(-50%, -50%) rotate(180deg);
-  }
-  
-  .room9-nav-arrow.back:hover {
-    transform: translate(-50%, -50%) rotate(180deg) scale(1.08);
-  }
-  
-  .room9-nav-arrow.left {
-    left: 40%;
-    top: 73%;
-    transform: translate(-50%, -50%) rotate(-90deg);
-  }
-  
-  .room9-nav-arrow.left:hover {
-    transform: translate(-50%, -50%) rotate(-90deg) scale(1.08);
-  }
-  
-  .room9-nav-arrow.right {
-    left: 60%;
-    top: 73%;
-    transform: translate(-50%, -50%) rotate(90deg);
-  }
-  
-  .room9-nav-arrow.right:hover {
-    transform: translate(-50%, -50%) rotate(90deg) scale(1.08);
-  }
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    opacity 0.2s ease;
+  opacity: 0.95;
+}
+
+.room9-nav-arrow::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 30px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  background: rgba(40, 40, 40, 0.78);
+  clip-path: polygon(50% 0%, 100% 100%, 50% 72%, 0% 100%);
+}
+
+.room9-nav-arrow:hover {
+  background: rgba(255, 255, 255, 0.34);
+  opacity: 1;
+}
+
+.room9-nav-arrow.forward {
+  left: 50%;
+  top: 66%;
+  transform: translate(-50%, -50%);
+}
+
+.room9-nav-arrow.forward:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.room9-nav-arrow.back {
+  left: 50%;
+  top: 78%;
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.room9-nav-arrow.back:hover {
+  transform: translate(-50%, -50%) rotate(180deg) scale(1.08);
+}
+
+.room9-nav-arrow.left {
+  left: 40%;
+  top: 73%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.room9-nav-arrow.left:hover {
+  transform: translate(-50%, -50%) rotate(-90deg) scale(1.08);
+}
+
+.room9-nav-arrow.right {
+  left: 60%;
+  top: 73%;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.room9-nav-arrow.right:hover {
+  transform: translate(-50%, -50%) rotate(90deg) scale(1.08);
+}
 
 /* Hotspot */
 .room9-hotspot {
-    position: absolute;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    z-index: 35;
-    pointer-events: auto;
-  }
+  position: absolute;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 35;
+  pointer-events: auto;
+}
 
 .room9-hotspot.debug {
   background: rgba(255, 0, 0, 0.22);
@@ -160,14 +166,13 @@
 }
 
 #room9Wrap .overlays {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    pointer-events: auto;
-  }
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: auto;
+}
 
-  #room9Wrap .room9-hotspot {
-    z-index: 35;
-    pointer-events: auto;
-
+#room9Wrap .room9-hotspot {
+  z-index: 35;
+  pointer-events: auto;
 }

@@ -1,4 +1,6 @@
 #scene-room3 {
+  --room-ui-backplate-width: 25%;
+
   position: relative;
   width: 100%;
   height: 100%;
@@ -45,126 +47,6 @@
   cursor: pointer;
 }
 
-#scene-room3 .room3-hotspot--return-left {
-  background: linear-gradient(
-    90deg,
-    rgba(0,0,0,.72),
-    rgba(0,0,0,.38),
-    rgba(0,0,0,0)
-  );
-}
-
-#scene-room3 .room3-hotspot--return-left::after {
-  content: "‹";
-  position: absolute;
-  left: 64px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 72px;
-  color: rgba(255,255,255,.9);
-}
-
-.room3-monologue {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  z-index: 30;
-  pointer-events: none;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-
-  padding: 0 16px max(18px, env(safe-area-inset-bottom));
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.room3-monologue__inner {
-  position: relative;
-  width: min(760px, 100%);
-  box-sizing: border-box;
-
-  background: #f2f2f2;
-  color: #111;
-  border: 3px solid #111;
-  box-shadow:
-    inset 0 0 0 2px #f2f2f2,
-    inset 0 0 0 4px #111;
-
-  min-height: 96px;
-  padding: 14px 54px 14px 16px;
-
-  image-rendering: pixelated;
-  pointer-events: auto;
-}
-
-.room3-monologue__text {
-  margin: 0;
-  color: #111;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(15px, 2.8vw, 20px);
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-
-.room3-monologue__next {
-  position: absolute;
-  right: 12px;
-  top: 10px;
-  width: 34px;
-  height: 34px;
-  border: 0;
-  background: transparent;
-  color: #111;
-  font-size: 32px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-}
-
-@media (max-width: 600px) {
-  .room3-monologue {
-    padding: 14px;
-  }
-
-  .room3-monologue__inner {
-    width: calc(100vw - 28px);
-    min-height: 72px;
-    padding: 14px 48px 14px 14px;
-  }
-
-  .room3-monologue__text {
-    margin: 0;
-    font-family: "Calibri", initial;
-    font-size: clamp(17px, 3vw, 26px);
-    line-height: 1.15;
-    color: #111;
-    overflow-wrap: anywhere;
-  }
-
-  .room3-monologue__next {
-    position: absolute;
-    top: 10px;
-    right: 14px;
-  
-    width: 34px;
-    height: 34px;
-  
-    border: 0;
-    background: transparent;
-    color: #111;
-  
-    font-size: 30px;
-    line-height: 1;
-    cursor: pointer;
-  
-    z-index: 50;
-    pointer-events: auto;
-  }
-}
-
 .room3-paper-popup {
   position: absolute;
   inset: 0;
@@ -177,7 +59,6 @@
 .room3-paper-popup__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,.25);
 }
 
 .room3-paper-popup__sheet-wrap {
@@ -204,7 +85,6 @@
 .room3-phone-popup__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,.35);
 }
 
 .room3-phone {
@@ -257,7 +137,7 @@
 
 .room3-phone__pad {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-top: 16px;
 }
@@ -293,12 +173,17 @@
   touch-action: none;
   pointer-events: auto;
   object-fit: contain;
-  filter:
-    drop-shadow(0 12px 20px rgba(0, 0, 0, 0.28))
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.28))
     drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
 }
 
 .room3-freshener.is-dragging {
   cursor: grabbing;
   transform: scale(1.03);
+}
+
+@media (max-width: 768px) {
+  #scene-room3 {
+    --room-ui-backplate-width: calc(42% - 50px);
+  }
 }

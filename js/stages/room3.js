@@ -59,7 +59,7 @@ export default {
       zoomDoor: {
         door: { x: 700, y: 0, w: 1300, h: 1800 },
         paper: { x: 1100, y: 375, w: 590, h: 900 },
-        returnLeft: { x: 0, y: 0, w: 260, h: 1800 },
+        returnLeft: { x: 0, y: 0, w: 150, h: 1800 },
       },
 
       dirtyRoomAfterGuideline: {
@@ -533,10 +533,24 @@ Please do not leave a message.`,
       btn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        if (name === "return-left") {
+          btn.disabled = true;
+          btn.classList.remove("is-visible");
+          window.setTimeout(onClick, 350);
+          return;
+        }
+
         onClick();
       });
 
       overlays.appendChild(btn);
+
+      if (name === "return-left") {
+        requestAnimationFrame(() => {
+          btn.classList.add("is-visible");
+        });
+      }
 
       return { el: btn, rect };
     }

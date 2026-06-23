@@ -1,39 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Empty Room</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Empty Room</title>
 
-  <!-- Meta (optional but good practice) -->
-  <meta name="description" content="An interactive escape-room experience." />
-  <meta name="robots" content="noindex, nofollow" />
+    <!-- Meta (optional but good practice) -->
+    <meta name="description" content="An interactive escape-room experience." />
+    <meta name="robots" content="noindex, nofollow" />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="./css/styles.css">
-  <link rel="stylesheet" href="./css/intro.css">
-  <link rel="stylesheet" href="./css/room-01.css">
-</head>
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/styles.css?v=20260622-5" />
+    <link rel="stylesheet" href="./css/intro.css" />
+    <!-- router.js swaps this file when the active room changes. -->
+    <link id="stage-css" rel="stylesheet" href="./css/room-01.css" />
+  </head>
 
-<body>
-  <!-- Loading / Transition Screen -->
-  <div id="loading-screen" class="screen active">
-    <p>Entering the room…</p>
-  </div>
+  <body>
+    <!-- Loading / Transition Screen -->
+    <div id="loading-screen" class="screen active">
+      <p>Entering the room…</p>
+    </div>
 
-  <!-- Game Root -->
-  <main id="game-root">
-    <!-- Stages will render here -->
-  </main>
+    <!-- Game Root -->
+    <main id="game-root">
+      <!-- Stages will render here -->
+    </main>
 
-  <!-- Overlay (for modals, inventory, hints, etc.) -->
-  <div id="overlay"></div>
+    <!-- Overlay (for modals, inventory, hints, etc.) -->
+    <div id="overlay"></div>
 
-  <!-- Audio (optional global sounds) -->
-  <audio id="bgm" loop></audio>
-  <audio id="sfx"></audio>
+    <!-- Audio (optional global sounds) -->
+    <audio id="bgm" loop></audio>
+    <audio id="sfx"></audio>
 
-  <!-- Main entry (ES module) -->
-  <script type="module" src="./js/main.js"></script>
-</body>
+    <!-- Main entry (ES module) -->
+    <script type="module" src="./js/main.js"></script>
+  </body>
 </html>
