@@ -32,6 +32,8 @@ export default {
       let loopEndTimer = null;
       let zoomTimer = null;
       let destroyed = false;
+      let hasShownOpeningDialog = false;
+      let hasShownPillBottleDialog = false;
 
       const COORD_W = 2800;
       const COORD_H = 1800;
@@ -305,7 +307,7 @@ export default {
               },
             })
           );
-        }, 10000);
+        }, 5000);
       }
   
       function playZoomIntoDistortion() {
@@ -338,6 +340,34 @@ export default {
         }, 900);
       }
   
+      function showRoom5Dialog(message, onClose) {
+        dialogLayer.innerHTML = `
+          <div class="rpg-ui room5-opening-dialog">
+            <div class="rpg-box rpg-box--dialog">
+              <div class="rpg-text">${message}</div>
+              <button
+                type="button"
+                class="rpg-close"
+                id="room5DialogClose"
+                aria-label="Close dialog"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        `;
+      
+        const closeBtn = dialogLayer.querySelector("#room5DialogClose");
+      
+        closeBtn.addEventListener("click", () => {
+          clearDialog();
+      
+          if (typeof onClose === "function") {
+            onClose();
+          }
+        });
+      }
+
       function renderScene() {
         clearAllTimers();
         resetFxLayer();
@@ -375,6 +405,16 @@ export default {
         // Handles cached images
         if (bg.complete && bg.naturalWidth > 0) {
           layout();
+        }
+
+        if (currentScene === "bedroom" && !hasShownOpeningDialog) {
+          hasShownOpeningDialog = true;
+          showRoom5Dialog("I’m not feeling so well…");
+        }
+        
+        if (currentScene === "kitchenCounter" && !hasShownPillBottleDialog) {
+          hasShownPillBottleDialog = true;
+          showRoom5Dialog("I think my pills are in the cabinet…");
         }
       }
   

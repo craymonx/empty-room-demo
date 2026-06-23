@@ -94,6 +94,14 @@ export function setupStageUI({ go, defaultMenuStage = "intro" }) {
 
   debugBtn.addEventListener("click", () => {
     document.body.classList.toggle("debug");
+
+    window.dispatchEvent(
+      new CustomEvent("game:debug", {
+        detail: {
+          enabled: document.body.classList.contains("debug"),
+        },
+      }),
+    );
   });
 
   nextBtn.addEventListener("click", () => {

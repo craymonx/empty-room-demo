@@ -54,14 +54,18 @@
   z-index: 50;
 }
 
-.room8-mop-auto {
-  transition:
-    left 0.85s ease,
-    top 0.85s ease,
-    width 0.85s ease,
-    height 0.85s ease;
+.room8-prop.is-activating {
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.75));
+}
+
+.room8-prop.is-processing {
   pointer-events: none;
-  z-index: 60;
+}
+
+.room8-prop.is-disabled {
+  cursor: default;
+  pointer-events: none;
+  touch-action: auto;
 }
 
 .room8-debug-rect {

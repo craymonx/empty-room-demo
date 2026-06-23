@@ -27,8 +27,12 @@ export default {
 
     let scene = "mainCloudy";
     let debug = false;
-    let mopLocked = false;
     let completionTimer = null;
+    let transitionTimer = null;
+
+    const INTERACTION_HOLD_MS = 1000;
+    const TRANSITION_DELAY_MS = 200;
+    const MOP_SWIPE_DISTANCE = 120;
 
     const ASSETS = {
       bg: {
@@ -43,18 +47,23 @@ export default {
         mop: "./assets/props/room8/mop.webp",
         sprayFull: "./assets/props/room8/spray-bottle-full.webp",
         sprayHalf: "./assets/props/room8/spray-bottle-half.webp",
+        sprayEmpty: "./assets/props/room8/spray-bottle-empty.webp",
       },
     };
+
+    Object.values(ASSETS.bg).forEach((src) => {
+      const image = new Image();
+      image.src = src;
+    });
 
     const RECTS = {
       clock: { x: 550, y: 200, w: 100, h: 100 },
 
       props: {
-        mop: { x: 220, y: 690, w: 170, h: 300 },
+        mop: { x: 220, y: 420, w: 300, h: 600 },
         spray: { x: 1510, y: 680, w: 150, h: 270 },
       },
 
-      mopTarget: { x: 870, y: 620, w: 180, h: 310 },
       floor: { x: 650, y: 520, w: 650, h: 450 },
 
       plants: {
@@ -141,6 +150,7 @@ export default {
       img.src = src;
       img.className = "room8-prop";
       img.draggable = false;
+      img.classList.toggle("is-disabled", !draggable);
       overlays.appendChild(img);
       placeRectOnImage(img, rect);
 
@@ -153,11 +163,51 @@ export default {
       let dragging = false;
       let offsetX = 0;
       let offsetY = 0;
+      let swipeDistance = 0;
+      let lastPointerX = 0;
+      let lastPointerY = 0;
+      let targetEnteredAt = null;
+      let isCompleting = false;
+      let holdTimer = null;
+      let activePointerId = null;
+
+      function clearHoldTimer() {
+        if (!holdTimer) return;
+        window.clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+
+      function tryCompleteInteraction() {
+        if (!dragging || isCompleting || !isOverInteractionTarget(el)) return;
+
+        const movedEnough =
+          el.id !== "mopItem" || swipeDistance >= MOP_SWIPE_DISTANCE;
+        if (!movedEnough) return;
+
+        isCompleting = true;
+        dragging = false;
+        clearHoldTimer();
+        el.classList.remove("is-dragging");
+        el.classList.remove("is-activating");
+
+        try {
+          el.releasePointerCapture(activePointerId);
+        } catch {}
+
+        completeInteraction(el);
+      }
 
       el.addEventListener("pointerdown", (e) => {
-        if (scene === "mainCloudy" || mopLocked) return;
+        if (scene === "mainCloudy") return;
 
         dragging = true;
+        swipeDistance = 0;
+        targetEnteredAt = null;
+        isCompleting = false;
+        activePointerId = e.pointerId;
+        clearHoldTimer();
+        lastPointerX = e.clientX;
+        lastPointerY = e.clientY;
 
         const elRect = el.getBoundingClientRect();
         offsetX = e.clientX - elRect.left;
@@ -174,16 +224,58 @@ export default {
 
         el.style.left = `${e.clientX - wrapRect.left - offsetX}px`;
         el.style.top = `${e.clientY - wrapRect.top - offsetY}px`;
+
+        if (el.id === "mopItem" && isOverInteractionTarget(el)) {
+          if (targetEnteredAt === null) {
+            targetEnteredAt = performance.now();
+            swipeDistance = 0;
+            clearHoldTimer();
+            holdTimer = window.setTimeout(
+              tryCompleteInteraction,
+              INTERACTION_HOLD_MS,
+            );
+          }
+
+          swipeDistance += Math.hypot(
+            e.clientX - lastPointerX,
+            e.clientY - lastPointerY,
+          );
+          el.classList.add("is-activating");
+
+          if (performance.now() - targetEnteredAt >= INTERACTION_HOLD_MS) {
+            tryCompleteInteraction();
+            if (isCompleting) return;
+          }
+        } else {
+          targetEnteredAt = null;
+          swipeDistance = 0;
+          clearHoldTimer();
+          el.classList.remove("is-activating");
+        }
+
+        lastPointerX = e.clientX;
+        lastPointerY = e.clientY;
       });
 
       el.addEventListener("pointerup", (e) => {
         if (!dragging) return;
 
         dragging = false;
-        el.releasePointerCapture(e.pointerId);
-        el.classList.remove("is-dragging");
+        clearHoldTimer();
 
-        handleDrop(el, homeRect);
+        try {
+          el.releasePointerCapture(e.pointerId);
+        } catch {}
+
+        el.classList.remove("is-dragging");
+        el.classList.remove("is-activating");
+
+        if (el.id === "sprayItem" && isOverInteractionTarget(el)) {
+          completeInteraction(el);
+          return;
+        }
+
+        placeRectOnImage(el, homeRect);
       });
     }
 
@@ -193,58 +285,63 @@ export default {
       );
     }
 
-    function handleDrop(el, homeRect) {
+    function isOverInteractionTarget(el) {
       if (el.id === "mopItem") {
-        if (scene === "sunnyWaterLeak" && isDroppedOnZone(el, RECTS.floor)) {
-          scene = "dried";
-          bg.src = ASSETS.bg.dried;
-          render();
-          return;
+        if (scene === "sunnyWaterLeak") {
+          return isDroppedOnZone(el, RECTS.floor);
         }
+
+        return (
+          (scene === "sunnyWaterLeak2" || scene === "cloudyWaterLeak") &&
+          plantDropSuccess(el)
+        );
       }
 
       if (el.id === "sprayItem") {
-        if (scene === "dried" && plantDropSuccess(el)) {
-          el.src = ASSETS.props.sprayHalf;
-
-          setTimeout(() => {
-            scene = "sunnyWaterLeak2";
-            bg.src = ASSETS.bg.sunnyWaterLeak;
-            render();
-          }, 1000);
-
-          return;
-        }
-
-        if (scene === "cloudyDried" && plantDropSuccess(el)) {
-          scene = "cloudyWaterLeak";
-          bg.src = ASSETS.bg.cloudyWaterLeak;
-          render();
-          return;
-        }
+        return (
+          (scene === "dried" || scene === "cloudyDried") && plantDropSuccess(el)
+        );
       }
 
-      placeRectOnImage(el, homeRect);
+      return false;
     }
 
-    function animateMopToMiddle(nextScene, nextBg) {
-      const mop = root.querySelector("#mopItem");
-      if (!mop || mopLocked) return;
+    function completeInteraction(el) {
+      let nextScene = null;
+      let nextBg = null;
 
-      mopLocked = true;
-      mop.classList.add("room8-mop-auto");
-      placeRectOnImage(mop, RECTS.mopTarget);
+      if (el.id === "mopItem" && scene === "sunnyWaterLeak") {
+        nextScene = "dried";
+        nextBg = ASSETS.bg.dried;
+      } else if (el.id === "mopItem" && scene === "sunnyWaterLeak2") {
+        nextScene = "cloudyDried";
+        nextBg = ASSETS.bg.cloudyDried;
+      } else if (el.id === "mopItem" && scene === "cloudyWaterLeak") {
+        nextScene = "driedNight";
+        nextBg = ASSETS.bg.driedNight;
+      } else if (el.id === "sprayItem" && scene === "dried") {
+        el.src = ASSETS.props.sprayHalf;
+        nextScene = "sunnyWaterLeak2";
+        nextBg = ASSETS.bg.sunnyWaterLeak;
+      } else if (el.id === "sprayItem" && scene === "cloudyDried") {
+        el.src = ASSETS.props.sprayEmpty;
+        nextScene = "cloudyWaterLeak";
+        nextBg = ASSETS.bg.cloudyWaterLeak;
+      }
 
-      setTimeout(() => {
+      if (!nextScene || !nextBg) return;
+
+      el.classList.add("is-processing");
+      transitionTimer = window.setTimeout(() => {
+        transitionTimer = null;
         scene = nextScene;
         bg.src = nextBg;
-        mopLocked = false;
         render();
 
         if (nextScene === "driedNight") {
           completionTimer = window.setTimeout(finishRoom, 3000);
         }
-      }, 900);
+      }, TRANSITION_DELAY_MS);
     }
 
     function finishRoom() {
@@ -273,6 +370,9 @@ export default {
       if (scene === "dried" || scene === "cloudyDried") {
         rects.push(...Object.values(RECTS.plants));
       }
+      if (scene === "sunnyWaterLeak2" || scene === "cloudyWaterLeak") {
+        rects.push(...Object.values(RECTS.plants));
+      }
 
       rects.forEach((rect) => {
         const box = document.createElement("div");
@@ -285,14 +385,15 @@ export default {
     function render() {
       overlays.innerHTML = "";
 
-      createProp("mopItem", ASSETS.props.mop, RECTS.props.mop, true);
+      const mopIsDraggable = scene !== "mainCloudy" && scene !== "driedNight";
+      createProp("mopItem", ASSETS.props.mop, RECTS.props.mop, mopIsDraggable);
 
       if (scene === "mainCloudy") {
         createProp(
           "sprayItem",
           ASSETS.props.sprayFull,
           RECTS.props.spray,
-          true,
+          false,
         );
 
         createHotspot(
@@ -329,13 +430,8 @@ export default {
           "sprayItem",
           ASSETS.props.sprayHalf,
           RECTS.props.spray,
-          true,
+          false,
         );
-
-        const mop = root.querySelector("#mopItem");
-        mop.addEventListener("click", () => {
-          animateMopToMiddle("cloudyDried", ASSETS.bg.cloudyDried);
-        });
       }
 
       if (scene === "cloudyDried") {
@@ -348,10 +444,12 @@ export default {
       }
 
       if (scene === "cloudyWaterLeak") {
-        const mop = root.querySelector("#mopItem");
-        mop.addEventListener("click", () => {
-          animateMopToMiddle("driedNight", ASSETS.bg.driedNight);
-        });
+        createProp(
+          "sprayItem",
+          ASSETS.props.sprayEmpty,
+          RECTS.props.spray,
+          false,
+        );
       }
 
       if (scene === "driedNight") {
@@ -365,16 +463,28 @@ export default {
       render();
     }
 
+    function handleDebugChange(event) {
+      debug = Boolean(event.detail?.enabled);
+      render();
+    }
+
     window.addEventListener("resize", layout);
+    window.addEventListener("game:debug", handleDebugChange);
     bg.addEventListener("load", () => requestAnimationFrame(layout));
 
+    debug = document.body.classList.contains("debug");
     render();
 
     this.cleanup = () => {
       window.removeEventListener("resize", layout);
+      window.removeEventListener("game:debug", handleDebugChange);
       if (completionTimer) {
         window.clearTimeout(completionTimer);
         completionTimer = null;
+      }
+      if (transitionTimer) {
+        window.clearTimeout(transitionTimer);
+        transitionTimer = null;
       }
     };
   },

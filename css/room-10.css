@@ -1,1 +1,19 @@
-/* Room 10 currently uses only the shared stage styles from styles.css. */
+#room10Wrap {
+  position: relative;
+}
+
+.room10-advance {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.room10-advance.hidden {
+  display: none;
+}

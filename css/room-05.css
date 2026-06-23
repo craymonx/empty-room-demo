@@ -38,8 +38,16 @@
 .room5-dialog-layer {
   position: absolute;
   inset: 0;
-  z-index: 40;
+  z-index: var(--room-ui-dialog-z);
   pointer-events: none;
+}
+
+.room5-opening-dialog {
+  pointer-events: auto;
+}
+
+.room5-opening-dialog .rpg-box {
+  pointer-events: auto;
 }
 
 .room5-dialog-backdrop {
