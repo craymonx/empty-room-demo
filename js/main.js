@@ -1,5 +1,5 @@
 import { registerStageLoaders, goToStage, startFromHash } from "./router.js";
-import { setupStageUI } from "./game-ui.js";
+import { setupStageUI } from "./game-ui.js?v=20260622-1";
 
 function setLoading(isLoading) {
   const el = document.getElementById("loading-screen");
@@ -24,7 +24,7 @@ async function waitForImages(container) {
         new Promise((resolve) => {
           img.addEventListener("load", resolve, { once: true });
           img.addEventListener("error", resolve, { once: true });
-        })
+        }),
     );
 
   if (pending.length) {

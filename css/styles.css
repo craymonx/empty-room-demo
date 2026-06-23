@@ -268,6 +268,22 @@ body {
   display: none;
 }
 
+@media (max-width: 600px) {
+  .global-stage-ui {
+    top: 14px;
+    right: 14px;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: calc(100vw - 28px);
+  }
+
+  .global-ui-btn {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+}
+
 /* Global hotspot debug mode */
 body.debug .hotspot,
 body.debug .dropzone,

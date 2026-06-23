@@ -2,6 +2,67 @@ let currentGo = null;
 let nextStageName = null;
 let menuStageName = "intro";
 let stageEndHandler = null;
+let soundEnabled = true;
+
+const SOUND_STORAGE_KEY = "empty-room-sound-enabled";
+const trackedMedia = new Set();
+
+function readSoundPreference() {
+  try {
+    return localStorage.getItem(SOUND_STORAGE_KEY) !== "false";
+  } catch {
+    return true;
+  }
+}
+
+function applySoundPreference() {
+  trackedMedia.forEach((media) => {
+    media.muted = !soundEnabled;
+  });
+
+  document.querySelectorAll("audio, video").forEach((media) => {
+    trackedMedia.add(media);
+    media.muted = !soundEnabled;
+  });
+
+  const soundBtn = document.querySelector("#globalSoundBtn");
+  if (!soundBtn) return;
+
+  soundBtn.textContent = soundEnabled ? "Sound: On" : "Sound: Off";
+  soundBtn.setAttribute("aria-pressed", String(soundEnabled));
+  soundBtn.setAttribute(
+    "aria-label",
+    soundEnabled ? "Turn sound off" : "Turn sound on",
+  );
+}
+
+function setupGlobalSoundControl() {
+  soundEnabled = readSoundPreference();
+
+  if (!window.__emptyRoomSoundPatched) {
+    const nativePlay = HTMLMediaElement.prototype.play;
+
+    HTMLMediaElement.prototype.play = function (...args) {
+      trackedMedia.add(this);
+      this.muted = !soundEnabled;
+      return nativePlay.apply(this, args);
+    };
+
+    window.__emptyRoomSoundPatched = true;
+  }
+
+  applySoundPreference();
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+
+  try {
+    localStorage.setItem(SOUND_STORAGE_KEY, String(soundEnabled));
+  } catch {}
+
+  applySoundPreference();
+}
 
 export function setupStageUI({ go, defaultMenuStage = "intro" }) {
   currentGo = go;
@@ -14,6 +75,7 @@ export function setupStageUI({ go, defaultMenuStage = "intro" }) {
   ui.className = "global-stage-ui";
 
   ui.innerHTML = `
+    <button id="globalSoundBtn" class="global-ui-btn" aria-pressed="true">Sound: On</button>
     <button id="globalDebugBtn" class="global-ui-btn">Hotspots</button>
     <button id="globalMenuBtn" class="global-ui-btn hidden">Back to Menu</button>
     <button id="globalNextBtn" class="global-ui-btn hidden">Next</button>
@@ -21,9 +83,14 @@ export function setupStageUI({ go, defaultMenuStage = "intro" }) {
 
   document.body.appendChild(ui);
 
+  const soundBtn = ui.querySelector("#globalSoundBtn");
   const debugBtn = ui.querySelector("#globalDebugBtn");
   const nextBtn = ui.querySelector("#globalNextBtn");
   const menuBtn = ui.querySelector("#globalMenuBtn");
+
+  setupGlobalSoundControl();
+
+  soundBtn.addEventListener("click", toggleSound);
 
   debugBtn.addEventListener("click", () => {
     document.body.classList.toggle("debug");

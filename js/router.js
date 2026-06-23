@@ -1,5 +1,5 @@
 // /js/router.js
-import { hideStageEndButtons } from "./game-ui.js";
+import { hideStageEndButtons } from "./game-ui.js?v=20260622-1";
 
 const STAGE_LOADERS = new Map();
 const STAGES = new Map();

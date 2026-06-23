@@ -71,23 +71,3 @@
   z-index: 90;
   pointer-events: none;
 }
-
-.room8-next-btn {
-  position: absolute;
-  top: 28px;
-  right: 32px;
-  z-index: 100;
-  padding: 10px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
-  color: #fff;
-  font-size: 15px;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-}
-
-.room8-next-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
