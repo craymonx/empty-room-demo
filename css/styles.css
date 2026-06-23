@@ -16,7 +16,7 @@
   --room-ui-x: 16px;
   --room-ui-x-mobile: 12px;
   --room-ui-bottom: 24px;
-  --room-ui-bottom-mobile: 84px;
+  --room-ui-bottom-mobile: 110px;
   --room-ui-dialog-z: 120;
   --room-ui-backplate-z: 90;
   --room-ui-backplate-width: 34%;
@@ -799,6 +799,6 @@ body.debug .sorting-zone {
 
 @media (max-width: 768px) and (max-height: 520px) {
   :root {
-    --room-ui-bottom-mobile: 56px;
+    --room-ui-bottom-mobile: 82px;
   }
 }
