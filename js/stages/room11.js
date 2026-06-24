@@ -380,11 +380,13 @@ export default {
 
     function showRpgDialog(text, speaker, onClose) {
       popupLayer.innerHTML = `
+        <div class="room11-rpg-layer">
           <div class="room11-rpg-dialog">
             <div class="room11-rpg-name">${speaker}</div>
             <div class="room11-rpg-text">${text}</div>
-            <button class="room11-rpg-next">Continue</button>
+            <button class="room11-rpg-next" type="button">Continue</button>
           </div>
+        </div>
         `;
 
       popupLayer

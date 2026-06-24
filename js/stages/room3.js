@@ -231,11 +231,11 @@ export default {
       box.innerHTML = `
         <div class="room3-monologue__inner">
           <p class="room3-monologue__text">${escapeHtml(text).replaceAll("\n", "<br>")}</p>
-          <button class="room3-monologue__next" type="button">›</button>
+          <button class="room3-monologue__continue" type="button">Continue</button>
         </div>
       `;
 
-      box.querySelector(".room3-monologue__next").addEventListener("click", (e) => {
+      box.querySelector(".room3-monologue__continue").addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
 

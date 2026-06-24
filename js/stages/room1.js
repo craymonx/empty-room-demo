@@ -521,23 +521,24 @@ export default {
       box.className = "room1-dialogue";
 
       box.innerHTML = `
+        <button class="room1-dialogue-blocker" type="button" tabindex="-1" aria-hidden="true"></button>
+
         <div class="room1-dialogue-text">
           ${text}
 
           <button
             type="button"
-            class="room1-dialogue-close"
-            id="room1DialogueClose"
-            aria-label="Close dialogue"
+            class="room1-dialogue-continue"
+            id="room1DialogueContinue"
           >
-            ×
+            Continue
           </button>
         </div>
       `;
 
       overlays.appendChild(box);
 
-      box.querySelector("#room1DialogueClose").addEventListener("click", () => {
+      box.querySelector("#room1DialogueContinue").addEventListener("click", () => {
         box.remove();
         onClose?.();
       });

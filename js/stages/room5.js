@@ -423,19 +423,18 @@ export default {
               <div class="rpg-text">${message}</div>
               <button
                 type="button"
-                class="rpg-close"
-                id="room5DialogClose"
-                aria-label="Close dialog"
+                class="rpg-continue"
+                id="room5DialogContinue"
               >
-                ×
+                Continue
               </button>
             </div>
           </div>
         `;
       
-        const closeBtn = dialogLayer.querySelector("#room5DialogClose");
+        const continueBtn = dialogLayer.querySelector("#room5DialogContinue");
       
-        closeBtn.addEventListener("click", () => {
+        continueBtn.addEventListener("click", () => {
           clearDialog();
       
           if (typeof onClose === "function") {

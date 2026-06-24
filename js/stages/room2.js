@@ -578,28 +578,30 @@ export default {
       });
     }
 
-    function showClosableDialog({ textLines, onClose }) {
-      showRpgDialog({ textLines });
-    
+    function addDialogContinueButton(onContinue) {
       const dialog = overlays.querySelector("#rpgDialog");
       if (!dialog) return;
-    
+
       const dialogBox = dialog.querySelector(".rpg-box--dialog");
       if (!dialogBox) return;
-    
-      const closeBtn = document.createElement("button");
-      closeBtn.className = "rpg-close";
-      closeBtn.type = "button";
-      closeBtn.innerHTML = "×";
-      closeBtn.setAttribute("aria-label", "Close dialogue");
-    
-      closeBtn.addEventListener("click", (e) => {
+
+      const continueBtn = document.createElement("button");
+      continueBtn.className = "rpg-continue";
+      continueBtn.type = "button";
+      continueBtn.textContent = "Continue";
+
+      continueBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         dialog.remove();
-        onClose?.();
+        onContinue?.();
       });
-    
-      dialogBox.appendChild(closeBtn);
+
+      dialogBox.appendChild(continueBtn);
+    }
+
+    function showClosableDialog({ textLines, onClose }) {
+      showRpgDialog({ textLines });
+      addDialogContinueButton(onClose);
     }
 
     function showSmokeHotspot(onClick) {
@@ -1213,13 +1215,11 @@ export default {
           showRpgDialog({
             textLines: [monologues[index]],
           });
-
-          enableClickAnywhere(async () => {
-            if (scene !== "chatting") return;
-
+          addDialogContinueButton(() => {
             disableClickAnywhere();
-            await goToSmokeScene();
+            goToSmokeScene();
           });
+
         },
       });
     }
