@@ -23,6 +23,8 @@ export default {
     let scene = "chatting";
     let cleanupDrag = null;
     let room2Bgm = null;
+    let eggAudio = null;
+    let eggBgmWasPlaying = false;
 
     function setupRoom2Bgm() {
       room2Bgm = new Audio("./assets/audio/room2/2 static bgm 2.wav");
@@ -112,6 +114,10 @@ export default {
 
       mainViewStatic: {
         room: { x: 50, y: 100, w: 750, h: 1500 },
+      },
+
+      bedroom: {
+        desk: { x: 255, y: 490, w: 470, h: 230 },
       },
 
       sortingItems: {
@@ -376,6 +382,13 @@ export default {
         const roomHotspot = overlays.querySelector("#roomHotspot");
         if (roomHotspot) {
           placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: roomHotspot, rectPx: RECTS.mainViewStatic.room });
+        }
+      }
+
+      if (scene === "bedroom") {
+        const eggHotspot = overlays.querySelector("#room2EggHotspot");
+        if (eggHotspot) {
+          placeRectOnImage({ imgEl: bg, parentEl: wrap, targetEl: eggHotspot, rectPx: RECTS.bedroom.desk });
         }
       }
     }
@@ -709,6 +722,155 @@ export default {
       layout();
     }
 
+    function formatDuration(seconds) {
+      if (!Number.isFinite(seconds) || seconds < 0) return "--:--";
+
+      const totalSeconds = Math.floor(seconds);
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+
+      return `${mins}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function stopEggAudio() {
+      if (!eggAudio) return;
+
+      eggAudio.pause();
+      eggAudio.currentTime = 0;
+      eggAudio = null;
+    }
+
+    function closeEggPlayer() {
+      overlays.querySelector("#room2EggPlayer")?.remove();
+      stopEggAudio();
+
+      if (eggBgmWasPlaying && room2Bgm) {
+        room2Bgm.play().catch(() => {});
+      }
+
+      eggBgmWasPlaying = false;
+    }
+
+    function showEggPlayer() {
+      closeEggPlayer();
+
+      eggBgmWasPlaying = Boolean(room2Bgm && !room2Bgm.paused);
+      if (room2Bgm) room2Bgm.pause();
+
+      eggAudio = new Audio("./assets/audio/room2/egg2.m4a");
+
+      const popup = document.createElement("div");
+      popup.id = "room2EggPlayer";
+      popup.className = "room2-egg-player";
+      popup.innerHTML = `
+        <div class="room2-egg-player__backdrop"></div>
+        <div class="room2-egg-player__deck" role="dialog" aria-modal="true" aria-label="Vintage song player">
+          <button class="room2-egg-player__close" type="button" aria-label="Close player">×</button>
+
+          <div class="room2-egg-player__record" aria-hidden="true">
+            <div class="room2-egg-player__label">Talk</div>
+          </div>
+
+          <div class="room2-egg-player__info">
+            <p class="room2-egg-player__eyebrow">Demo tape</p>
+            <h2>Talk</h2>
+            <dl>
+              <div>
+                <dt>Date</dt>
+                <dd>17 Jan 2020</dd>
+              </div>
+              <div>
+                <dt>Duration</dt>
+                <dd id="room2EggDuration">--:--</dd>
+              </div>
+            </dl>
+
+            <div class="room2-egg-player__progress">
+              <div id="room2EggProgress" class="room2-egg-player__progress-bar"></div>
+            </div>
+
+            <div class="room2-egg-player__times">
+              <span id="room2EggCurrentTime">0:00</span>
+              <span id="room2EggTotalTime">--:--</span>
+            </div>
+
+            <button id="room2EggPlay" class="room2-egg-player__play" type="button">Play</button>
+          </div>
+        </div>
+      `;
+
+      overlays.appendChild(popup);
+
+      const playBtn = popup.querySelector("#room2EggPlay");
+      const durationEl = popup.querySelector("#room2EggDuration");
+      const totalTimeEl = popup.querySelector("#room2EggTotalTime");
+      const currentTimeEl = popup.querySelector("#room2EggCurrentTime");
+      const progressEl = popup.querySelector("#room2EggProgress");
+
+      function updatePlaybackUi() {
+        if (!eggAudio) return;
+
+        const duration = eggAudio.duration;
+        const current = eggAudio.currentTime;
+
+        currentTimeEl.textContent = formatDuration(current);
+        playBtn.textContent = eggAudio.paused ? "Play" : "Pause";
+
+        if (Number.isFinite(duration) && duration > 0) {
+          progressEl.style.width = `${Math.min(100, (current / duration) * 100)}%`;
+        } else {
+          progressEl.style.width = "0%";
+        }
+      }
+
+      eggAudio.addEventListener("loadedmetadata", () => {
+        const durationText = formatDuration(eggAudio.duration);
+        durationEl.textContent = durationText;
+        totalTimeEl.textContent = durationText;
+      });
+
+      eggAudio.addEventListener("timeupdate", updatePlaybackUi);
+      eggAudio.addEventListener("play", updatePlaybackUi);
+      eggAudio.addEventListener("pause", updatePlaybackUi);
+      eggAudio.addEventListener("ended", updatePlaybackUi);
+
+      popup
+        .querySelector(".room2-egg-player__close")
+        .addEventListener("click", closeEggPlayer);
+
+      popup
+        .querySelector(".room2-egg-player__backdrop")
+        .addEventListener("click", closeEggPlayer);
+
+      playBtn.addEventListener("click", () => {
+        if (!eggAudio) return;
+
+        if (eggAudio.paused) {
+          eggAudio.play().catch(() => {});
+        } else {
+          eggAudio.pause();
+        }
+      });
+
+      eggAudio.play().catch(() => {});
+      updatePlaybackUi();
+    }
+
+    function showBedroomEggHotspot() {
+      if (scene !== "bedroom") return;
+      if (overlays.querySelector("#room2EggHotspot")) return;
+
+      const btn = document.createElement("button");
+      btn.id = "room2EggHotspot";
+      btn.className = "hotspot room2-egg-hotspot";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Play Talk demo");
+      btn.addEventListener("click", showEggPlayer);
+
+      overlays.appendChild(btn);
+      layout();
+    }
+
     function getZoneForType(type) {
       if (type === "fork") return overlays.querySelector("#forkZone");
       if (type === "spoon") return overlays.querySelector("#spoonZone");
@@ -881,6 +1043,7 @@ export default {
                         
                               await wait(250);
                               localStorage.setItem("room2_done", "1");
+                              showBedroomEggHotspot();
                         
                               window.dispatchEvent(
                                 new CustomEvent("stage:end", {
@@ -1076,6 +1239,7 @@ export default {
     this._room2Cleanup = () => {
       window.removeEventListener("resize", onResize);
       if (cleanupDrag) cleanupDrag();
+      closeEggPlayer();
       stopRoom2Bgm();
       delete window.__room2Rects;
       delete window.__room2Layout;

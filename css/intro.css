@@ -176,6 +176,40 @@
   color: #f1d18a;
 }
 
+/* Long-form intro panel copy */
+
+.intro-copy {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 15px;
+  line-height: 1.62;
+}
+
+.intro-copy p {
+  margin: 0 0 14px;
+  color: inherit;
+}
+
+.intro-credit {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.intro-credit section {
+  padding-top: 2px;
+}
+
+.intro-credit h2 {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 17px;
+  letter-spacing: 0.03em;
+}
+
+.intro-credit p {
+  margin: 0 0 6px;
+}
+
 /* Linktree style links */
 
 .linktree-list {
@@ -236,5 +270,10 @@
   .code-card {
     font-size: 12px;
     overflow-x: auto;
+  }
+
+  .intro-copy {
+    font-size: 14px;
+    line-height: 1.55;
   }
 }

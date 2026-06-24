@@ -187,13 +187,13 @@ export default {
         panelContent.innerHTML = `
           <h1>Artist Statement</h1>
 
-          <div class="code-card">
-            <p><span class="code-key">project.name</span> = <span class="code-value">"Empty Room"</span></p>
-            <p><span class="code-key">theme</span> = <span class="code-value">"memory, silence, late-night distance"</span></p>
-            <p><span class="code-key">condition</span> = <span class="code-value">"a room that remembers more than the person inside it"</span></p>
-            <p><span class="code-key">sound</span> = <span class="code-value">"soft noise, broken loops, unfinished thoughts"</span></p>
-            <p><span class="code-key">movement</span> = <span class="code-value">"click, wait, discover, repeat"</span></p>
-            <p><span class="code-key">note</span> = <span class="code-value">"nothing is hidden; it only waits for attention"</span></p>
+          <div class="intro-copy">
+            <p>Empty Room is a world created by James Tseung, with the album at its centre.</p>
+            <p>Drawing from his experience living in a foreign country as an international student during his late adolescence, the project explores themes of loneliness, isolation, dreams, memory, spatial relationships, faith, and human connection.</p>
+            <p>Living alone on campus during the COVID-19 pandemic, his room became the main stage for everyday life. As physical movement became increasingly restricted, dreams and imagination became another territory to explore. Over time, the room began to feel less like a living space and more like an extension of the mind itself, a place shaped by memory, emotion, fear, and desire. Though physically confined, Tseung found himself equally trapped within a mental landscape formed in the aftermath of real-life upheaval.</p>
+            <p>Yet the room was never merely a prison. It was a place of refuge, a temporary home in a foreign land, and a spiritual sanctuary. It witnessed moments of ecstasy, frustration, depression, peace, friendship, and wonder. As the project unfolds, the room gradually transforms alongside its inhabitant, becoming a symbolic space where reality, memory, dreams, and imagination overlap.</p>
+            <p>To embody the absurdity of life as he experienced it, Tseung gave the room its own logic—one that does not always make sense to the audience. Through recurring symbols and surreal events, ordinary objects and spaces take on new meanings, reflecting the shifting emotional landscape of its inhabitant.</p>
+            <p>Empty Room traces a journey through grief, trauma, joy, companionship, and renewal. When its inhabitant finally leaves the room, he carries with him not only the memories created within it, but also the relationships, lessons, and sense of self discovered along the way.</p>
           </div>
         `;
       }
@@ -218,12 +218,35 @@ export default {
         panelContent.innerHTML = `
           <h1>Credit</h1>
 
-          <div class="code-card">
-            <p><span class="code-key">created_by</span> = <span class="code-value">"To be updated"</span></p>
-            <p><span class="code-key">music</span> = <span class="code-value">"To be updated"</span></p>
-            <p><span class="code-key">visual_direction</span> = <span class="code-value">"To be updated"</span></p>
-            <p><span class="code-key">web_development</span> = <span class="code-value">"To be updated"</span></p>
-            <p><span class="code-key">special_thanks</span> = <span class="code-value">"To be updated"</span></p>
+          <div class="intro-copy intro-credit">
+            <section>
+              <h2>Album</h2>
+              <p>Written, arranged, performed, recorded, produced, mixed and mastered by James Tseung, except where noted.</p>
+            </section>
+
+            <section>
+              <h2>Musicians</h2>
+              <p>Cello — Brian Chan (4)</p>
+              <p>Violin — Caleb Chan (4)</p>
+              <p>Electric Guitar — Tony Choi (1, 11)</p>
+              <p>Electric Bass — YY (1, 11)</p>
+              <p>Electric Upright Bass — YY (8)</p>
+              <p>Featured Artist — handwash (2)</p>
+            </section>
+
+            <section>
+              <h2>Artwork</h2>
+              <p>Album and Single Artwork — Emily Lau</p>
+            </section>
+
+            <section>
+              <h2>Website</h2>
+              <p>Concept — James Tseung</p>
+              <p>Programming — Ray Choi</p>
+              <p>Sound Effects — Ray Choi</p>
+              <p>Background Music — James Tseung</p>
+              <p>Website imagery created using Google Gemini</p>
+            </section>
           </div>
         `;
       }

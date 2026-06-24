@@ -1,4 +1,4 @@
-import { registerStageLoaders, goToStage, startFromHash } from "./router.js?v=20260623-1";
+import { registerStageLoaders, goToStage, startFromHash } from "./router.js?v=20260623-2";
 import { setupStageUI } from "./game-ui.js?v=20260622-2";
 
 function setLoading(isLoading) {
@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Register stage loaders instead of importing all rooms immediately
   registerStageLoaders({
-    intro: () => import("./stages/intro.js?v=20260623-1"),
+    intro: () => import("./stages/intro.js?v=20260623-2"),
     room1: () => import("./stages/room1.js?v=20260623-2"),
-    room2: () => import("./stages/room2.js"),
+    room2: () => import("./stages/room2.js?v=20260623-1"),
     room3: () => import("./stages/room3.js?v=20260623-1"),
     room4: () => import("./stages/room4.js?v=20260623-1"),
     room5: () => import("./stages/room5.js?v=20260623-1"),
