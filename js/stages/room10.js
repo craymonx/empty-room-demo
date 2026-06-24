@@ -1,4 +1,6 @@
 // /js/stages/room10.js
+import { createRoomBgm } from "../room-bgm.js";
+
 export default {
   enter({ root }) {
     root.innerHTML = `
@@ -24,6 +26,9 @@ export default {
 
     const bg = root.querySelector("#room10Bg");
     const advanceBtn = root.querySelector("#room10Advance");
+    const bgm = createRoomBgm(
+      "./assets/audio/room10/10 foreign night sea bgm_1.wav",
+    );
 
     const slides = [
       "fns01.webp",
@@ -80,8 +85,10 @@ export default {
     }
 
     advanceBtn.addEventListener("click", advanceScene);
+    bgm.start();
 
     this.cleanup = () => {
+      bgm.stop();
       advanceBtn.removeEventListener("click", advanceScene);
     };
   },

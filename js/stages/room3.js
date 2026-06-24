@@ -758,6 +758,7 @@ Please do not leave a message.`,
     if (room3Bgm) {
       room3Bgm.pause();
       room3Bgm.currentTime = 0;
+      room3Bgm = null;
     }
 
     root.innerHTML = "";

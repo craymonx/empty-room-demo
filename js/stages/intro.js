@@ -44,7 +44,7 @@ export default {
             ${unlocked ? "" : "disabled"}
             type="button"
           >
-            <span class="room-name">${room.name}</span>
+            <span class="room-name">${index + 1} - ${room.name}</span>
 
             <span class="room-meta">
               ${done ? "✓" : unlocked ? "" : `<span class="lock">🔒</span>`}
@@ -89,7 +89,7 @@ export default {
     const HOTSPOTS = [
       {
         id: "level-list",
-        label: "Level list",
+        label: "Stages",
         rect: { x: 575, y: 738, w: 180, h: 120 }, // drawing on floor
       },
       {
@@ -166,8 +166,7 @@ export default {
     function openPanel(type) {
       if (type === "level-list") {
         panelContent.innerHTML = `
-          <h1>Level List</h1>
-          <p>Select a room to explore your journey.</p>
+          <h1>Stages</h1>
 
           <div class="room-list">
             ${getRoomsHtml()}

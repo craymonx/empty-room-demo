@@ -29,6 +29,9 @@ export default {
 
     let scene = "livingRoom";
     let cleanupDrag = null;
+    let kitchenEggUnlocked = false;
+    let kitchenEggIndex = 0;
+    let eggAlbumOpen = false;
 
     let chopstickEl = null;
     let chopstickTracking = false;
@@ -55,6 +58,7 @@ export default {
       },
       kitchen: {
         stove: { x: 930, y: 200, w: 520, h: 330 },
+        eggTable: { x: 0, y: 420, w: 455, h: 310 },
       },
       stove: {
         noodles: { x: 1100, y: 690, w: 120, h: 50 },
@@ -70,6 +74,12 @@ export default {
     };
 
     const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const EGG_IMAGES = [
+      "./assets/props/room1/egg1.1.webp",
+      "./assets/props/room1/egg1.2.webp",
+      "./assets/props/room1/egg1.3.webp",
+      "./assets/props/room1/egg1.4.webp",
+    ];
 
     function getDrawnImageRect(imgEl) {
       const box = imgEl.getBoundingClientRect();
@@ -216,6 +226,17 @@ export default {
           targetEl: stoveBtn,
           rectPx: RECTS.kitchen.stove,
         });
+
+        const eggHotspot = overlays.querySelector("#room1EggHotspot");
+
+        if (eggHotspot) {
+          placeRectOnImage({
+            imgEl: bg,
+            parentEl: wrap,
+            targetEl: eggHotspot,
+            rectPx: RECTS.kitchen.eggTable,
+          });
+        }
       }
 
       if (scene === "stove") {
@@ -522,6 +543,111 @@ export default {
       });
     }
 
+    function updateEggAlbum() {
+      const popup = overlays.querySelector("#room1EggAlbum");
+      if (!popup) return;
+
+      const image = popup.querySelector("#room1EggAlbumImage");
+      const counter = popup.querySelector("#room1EggAlbumCounter");
+      const prevBtn = popup.querySelector("#room1EggAlbumPrev");
+      const nextBtn = popup.querySelector("#room1EggAlbumNext");
+
+      image.src = EGG_IMAGES[kitchenEggIndex];
+      image.alt = `Easter egg photo ${kitchenEggIndex + 1}`;
+      counter.textContent = `${kitchenEggIndex + 1} / ${EGG_IMAGES.length}`;
+      prevBtn.disabled = kitchenEggIndex === 0;
+      nextBtn.disabled = kitchenEggIndex === EGG_IMAGES.length - 1;
+    }
+
+    function closeEggAlbum() {
+      overlays.querySelector("#room1EggAlbum")?.remove();
+      eggAlbumOpen = false;
+      stoveBtn.disabled = false;
+      stoveBtn.style.pointerEvents = "";
+    }
+
+    function showEggAlbum() {
+      closeEggAlbum();
+      eggAlbumOpen = true;
+      stoveBtn.disabled = true;
+      stoveBtn.style.pointerEvents = "none";
+
+      const popup = document.createElement("div");
+      popup.id = "room1EggAlbum";
+      popup.className = "room1-egg-album";
+
+      popup.innerHTML = `
+        <div class="room1-egg-album__backdrop"></div>
+        <div class="room1-egg-album__book" role="dialog" aria-modal="true" aria-label="Old photo album">
+          <button
+            id="room1EggAlbumClose"
+            class="room1-egg-album__close"
+            type="button"
+            aria-label="Close album"
+          >×</button>
+
+          <div class="room1-egg-album__spine" aria-hidden="true"></div>
+
+          <div class="room1-egg-album__page">
+            <div class="room1-egg-album__photo-frame">
+              <img id="room1EggAlbumImage" class="room1-egg-album__image" src="" alt="">
+            </div>
+
+            <div class="room1-egg-album__caption">
+              <span>Memory fragment</span>
+              <span id="room1EggAlbumCounter"></span>
+            </div>
+
+            <div class="room1-egg-album__controls">
+              <button id="room1EggAlbumPrev" type="button">‹ Previous</button>
+              <button id="room1EggAlbumNext" type="button">Next ›</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      overlays.appendChild(popup);
+
+      popup
+        .querySelector("#room1EggAlbumClose")
+        .addEventListener("click", closeEggAlbum);
+
+      popup
+        .querySelector(".room1-egg-album__backdrop")
+        .addEventListener("click", closeEggAlbum);
+
+      popup.querySelector("#room1EggAlbumPrev").addEventListener("click", () => {
+        kitchenEggIndex = Math.max(0, kitchenEggIndex - 1);
+        updateEggAlbum();
+      });
+
+      popup.querySelector("#room1EggAlbumNext").addEventListener("click", () => {
+        kitchenEggIndex = Math.min(EGG_IMAGES.length - 1, kitchenEggIndex + 1);
+        updateEggAlbum();
+      });
+
+      updateEggAlbum();
+    }
+
+    function showKitchenEggHotspot() {
+      if (scene !== "kitchen" || !kitchenEggUnlocked) return;
+      if (overlays.querySelector("#room1EggHotspot")) return;
+
+      const btn = document.createElement("button");
+      btn.id = "room1EggHotspot";
+      btn.className = "hotspot room1-egg-hotspot";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Open old photo album");
+
+      btn.addEventListener("click", () => {
+        kitchenEggIndex = 0;
+        showEggAlbum();
+      });
+
+      overlays.appendChild(btn);
+      layout();
+    }
+
     async function finishRoom1AfterGlass() {
       if (scene !== "glassEmptyAfterMix") return;
 
@@ -721,6 +847,8 @@ export default {
     }
 
     async function handleStoveButtonClick() {
+      if (eggAlbumOpen) return;
+
       startBgm();
 
       if (scene === "livingRoom") {
@@ -729,6 +857,8 @@ export default {
         await transitionBg("./assets/bg/room1/kitchen-main-view.webp");
 
         showRoom1Dialogue("Kinda hungry, gonna cook something", () => {
+          kitchenEggUnlocked = true;
+          showKitchenEggHotspot();
           layout();
         });
 
@@ -739,6 +869,7 @@ export default {
       if (scene !== "kitchen") return;
 
       scene = "stove";
+      kitchenEggUnlocked = false;
 
       await transitionBg("./assets/bg/room1/empty-pot-boiling.webp");
 

@@ -1,3 +1,5 @@
+import { createRoomBgm } from "../room-bgm.js";
+
 export default {
     enter({ root, go }) {
       root.innerHTML = `
@@ -23,6 +25,9 @@ export default {
   
       const BASE_W = 2560;
       const BASE_H = 1440;
+      const bgm = createRoomBgm(
+        "./assets/audio/room6/6 deep dream bgm_1.wav",
+      );
   
       let scene = "fogForest";
       let debug = false;
@@ -353,10 +358,12 @@ export default {
   
       window.addEventListener("resize", layout);
   
+      bgm.start();
       render();
   
       this.cleanup = () => {
         clearTimers();
+        bgm.stop();
         window.removeEventListener("resize", layout);
       };
     },

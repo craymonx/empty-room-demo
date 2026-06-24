@@ -1,4 +1,4 @@
-import { registerStageLoaders, goToStage, startFromHash } from "./router.js";
+import { registerStageLoaders, goToStage, startFromHash } from "./router.js?v=20260623-1";
 import { setupStageUI } from "./game-ui.js?v=20260622-2";
 
 function setLoading(isLoading) {
@@ -42,18 +42,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Register stage loaders instead of importing all rooms immediately
   registerStageLoaders({
-    intro: () => import("./stages/intro.js"),
-    room1: () => import("./stages/room1.js"),
+    intro: () => import("./stages/intro.js?v=20260623-1"),
+    room1: () => import("./stages/room1.js?v=20260623-2"),
     room2: () => import("./stages/room2.js"),
-    room3: () => import("./stages/room3.js"),
-    room4: () => import("./stages/room4.js"),
-    room5: () => import("./stages/room5.js"),
-    room6: () => import("./stages/room6.js"),
-    room7: () => import("./stages/room7.js"),
-    room8: () => import("./stages/room8.js?v=20260622-5"),
-    room9: () => import("./stages/room9.js"),
-    room10: () => import("./stages/room10.js?v=20260622-1"),
-    room11: () => import("./stages/room11.js?v=20260622-1"),
+    room3: () => import("./stages/room3.js?v=20260623-1"),
+    room4: () => import("./stages/room4.js?v=20260623-1"),
+    room5: () => import("./stages/room5.js?v=20260623-1"),
+    room6: () => import("./stages/room6.js?v=20260623-1"),
+    room7: () => import("./stages/room7.js?v=20260623-1"),
+    room8: () => import("./stages/room8.js?v=20260623-1"),
+    room9: () => import("./stages/room9.js?v=20260623-1"),
+    room10: () => import("./stages/room10.js?v=20260623-1"),
+    room11: () => import("./stages/room11.js?v=20260623-1"),
     ending: () => import("./stages/ending.js"),
   });
 

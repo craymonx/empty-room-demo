@@ -3,6 +3,7 @@ import { hideStageEndButtons } from "./game-ui.js?v=20260622-2";
 
 const STAGE_LOADERS = new Map();
 const STAGES = new Map();
+const ROOM_CSS_VERSION = "20260623-1";
 
 let currentStageId = null;
 
@@ -33,7 +34,7 @@ function setStageStyles(stageId) {
   }
 
   // room1 -> room-01.css, room10 -> room-10.css
-  const file = `./css/room-${String(num).padStart(2, "0")}.css`;
+  const file = `./css/room-${String(num).padStart(2, "0")}.css?v=${ROOM_CSS_VERSION}`;
 
   let link = document.getElementById(linkId);
 

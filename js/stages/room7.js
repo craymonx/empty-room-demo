@@ -1,3 +1,5 @@
+import { createRoomBgm } from "../room-bgm.js";
+
 export default {
   enter({ root, go }) {
     root.innerHTML = `
@@ -23,6 +25,9 @@ export default {
 
     const wrap = root.querySelector("#room7Wrap");
     const bg = root.querySelector("#bg");
+    const bgm = createRoomBgm(
+      "./assets/audio/room7/7 empty room bgm_1.wav",
+    );
     const overlays = root.querySelector("#overlays");
     const leftGradient = root.querySelector("#leftGradient");
 
@@ -457,7 +462,10 @@ export default {
     if (bg.complete) layout();
     else bg.addEventListener("load", layout);
 
+    bgm.start();
+
     this.cleanup = () => {
+      bgm.stop();
       window.removeEventListener("resize", layout);
       wrap.removeEventListener("mousemove", handleLeftGradient);
 

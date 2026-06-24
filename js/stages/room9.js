@@ -1,4 +1,6 @@
 // /js/stages/room9.js
+import { createRoomBgm } from "../room-bgm.js";
+
 export default {
     enter({ root, go }) {
       root.innerHTML = `
@@ -27,6 +29,9 @@ export default {
       const overlays = root.querySelector("#overlays");
       const arrowLayer = root.querySelector("#arrowLayer");
       const nextBtn = root.querySelector("#nextBtn");
+      const bgm = createRoomBgm(
+        "./assets/audio/room9/9 langley fog bgm_1.wav",
+      );
   
       const BASE_W = 1920;
       const BASE_H = 1080;
@@ -402,10 +407,12 @@ for (const s of returnSeq) {
       window.addEventListener("resize", layout);
       bg.addEventListener("load", layout);
   
+      bgm.start();
       startIntroSequence();
   
       this._cleanup = () => {
         clearTimers();
+        bgm.stop();
         window.removeEventListener("resize", layout);
         bg.removeEventListener("load", layout);
       };

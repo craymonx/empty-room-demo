@@ -1,4 +1,6 @@
 // /js/stages/room4.js
+import { createRoomBgm } from "../room-bgm.js";
+
 export default {
   enter({ root, go }) {
     root.innerHTML = `
@@ -33,6 +35,9 @@ export default {
     let debug = false;
     let rewinding = false;
     let beachEnded = false;
+    const bgm = createRoomBgm(
+      "./assets/audio/room4/4 pebbles and the rock bgm_1.wav",
+    );
 
     let jarEl = null;
     let cleanupJarEvents = null;
@@ -705,11 +710,13 @@ export default {
     bg.addEventListener("load", layout);
     window.addEventListener("resize", layout);
 
+    bgm.start();
     renderScene();
 
     this._cleanup = () => {
       destroyed = true;
       clearTimers();
+      bgm.stop();
 
       if (cleanupJarEvents) {
         cleanupJarEvents();

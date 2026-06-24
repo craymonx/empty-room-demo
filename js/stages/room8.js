@@ -1,4 +1,6 @@
 // /js/stages/room8.js
+import { createRoomBgm } from "../room-bgm.js";
+
 export default {
   enter({ root, go }) {
     root.innerHTML = `
@@ -28,6 +30,9 @@ export default {
     let scene = "mainCloudy";
     let debug = false;
     let completionTimer = null;
+    const bgm = createRoomBgm(
+      "./assets/audio/room8/8 calmly sob bgm_1.wav",
+    );
     let transitionTimer = null;
 
     const INTERACTION_HOLD_MS = 1000;
@@ -473,9 +478,11 @@ export default {
     bg.addEventListener("load", () => requestAnimationFrame(layout));
 
     debug = document.body.classList.contains("debug");
+    bgm.start();
     render();
 
     this.cleanup = () => {
+      bgm.stop();
       window.removeEventListener("resize", layout);
       window.removeEventListener("game:debug", handleDebugChange);
       if (completionTimer) {

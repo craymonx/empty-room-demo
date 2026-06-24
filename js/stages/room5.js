@@ -1,4 +1,6 @@
 // /js/stages/room5.js
+import { createRoomBgm } from "../room-bgm.js";
+
 export default {
     enter({ root, go }) {
       root.innerHTML = `
@@ -28,6 +30,9 @@ export default {
 
       let currentScene = "bedroom";
       let activeHotspots = [];
+      const bgm = createRoomBgm(
+        "./assets/audio/room5/5 norewgian mood bgm_1.wav",
+      );
       let loopTimer = null;
       let loopEndTimer = null;
       let zoomTimer = null;
@@ -428,9 +433,11 @@ export default {
       this._cleanup = () => {
         destroyed = true;
         clearAllTimers();
+        bgm.stop();
         window.removeEventListener("resize", layout);
       };
   
+      bgm.start();
       renderScene();
     },
   

@@ -1,4 +1,5 @@
 // /js/stages/room11.js
+import { createRoomBgm } from "../room-bgm.js";
 
 export default {
   enter({ root, go }) {
@@ -83,6 +84,9 @@ export default {
     let alarmAudio = null;
     let knockAudio = null;
     let audioUnlocked = false;
+    const bgm = createRoomBgm(
+      "./assets/audio/room11/11 car accident bgm_1.wav",
+    );
 
     function getDrawnImageRect() {
       const wrapRect = wrap.getBoundingClientRect();
@@ -559,9 +563,11 @@ export default {
     bg.addEventListener("load", layout);
 
     renderCoca1();
+    bgm.start();
 
     this.exit = () => {
       clearTimers();
+      bgm.stop();
 
       window.removeEventListener("resize", handleResize);
       bg.removeEventListener("load", layout);
