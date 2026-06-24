@@ -1,3 +1,5 @@
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
+
 export default {
   enter({ root, go }) {
     root.innerHTML = `
@@ -544,24 +546,8 @@ export default {
       });
     }
 
-    function updateEggAlbum() {
-      const popup = overlays.querySelector("#room1EggAlbum");
-      if (!popup) return;
-
-      const image = popup.querySelector("#room1EggAlbumImage");
-      const counter = popup.querySelector("#room1EggAlbumCounter");
-      const prevBtn = popup.querySelector("#room1EggAlbumPrev");
-      const nextBtn = popup.querySelector("#room1EggAlbumNext");
-
-      image.src = EGG_IMAGES[kitchenEggIndex];
-      image.alt = `Easter egg photo ${kitchenEggIndex + 1}`;
-      counter.textContent = `${kitchenEggIndex + 1} / ${EGG_IMAGES.length}`;
-      prevBtn.disabled = kitchenEggIndex === 0;
-      nextBtn.disabled = kitchenEggIndex === EGG_IMAGES.length - 1;
-    }
-
     function closeEggAlbum() {
-      overlays.querySelector("#room1EggAlbum")?.remove();
+      closePhotoPopup(overlays, "room1EggAlbum");
       eggAlbumOpen = false;
       stoveBtn.disabled = false;
       stoveBtn.style.pointerEvents = "";
@@ -573,61 +559,18 @@ export default {
       stoveBtn.disabled = true;
       stoveBtn.style.pointerEvents = "none";
 
-      const popup = document.createElement("div");
-      popup.id = "room1EggAlbum";
-      popup.className = "room1-egg-album";
-
-      popup.innerHTML = `
-        <div class="room1-egg-album__backdrop"></div>
-        <div class="room1-egg-album__book" role="dialog" aria-modal="true" aria-label="Old photo album">
-          <button
-            id="room1EggAlbumClose"
-            class="room1-egg-album__close"
-            type="button"
-            aria-label="Close album"
-          >×</button>
-
-          <div class="room1-egg-album__spine" aria-hidden="true"></div>
-
-          <div class="room1-egg-album__page">
-            <div class="room1-egg-album__photo-frame">
-              <img id="room1EggAlbumImage" class="room1-egg-album__image" src="" alt="">
-            </div>
-
-            <div class="room1-egg-album__caption">
-              <span>Memory fragment</span>
-              <span id="room1EggAlbumCounter"></span>
-            </div>
-
-            <div class="room1-egg-album__controls">
-              <button id="room1EggAlbumPrev" type="button">‹ Previous</button>
-              <button id="room1EggAlbumNext" type="button">Next ›</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      overlays.appendChild(popup);
-
-      popup
-        .querySelector("#room1EggAlbumClose")
-        .addEventListener("click", closeEggAlbum);
-
-      popup
-        .querySelector(".room1-egg-album__backdrop")
-        .addEventListener("click", closeEggAlbum);
-
-      popup.querySelector("#room1EggAlbumPrev").addEventListener("click", () => {
-        kitchenEggIndex = Math.max(0, kitchenEggIndex - 1);
-        updateEggAlbum();
+      showPhotoPopup({
+        container: overlays,
+        id: "room1EggAlbum",
+        title: "Memory fragment",
+        images: EGG_IMAGES,
+        initialIndex: kitchenEggIndex,
+        onClose: () => {
+          eggAlbumOpen = false;
+          stoveBtn.disabled = false;
+          stoveBtn.style.pointerEvents = "";
+        },
       });
-
-      popup.querySelector("#room1EggAlbumNext").addEventListener("click", () => {
-        kitchenEggIndex = Math.min(EGG_IMAGES.length - 1, kitchenEggIndex + 1);
-        updateEggAlbum();
-      });
-
-      updateEggAlbum();
     }
 
     function showKitchenEggHotspot() {

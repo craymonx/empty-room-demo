@@ -1,3 +1,4 @@
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
 export default {
@@ -237,49 +238,18 @@ export default {
       }
 
       function closeEggAlbum() {
-        overlays.querySelector("#room6EggAlbum")?.remove();
+        closePhotoPopup(overlays, "room6EggAlbum");
       }
 
       function showEggAlbum() {
         closeEggAlbum();
 
-        const album = document.createElement("div");
-        album.id = "room6EggAlbum";
-        album.className = "room6-egg-album";
-        album.innerHTML = `
-          <div class="room6-egg-album__backdrop"></div>
-          <div class="room6-egg-album__book" role="dialog" aria-modal="true" aria-label="Window memory">
-            <button
-              id="room6EggAlbumClose"
-              class="room6-egg-album__close"
-              type="button"
-              aria-label="Close album"
-            >×</button>
-
-            <div class="room6-egg-album__spine" aria-hidden="true"></div>
-
-            <div class="room6-egg-album__page">
-              <div class="room6-egg-album__photo-frame">
-                <img class="room6-egg-album__image" src="./assets/props/room6/egg6.1.webp?v=20260624-2" alt="Window memory">
-              </div>
-
-              <div class="room6-egg-album__caption">
-                <span>Window memory</span>
-                <span>1 / 1</span>
-              </div>
-            </div>
-          </div>
-        `;
-
-        overlays.appendChild(album);
-
-        album
-          .querySelector("#room6EggAlbumClose")
-          .addEventListener("click", closeEggAlbum);
-
-        album
-          .querySelector(".room6-egg-album__backdrop")
-          .addEventListener("click", closeEggAlbum);
+        showPhotoPopup({
+          container: overlays,
+          id: "room6EggAlbum",
+          title: "Window memory",
+          images: ["./assets/props/room6/egg6.1.webp?v=20260624-2"],
+        });
       }
   
       function playSpiritSequence() {

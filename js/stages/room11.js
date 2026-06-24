@@ -1,4 +1,5 @@
 // /js/stages/room11.js
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
 export default {
@@ -194,7 +195,7 @@ export default {
     }
 
     function closeEggAlbum() {
-      popupLayer.querySelector("#room11EggAlbum")?.remove();
+      closePhotoPopup(popupLayer, "room11EggAlbum");
     }
 
     function stopAudio(audio) {
@@ -286,73 +287,12 @@ export default {
     function showEggAlbum(albumData) {
       closeEggAlbum();
 
-      let pageIndex = 0;
-      const album = document.createElement("div");
-      album.id = "room11EggAlbum";
-      album.className = "room11-egg-album";
-      album.innerHTML = `
-          <div class="room11-egg-album__backdrop"></div>
-          <div class="room11-egg-album__book" role="dialog" aria-modal="true" aria-label="${albumData.title}">
-            <button
-              id="room11EggAlbumClose"
-              class="room11-egg-album__close"
-              type="button"
-              aria-label="Close album"
-            >×</button>
-
-            <div class="room11-egg-album__spine" aria-hidden="true"></div>
-
-            <div class="room11-egg-album__page">
-              <div class="room11-egg-album__photo-frame">
-                <img id="room11EggAlbumImage" class="room11-egg-album__image" src="" alt="${albumData.caption}">
-              </div>
-
-              <div class="room11-egg-album__caption">
-                <span>${albumData.caption}</span>
-                <span id="room11EggAlbumCounter"></span>
-              </div>
-
-              <div class="room11-egg-album__controls">
-                <button id="room11EggAlbumPrev" type="button">‹ Previous</button>
-                <button id="room11EggAlbumNext" type="button">Next ›</button>
-              </div>
-            </div>
-          </div>
-        `;
-
-      popupLayer.appendChild(album);
-
-      const img = album.querySelector("#room11EggAlbumImage");
-      const counter = album.querySelector("#room11EggAlbumCounter");
-      const prevBtn = album.querySelector("#room11EggAlbumPrev");
-      const nextBtn = album.querySelector("#room11EggAlbumNext");
-
-      function updateAlbum() {
-        img.src = albumData.images[pageIndex];
-        counter.textContent = `${pageIndex + 1} / ${albumData.images.length}`;
-        prevBtn.disabled = pageIndex === 0;
-        nextBtn.disabled = pageIndex === albumData.images.length - 1;
-      }
-
-      album
-        .querySelector("#room11EggAlbumClose")
-        .addEventListener("click", closeEggAlbum);
-
-      album
-        .querySelector(".room11-egg-album__backdrop")
-        .addEventListener("click", closeEggAlbum);
-
-      prevBtn.addEventListener("click", () => {
-        pageIndex = Math.max(0, pageIndex - 1);
-        updateAlbum();
+      showPhotoPopup({
+        container: popupLayer,
+        id: "room11EggAlbum",
+        title: albumData.caption,
+        images: albumData.images,
       });
-
-      nextBtn.addEventListener("click", () => {
-        pageIndex = Math.min(albumData.images.length - 1, pageIndex + 1);
-        updateAlbum();
-      });
-
-      updateAlbum();
     }
 
     function showAlarmClosedHotspots() {

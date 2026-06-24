@@ -1,3 +1,5 @@
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
+
 let room3Bgm = null;
 
 export default {
@@ -36,6 +38,7 @@ export default {
 
     let zoomDoorDialogShown = false;
     let guidelineAfterDialogShown = false;
+    let guidelinePaperClicked = false;
     let security1DialogShown = false;
     let paper2DialogShown = false;
 
@@ -297,7 +300,11 @@ export default {
     }
 
     function openPaperPopup() {
+      guidelinePaperClicked = true;
+
       openChecklistPopup("resident-guidelines.webp", () => {
+        buildSceneHotspots();
+
         if (!guidelineAfterDialogShown) {
           guidelineAfterDialogShown = true;
           showMonologue("I guess I have to stay and call for help");
@@ -363,87 +370,26 @@ export default {
         });
       }
 
-      function updateEggAlbum() {
-        const album = dialogLayer.querySelector("#room3EggAlbum");
-        if (!album) return;
-
-        const img = album.querySelector("#room3EggAlbumImage");
-        const counter = album.querySelector("#room3EggAlbumCounter");
-        const prevBtn = album.querySelector("#room3EggAlbumPrev");
-        const nextBtn = album.querySelector("#room3EggAlbumNext");
-
-        img.src = activeEgg.images[eggAlbumIndex];
-        img.alt = `Room 3 easter egg image ${eggAlbumIndex + 1}`;
-        counter.textContent = `${eggAlbumIndex + 1} / ${activeEgg.images.length}`;
-        prevBtn.disabled = eggAlbumIndex === 0;
-        nextBtn.disabled = eggAlbumIndex === activeEgg.images.length - 1;
-      }
-
       function closeEggAlbum() {
-        dialogLayer.querySelector("#room3EggAlbum")?.remove();
+        closePhotoPopup(dialogLayer, "room3EggAlbum");
         phoneInput = "";
         renderPhoneDisplay(phoneInput);
       }
 
       function showEggAlbum(egg) {
-        dialogLayer.querySelector("#room3EggAlbum")?.remove();
         activeEgg = egg;
         eggAlbumIndex = 0;
 
-        const album = document.createElement("div");
-        album.id = "room3EggAlbum";
-        album.className = "room3-egg-album";
-        album.innerHTML = `
-          <div class="room3-egg-album__backdrop"></div>
-          <div class="room3-egg-album__book" role="dialog" aria-modal="true" aria-label="Room 3 photo album">
-            <button
-              id="room3EggAlbumClose"
-              class="room3-egg-album__close"
-              type="button"
-              aria-label="Close album"
-            >×</button>
-
-            <div class="room3-egg-album__spine" aria-hidden="true"></div>
-
-            <div class="room3-egg-album__page">
-              <div class="room3-egg-album__photo-frame">
-                <img id="room3EggAlbumImage" class="room3-egg-album__image" src="" alt="">
-              </div>
-
-              <div class="room3-egg-album__caption">
-                <span>${activeEgg.title}</span>
-                <span id="room3EggAlbumCounter"></span>
-              </div>
-
-              <div class="room3-egg-album__controls">
-                <button id="room3EggAlbumPrev" type="button">‹ Previous</button>
-                <button id="room3EggAlbumNext" type="button">Next ›</button>
-              </div>
-            </div>
-          </div>
-        `;
-
-        dialogLayer.appendChild(album);
-
-        album
-          .querySelector("#room3EggAlbumClose")
-          .addEventListener("click", closeEggAlbum);
-
-        album
-          .querySelector(".room3-egg-album__backdrop")
-          .addEventListener("click", closeEggAlbum);
-
-        album.querySelector("#room3EggAlbumPrev").addEventListener("click", () => {
-          eggAlbumIndex = Math.max(0, eggAlbumIndex - 1);
-          updateEggAlbum();
+        showPhotoPopup({
+          container: dialogLayer,
+          id: "room3EggAlbum",
+          title: activeEgg.title,
+          images: activeEgg.images,
+          onClose: () => {
+            phoneInput = "";
+            renderPhoneDisplay(phoneInput);
+          },
         });
-
-        album.querySelector("#room3EggAlbumNext").addEventListener("click", () => {
-          eggAlbumIndex = Math.min(activeEgg.images.length - 1, eggAlbumIndex + 1);
-          updateEggAlbum();
-        });
-
-        updateEggAlbum();
       }
 
       popup.querySelector(".room3-phone__close").addEventListener("click", (e) => {
@@ -690,12 +636,14 @@ Please do not leave a message.`,
           })
         );
 
-        items.push(
-          makeHotspot("return-left", RECTS.zoomDoor.returnLeft, () => {
-            scene = "dirtyRoomAfterGuideline";
-            render();
-          })
-        );
+        if (guidelinePaperClicked) {
+          items.push(
+            makeHotspot("return-left", RECTS.zoomDoor.returnLeft, () => {
+              scene = "dirtyRoomAfterGuideline";
+              render();
+            })
+          );
+        }
       }
 
       if (scene === "dirtyRoomAfterGuideline") {

@@ -1,4 +1,5 @@
 // /js/stages/room8.js
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
 export default {
@@ -151,49 +152,18 @@ export default {
     }
 
     function closeEggAlbum() {
-      overlays.querySelector("#room8EggAlbum")?.remove();
+      closePhotoPopup(overlays, "room8EggAlbum");
     }
 
     function showEggAlbum({ title, image }) {
       closeEggAlbum();
 
-      const album = document.createElement("div");
-      album.id = "room8EggAlbum";
-      album.className = "room8-egg-album";
-      album.innerHTML = `
-        <div class="room8-egg-album__backdrop"></div>
-        <div class="room8-egg-album__book" role="dialog" aria-modal="true" aria-label="${title}">
-          <button
-            id="room8EggAlbumClose"
-            class="room8-egg-album__close"
-            type="button"
-            aria-label="Close album"
-          >×</button>
-
-          <div class="room8-egg-album__spine" aria-hidden="true"></div>
-
-          <div class="room8-egg-album__page">
-            <div class="room8-egg-album__photo-frame">
-              <img class="room8-egg-album__image" src="${image}" alt="${title}">
-            </div>
-
-            <div class="room8-egg-album__caption">
-              <span>${title}</span>
-              <span>1 / 1</span>
-            </div>
-          </div>
-        </div>
-      `;
-
-      overlays.appendChild(album);
-
-      album
-        .querySelector("#room8EggAlbumClose")
-        .addEventListener("click", closeEggAlbum);
-
-      album
-        .querySelector(".room8-egg-album__backdrop")
-        .addEventListener("click", closeEggAlbum);
+      showPhotoPopup({
+        container: overlays,
+        id: "room8EggAlbum",
+        title,
+        images: [image],
+      });
     }
 
     function createProp(id, src, rect, draggable = true) {

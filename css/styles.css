@@ -554,6 +554,121 @@ body.debug .sorting-zone {
   backdrop-filter: none;
 }
 
+/* Shared easter egg photo popup */
+.egg-photo-popup {
+  position: absolute;
+  inset: 0;
+  z-index: 180;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  pointer-events: auto;
+}
+
+.egg-photo-popup__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--room-ui-overlay);
+  backdrop-filter: blur(3px);
+}
+
+.egg-photo-popup__frame {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  width: min(86vw, 920px);
+  max-height: calc(100vh - 48px);
+  pointer-events: auto;
+}
+
+.egg-photo-popup__image {
+  display: block;
+  justify-self: center;
+  max-width: 100%;
+  max-height: min(76vh, 760px);
+  object-fit: contain;
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.55);
+}
+
+.egg-photo-popup__close {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: 2px solid var(--room-ui-border);
+  border-radius: 999px;
+  background: var(--room-ui-panel);
+  color: var(--room-ui-text);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.egg-photo-popup__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.egg-photo-popup__nav {
+  min-width: 112px;
+  min-height: 36px;
+  border: 2px solid var(--room-ui-border);
+  background: var(--room-ui-panel);
+  color: var(--room-ui-text);
+  font-family: var(--room-ui-font);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.egg-photo-popup__nav:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.egg-photo-popup__counter {
+  min-width: 52px;
+  color: #fff;
+  font-family: var(--room-ui-font);
+  font-size: 16px;
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 640px) {
+  .egg-photo-popup {
+    padding: 16px;
+  }
+
+  .egg-photo-popup__frame {
+    width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+  }
+
+  .egg-photo-popup__image {
+    max-height: 70vh;
+  }
+
+  .egg-photo-popup__close {
+    top: -12px;
+    right: -10px;
+  }
+
+  .egg-photo-popup__controls {
+    gap: 8px;
+  }
+
+  .egg-photo-popup__nav {
+    min-width: 0;
+    flex: 1;
+    font-size: 14px;
+  }
+}
+
 /* Shared left return/back plates */
 .room1-left-gradient,
 .room2-left-gradient,

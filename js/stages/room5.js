@@ -1,4 +1,5 @@
 // /js/stages/room5.js
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
 export default {
@@ -291,49 +292,18 @@ export default {
       }
 
       function closeEggAlbum() {
-        dialogLayer.querySelector("#room5EggAlbum")?.remove();
+        closePhotoPopup(dialogLayer, "room5EggAlbum");
       }
 
       function showEggAlbum({ title, image }) {
         closeEggAlbum();
 
-        const album = document.createElement("div");
-        album.id = "room5EggAlbum";
-        album.className = "room5-egg-album";
-        album.innerHTML = `
-          <div class="room5-egg-album__backdrop"></div>
-          <div class="room5-egg-album__book" role="dialog" aria-modal="true" aria-label="${title}">
-            <button
-              id="room5EggAlbumClose"
-              class="room5-egg-album__close"
-              type="button"
-              aria-label="Close album"
-            >×</button>
-
-            <div class="room5-egg-album__spine" aria-hidden="true"></div>
-
-            <div class="room5-egg-album__page">
-              <div class="room5-egg-album__photo-frame">
-                <img class="room5-egg-album__image" src="${image}" alt="${title}">
-              </div>
-
-              <div class="room5-egg-album__caption">
-                <span>${title}</span>
-                <span>1 / 1</span>
-              </div>
-            </div>
-          </div>
-        `;
-
-        dialogLayer.appendChild(album);
-
-        album
-          .querySelector("#room5EggAlbumClose")
-          .addEventListener("click", closeEggAlbum);
-
-        album
-          .querySelector(".room5-egg-album__backdrop")
-          .addEventListener("click", closeEggAlbum);
+        showPhotoPopup({
+          container: dialogLayer,
+          id: "room5EggAlbum",
+          title,
+          images: [image],
+        });
       }
   
       function layout() {
