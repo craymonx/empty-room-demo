@@ -13,7 +13,7 @@ export default {
       { id: "room8", name: "Calmly Sob" },
       { id: "room9", name: "Langley Fog" },
       { id: "room10", name: "Foreign Night Sea" },
-      { id: "room11", name: "Chill Out (Car Accident)" },
+      { id: "room11", name: "Car Accident (Chill Out)" },
     ];
 
     const BASE_W = 1248;

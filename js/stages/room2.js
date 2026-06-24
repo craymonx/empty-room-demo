@@ -58,7 +58,7 @@ export default {
 
       emptyCup: {
         beer: { x: 690, y: 465, w: 85, h: 200 },
-        drop: { x: 1050, y: 500, w: 475, h: 225 },
+        drop: { x: 850, y: 500, w: 250, h: 225 },
       },
 
       fullCup: {
