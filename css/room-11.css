@@ -116,3 +116,169 @@
 .room11-rpg-name {
   letter-spacing: 0.04em;
 }
+
+.room11-egg-album {
+  position: absolute;
+  inset: 0;
+  z-index: 180;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+}
+
+.room11-egg-album__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 244, 208, 0.12), transparent 42%),
+    rgba(13, 10, 8, 0.68);
+  backdrop-filter: blur(3px);
+}
+
+.room11-egg-album__book {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  width: min(860px, calc(100vw - 36px));
+  max-height: min(88vh, 740px);
+  padding: clamp(14px, 2.4vw, 24px);
+  border: 2px solid #2b1a10;
+  border-radius: 10px;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 12%),
+    linear-gradient(135deg, #3a2016, #6e4329 45%, #321a11);
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 3px rgba(255, 230, 175, 0.12);
+  color: #2b1a10;
+  font-family: Georgia, "Times New Roman", serif;
+  pointer-events: auto;
+}
+
+.room11-egg-album__spine {
+  border-right: 2px solid rgba(40, 20, 10, 0.55);
+  box-shadow: inset -8px 0 14px rgba(0, 0, 0, 0.18);
+}
+
+.room11-egg-album__page {
+  min-width: 0;
+  padding: clamp(14px, 2.8vw, 28px);
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.12), transparent),
+    #e7d4aa;
+  box-shadow:
+    inset 0 0 24px rgba(87, 55, 28, 0.22),
+    0 0 0 1px rgba(57, 34, 18, 0.25);
+}
+
+.room11-egg-album__photo-frame {
+  position: relative;
+  padding: clamp(10px, 1.8vw, 18px);
+  background: #f8f2df;
+  box-shadow:
+    0 10px 24px rgba(52, 31, 17, 0.25),
+    inset 0 0 0 1px rgba(57, 34, 18, 0.18);
+  transform: rotate(-0.6deg);
+}
+
+.room11-egg-album__photo-frame::before,
+.room11-egg-album__photo-frame::after {
+  content: "";
+  position: absolute;
+  width: 52px;
+  height: 18px;
+  background: rgba(214, 184, 115, 0.72);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.room11-egg-album__photo-frame::before {
+  left: -15px;
+  top: 12px;
+  transform: rotate(-36deg);
+}
+
+.room11-egg-album__photo-frame::after {
+  right: -15px;
+  bottom: 12px;
+  transform: rotate(-36deg);
+}
+
+.room11-egg-album__image {
+  display: block;
+  width: 100%;
+  max-height: min(54vh, 480px);
+  object-fit: contain;
+  background: #111;
+  filter: sepia(0.08) contrast(0.96) saturate(0.9);
+}
+
+.room11-egg-album__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  color: #51341f;
+  font-size: clamp(15px, 2.4vw, 20px);
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+.room11-egg-album__controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.room11-egg-album__controls button,
+.room11-egg-album__close {
+  border: 1px solid #4f301d;
+  background: #2b1a10;
+  color: #f7e7bd;
+  font-family: Georgia, "Times New Roman", serif;
+  cursor: pointer;
+}
+
+.room11-egg-album__controls button {
+  min-width: 132px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-size: 16px;
+}
+
+.room11-egg-album__controls button:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+.room11-egg-album__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .room11-egg-album__book {
+    grid-template-columns: 18px minmax(0, 1fr);
+    width: calc(100vw - 22px);
+    padding: 12px;
+  }
+
+  .room11-egg-album__page {
+    padding: 14px;
+  }
+
+  .room11-egg-album__controls button {
+    min-width: 0;
+    flex: 1;
+    padding: 9px 10px;
+    font-size: 14px;
+  }
+}

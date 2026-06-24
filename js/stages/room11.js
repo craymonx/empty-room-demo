@@ -27,6 +27,8 @@ export default {
     const RECTS = {
       coca1: {
         start: { x: 1020, y: 50, w: 750, h: 1000 },
+        books: { x: 500, y: 530, w: 270, h: 180 },
+        board: { x: 0, y: 265, w: 190, h: 320 },
       },
       coca2: {
         full: { x: 0, y: 0, w: 1920, h: 1080 },
@@ -87,6 +89,21 @@ export default {
     const bgm = createRoomBgm(
       "./assets/audio/room11/11 car accident bgm_1.wav",
     );
+    const EGG_ALBUMS = {
+      books: {
+        title: "Book memories",
+        caption: "Book memory",
+        images: [
+          "./assets/props/room11/egg11.1.webp?v=20260624-1",
+          "./assets/props/room11/egg11.2.webp?v=20260624-1",
+        ],
+      },
+      board: {
+        title: "Board memory",
+        caption: "Board memory",
+        images: ["./assets/props/room11/egg11.3.webp?v=20260624-1"],
+      },
+    };
 
     function getDrawnImageRect() {
       const wrapRect = wrap.getBoundingClientRect();
@@ -125,6 +142,8 @@ export default {
     function layout() {
       const map = [
         ["start", RECTS.coca1.start],
+        ["books", RECTS.coca1.books],
+        ["board", RECTS.coca1.board],
         ["full", RECTS.coca2.full],
         ["tv", RECTS.alarm.tv],
         ["phone-left", RECTS.alarm.phoneLeft],
@@ -172,6 +191,10 @@ export default {
 
     function clearOverlays() {
       overlays.innerHTML = "";
+    }
+
+    function closeEggAlbum() {
+      popupLayer.querySelector("#room11EggAlbum")?.remove();
     }
 
     function stopAudio(audio) {
@@ -236,6 +259,100 @@ export default {
         .addEventListener("click", callback);
 
       layout();
+    }
+
+    function showCoca1Hotspots() {
+      overlays.innerHTML = `
+          <button class="hotspot room11-hotspot" data-hotspot="start" aria-label="Continue"></button>
+          <button class="hotspot room11-hotspot" data-hotspot="books" aria-label="Open book memories"></button>
+          <button class="hotspot room11-hotspot" data-hotspot="board" aria-label="Open board memory"></button>
+        `;
+
+      overlays
+        .querySelector('[data-hotspot="start"]')
+        .addEventListener("click", goToCoca2);
+
+      overlays
+        .querySelector('[data-hotspot="books"]')
+        .addEventListener("click", () => showEggAlbum(EGG_ALBUMS.books));
+
+      overlays
+        .querySelector('[data-hotspot="board"]')
+        .addEventListener("click", () => showEggAlbum(EGG_ALBUMS.board));
+
+      layout();
+    }
+
+    function showEggAlbum(albumData) {
+      closeEggAlbum();
+
+      let pageIndex = 0;
+      const album = document.createElement("div");
+      album.id = "room11EggAlbum";
+      album.className = "room11-egg-album";
+      album.innerHTML = `
+          <div class="room11-egg-album__backdrop"></div>
+          <div class="room11-egg-album__book" role="dialog" aria-modal="true" aria-label="${albumData.title}">
+            <button
+              id="room11EggAlbumClose"
+              class="room11-egg-album__close"
+              type="button"
+              aria-label="Close album"
+            >×</button>
+
+            <div class="room11-egg-album__spine" aria-hidden="true"></div>
+
+            <div class="room11-egg-album__page">
+              <div class="room11-egg-album__photo-frame">
+                <img id="room11EggAlbumImage" class="room11-egg-album__image" src="" alt="${albumData.caption}">
+              </div>
+
+              <div class="room11-egg-album__caption">
+                <span>${albumData.caption}</span>
+                <span id="room11EggAlbumCounter"></span>
+              </div>
+
+              <div class="room11-egg-album__controls">
+                <button id="room11EggAlbumPrev" type="button">‹ Previous</button>
+                <button id="room11EggAlbumNext" type="button">Next ›</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+      popupLayer.appendChild(album);
+
+      const img = album.querySelector("#room11EggAlbumImage");
+      const counter = album.querySelector("#room11EggAlbumCounter");
+      const prevBtn = album.querySelector("#room11EggAlbumPrev");
+      const nextBtn = album.querySelector("#room11EggAlbumNext");
+
+      function updateAlbum() {
+        img.src = albumData.images[pageIndex];
+        counter.textContent = `${pageIndex + 1} / ${albumData.images.length}`;
+        prevBtn.disabled = pageIndex === 0;
+        nextBtn.disabled = pageIndex === albumData.images.length - 1;
+      }
+
+      album
+        .querySelector("#room11EggAlbumClose")
+        .addEventListener("click", closeEggAlbum);
+
+      album
+        .querySelector(".room11-egg-album__backdrop")
+        .addEventListener("click", closeEggAlbum);
+
+      prevBtn.addEventListener("click", () => {
+        pageIndex = Math.max(0, pageIndex - 1);
+        updateAlbum();
+      });
+
+      nextBtn.addEventListener("click", () => {
+        pageIndex = Math.min(albumData.images.length - 1, pageIndex + 1);
+        updateAlbum();
+      });
+
+      updateAlbum();
     }
 
     function showAlarmClosedHotspots() {
@@ -328,7 +445,7 @@ export default {
       scene = "coca1";
       setBG("./assets/bg/room11/coca1.webp");
       popupLayer.innerHTML = "";
-      showHotspot("start", "Continue", goToCoca2);
+      showCoca1Hotspots();
     }
 
     function goToCoca2() {
@@ -568,6 +685,7 @@ export default {
     this.exit = () => {
       clearTimers();
       bgm.stop();
+      closeEggAlbum();
 
       window.removeEventListener("resize", handleResize);
       bg.removeEventListener("load", layout);

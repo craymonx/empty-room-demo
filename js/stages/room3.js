@@ -44,6 +44,15 @@ export default {
 
     const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm 2.wav";
     const SPRAY_SRC = "./assets/audio/room3/spray.wav";
+    const PHONE_EASTER_EGGS = {
+      20210115: {
+        title: "Memory fragment",
+        images: [
+          "./assets/props/room3/easteregg_test1.webp",
+          "./assets/props/room3/easteregg_test2.webp",
+        ],
+      },
+    };
 
     // IMPORTANT:
     // All Room 3 coordinates below are based on the original 2800 × 1800 image size.
@@ -80,6 +89,7 @@ export default {
       },
 
       paper1: {
+        phone: { x: 375, y: 920, w: 80, h: 20 },
         paper: { x: 1310, y: 1360, w: 325, h: 190 },
       },
 
@@ -295,9 +305,11 @@ export default {
       });
     }
 
-    function openPhonePopup() {
+    function openPhonePopup({ allowSecurityCall = true } = {}) {
       phoneInput = "";
       clearDialog();
+      let eggAlbumIndex = 0;
+      let activeEgg = null;
 
       const popup = document.createElement("div");
       popup.className = "room3-phone-popup";
@@ -347,8 +359,91 @@ export default {
         clearDialog();
 
         showMonologue(message, () => {
-          openPhonePopup();
+          openPhonePopup({ allowSecurityCall });
         });
+      }
+
+      function updateEggAlbum() {
+        const album = dialogLayer.querySelector("#room3EggAlbum");
+        if (!album) return;
+
+        const img = album.querySelector("#room3EggAlbumImage");
+        const counter = album.querySelector("#room3EggAlbumCounter");
+        const prevBtn = album.querySelector("#room3EggAlbumPrev");
+        const nextBtn = album.querySelector("#room3EggAlbumNext");
+
+        img.src = activeEgg.images[eggAlbumIndex];
+        img.alt = `Room 3 easter egg image ${eggAlbumIndex + 1}`;
+        counter.textContent = `${eggAlbumIndex + 1} / ${activeEgg.images.length}`;
+        prevBtn.disabled = eggAlbumIndex === 0;
+        nextBtn.disabled = eggAlbumIndex === activeEgg.images.length - 1;
+      }
+
+      function closeEggAlbum() {
+        dialogLayer.querySelector("#room3EggAlbum")?.remove();
+        phoneInput = "";
+        renderPhoneDisplay(phoneInput);
+      }
+
+      function showEggAlbum(egg) {
+        dialogLayer.querySelector("#room3EggAlbum")?.remove();
+        activeEgg = egg;
+        eggAlbumIndex = 0;
+
+        const album = document.createElement("div");
+        album.id = "room3EggAlbum";
+        album.className = "room3-egg-album";
+        album.innerHTML = `
+          <div class="room3-egg-album__backdrop"></div>
+          <div class="room3-egg-album__book" role="dialog" aria-modal="true" aria-label="Room 3 photo album">
+            <button
+              id="room3EggAlbumClose"
+              class="room3-egg-album__close"
+              type="button"
+              aria-label="Close album"
+            >×</button>
+
+            <div class="room3-egg-album__spine" aria-hidden="true"></div>
+
+            <div class="room3-egg-album__page">
+              <div class="room3-egg-album__photo-frame">
+                <img id="room3EggAlbumImage" class="room3-egg-album__image" src="" alt="">
+              </div>
+
+              <div class="room3-egg-album__caption">
+                <span>${activeEgg.title}</span>
+                <span id="room3EggAlbumCounter"></span>
+              </div>
+
+              <div class="room3-egg-album__controls">
+                <button id="room3EggAlbumPrev" type="button">‹ Previous</button>
+                <button id="room3EggAlbumNext" type="button">Next ›</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        dialogLayer.appendChild(album);
+
+        album
+          .querySelector("#room3EggAlbumClose")
+          .addEventListener("click", closeEggAlbum);
+
+        album
+          .querySelector(".room3-egg-album__backdrop")
+          .addEventListener("click", closeEggAlbum);
+
+        album.querySelector("#room3EggAlbumPrev").addEventListener("click", () => {
+          eggAlbumIndex = Math.max(0, eggAlbumIndex - 1);
+          updateEggAlbum();
+        });
+
+        album.querySelector("#room3EggAlbumNext").addEventListener("click", () => {
+          eggAlbumIndex = Math.min(activeEgg.images.length - 1, eggAlbumIndex + 1);
+          updateEggAlbum();
+        });
+
+        updateEggAlbum();
       }
 
       popup.querySelector(".room3-phone__close").addEventListener("click", (e) => {
@@ -391,7 +486,14 @@ export default {
         e.preventDefault();
         e.stopPropagation();
 
-        if (phoneInput === CORRECT_SECURITY_NUMBER) {
+        const easterEgg = PHONE_EASTER_EGGS[phoneInput];
+
+        if (easterEgg) {
+          showEggAlbum(easterEgg);
+          return;
+        }
+
+        if (phoneInput === CORRECT_SECURITY_NUMBER && allowSecurityCall) {
           closePhone();
 
           showBlockingMessageAndAdvance(
@@ -403,6 +505,11 @@ Please do not leave a message.`,
             "security1"
           );
 
+          return;
+        }
+
+        if (phoneInput === CORRECT_SECURITY_NUMBER && !allowSecurityCall) {
+          showPhoneError("This number is no longer available.");
           return;
         }
 
@@ -634,6 +741,12 @@ Please do not leave a message.`,
       }
 
       if (scene === "paper1") {
+        items.push(
+          makeHotspot("phone", RECTS.paper1.phone, () => {
+            openPhonePopup({ allowSecurityCall: false });
+          })
+        );
+
         items.push(
           makeHotspot("paper", RECTS.paper1.paper, () => {
             openChecklistPopup("checklist-1.webp", () => {

@@ -43,6 +43,9 @@ export default {
       let timers = [];
   
       const RECTS = {
+        mainRoom: {
+          table: { x: 55, y: 585, w: 340, h: 250 },
+        },
         shore: {
           bush: { x: 620, y: 120, w: 760, h: 650 },
         },
@@ -50,6 +53,11 @@ export default {
           house: { x: 690, y: 420, w: 500, h: 250 },
         },
       };
+
+      const EGG_ALBUM_IMAGES = [
+        "./assets/props/room9/egg9.1.webp?v=20260624-1",
+        "./assets/props/room9/egg9.2.webp?v=20260624-1",
+      ];
   
       const ROUTES = {
         further: [
@@ -244,6 +252,10 @@ export default {
         overlays.innerHTML = "";
         arrowLayer.innerHTML = "";
         nextBtn.classList.add("hidden");
+
+        if (scene === "main-room") {
+          renderMainRoomEggHotspot();
+        }
   
         if (ROUTES[scene]) {
           renderArrows();
@@ -318,6 +330,96 @@ export default {
         overlays.appendChild(btn);
         placeRectOnImage(btn, RECTS.r61.house);
       }
+
+      function renderMainRoomEggHotspot() {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `room9-hotspot ${debug ? "debug" : ""}`;
+        btn.setAttribute("aria-label", "Open table memories");
+
+        btn.addEventListener("click", () => {
+          showEggAlbum();
+        });
+
+        overlays.appendChild(btn);
+        placeRectOnImage(btn, RECTS.mainRoom.table);
+      }
+
+      function closeEggAlbum() {
+        overlays.querySelector("#room9EggAlbum")?.remove();
+      }
+
+      function showEggAlbum() {
+        closeEggAlbum();
+
+        let pageIndex = 0;
+        const album = document.createElement("div");
+        album.id = "room9EggAlbum";
+        album.className = "room9-egg-album";
+        album.innerHTML = `
+          <div class="room9-egg-album__backdrop"></div>
+          <div class="room9-egg-album__book" role="dialog" aria-modal="true" aria-label="Table memories">
+            <button
+              id="room9EggAlbumClose"
+              class="room9-egg-album__close"
+              type="button"
+              aria-label="Close album"
+            >×</button>
+
+            <div class="room9-egg-album__spine" aria-hidden="true"></div>
+
+            <div class="room9-egg-album__page">
+              <div class="room9-egg-album__photo-frame">
+                <img id="room9EggAlbumImage" class="room9-egg-album__image" src="" alt="Table memory">
+              </div>
+
+              <div class="room9-egg-album__caption">
+                <span>Table memory</span>
+                <span id="room9EggAlbumCounter"></span>
+              </div>
+
+              <div class="room9-egg-album__controls">
+                <button id="room9EggAlbumPrev" type="button">‹ Previous</button>
+                <button id="room9EggAlbumNext" type="button">Next ›</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        overlays.appendChild(album);
+
+        const img = album.querySelector("#room9EggAlbumImage");
+        const counter = album.querySelector("#room9EggAlbumCounter");
+        const prevBtn = album.querySelector("#room9EggAlbumPrev");
+        const nextBtn = album.querySelector("#room9EggAlbumNext");
+
+        function updateAlbum() {
+          img.src = EGG_ALBUM_IMAGES[pageIndex];
+          counter.textContent = `${pageIndex + 1} / ${EGG_ALBUM_IMAGES.length}`;
+          prevBtn.disabled = pageIndex === 0;
+          nextBtn.disabled = pageIndex === EGG_ALBUM_IMAGES.length - 1;
+        }
+
+        album
+          .querySelector("#room9EggAlbumClose")
+          .addEventListener("click", closeEggAlbum);
+
+        album
+          .querySelector(".room9-egg-album__backdrop")
+          .addEventListener("click", closeEggAlbum);
+
+        prevBtn.addEventListener("click", () => {
+          pageIndex = Math.max(0, pageIndex - 1);
+          updateAlbum();
+        });
+
+        nextBtn.addEventListener("click", () => {
+          pageIndex = Math.min(EGG_ALBUM_IMAGES.length - 1, pageIndex + 1);
+          updateAlbum();
+        });
+
+        updateAlbum();
+      }
   
       async function startIntroSequence() {
         const intro = [
@@ -377,7 +479,7 @@ for (const s of returnSeq) {
         scene = "main-room";
         overlays.innerHTML = "";
         arrowLayer.innerHTML = "";
-        localStorage.setItem("room8_done", "1");
+        localStorage.setItem("room9_done", "1");
 
         window.dispatchEvent(
           new CustomEvent("stage:end", {
@@ -398,6 +500,10 @@ for (const s of returnSeq) {
         if (scene === "shore") {
           placeRectOnImage(hotspot, RECTS.shore.bush);
         }
+
+        if (scene === "main-room") {
+          placeRectOnImage(hotspot, RECTS.mainRoom.table);
+        }
       
         if (scene === "r61") {
           placeRectOnImage(hotspot, RECTS.r61.house);
@@ -412,6 +518,7 @@ for (const s of returnSeq) {
   
       this._cleanup = () => {
         clearTimers();
+        closeEggAlbum();
         bgm.stop();
         window.removeEventListener("resize", layout);
         bg.removeEventListener("load", layout);

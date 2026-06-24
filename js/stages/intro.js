@@ -5,7 +5,7 @@ export default {
     const ROOMS = [
       { id: "room1", name: "Cooking at 1AM" },
       { id: "room2", name: "Static" },
-      { id: "room3", name: "No Wheel, No Deal" },
+      { id: "room3", name: "No Wheel No Deal" },
       { id: "room4", name: "Pebbles and the Rock" },
       { id: "room5", name: "Norwegian Mood" },
       { id: "room6", name: "Deep Dream" },
@@ -166,7 +166,7 @@ export default {
     function openPanel(type) {
       if (type === "level-list") {
         panelContent.innerHTML = `
-          <h1>Stages</h1>
+          <h1>Chapters</h1>
 
           <div class="room-list">
             ${getRoomsHtml()}

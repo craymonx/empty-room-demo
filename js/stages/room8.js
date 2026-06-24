@@ -35,7 +35,7 @@ export default {
     );
     let transitionTimer = null;
 
-    const INTERACTION_HOLD_MS = 1000;
+    const INTERACTION_HOLD_MS = 500;
     const TRANSITION_DELAY_MS = 200;
     const MOP_SWIPE_DISTANCE = 120;
 
@@ -70,11 +70,12 @@ export default {
       },
 
       floor: { x: 650, y: 520, w: 650, h: 450 },
+      window: { x: 135, y: 155, w: 185, h: 355 },
 
       plants: {
-        plant1: { x: 100, y: 720, w: 180, h: 300 },
+        plant1: { x: 100, y: 720, w: 300, h: 500 },
         plant2: { x: 750, y: 180, w: 250, h: 500 },
-        plant3: { x: 810, y: 650, w: 400, h: 275 },
+        plant3: { x: 750, y: 650, w: 500, h: 350 },
         plant4: { x: 1250, y: 350, w: 150, h: 150 },
         plant5: { x: 1475, y: 350, w: 100, h: 150 },
       },
@@ -149,6 +150,52 @@ export default {
       return btn;
     }
 
+    function closeEggAlbum() {
+      overlays.querySelector("#room8EggAlbum")?.remove();
+    }
+
+    function showEggAlbum({ title, image }) {
+      closeEggAlbum();
+
+      const album = document.createElement("div");
+      album.id = "room8EggAlbum";
+      album.className = "room8-egg-album";
+      album.innerHTML = `
+        <div class="room8-egg-album__backdrop"></div>
+        <div class="room8-egg-album__book" role="dialog" aria-modal="true" aria-label="${title}">
+          <button
+            id="room8EggAlbumClose"
+            class="room8-egg-album__close"
+            type="button"
+            aria-label="Close album"
+          >×</button>
+
+          <div class="room8-egg-album__spine" aria-hidden="true"></div>
+
+          <div class="room8-egg-album__page">
+            <div class="room8-egg-album__photo-frame">
+              <img class="room8-egg-album__image" src="${image}" alt="${title}">
+            </div>
+
+            <div class="room8-egg-album__caption">
+              <span>${title}</span>
+              <span>1 / 1</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      overlays.appendChild(album);
+
+      album
+        .querySelector("#room8EggAlbumClose")
+        .addEventListener("click", closeEggAlbum);
+
+      album
+        .querySelector(".room8-egg-album__backdrop")
+        .addEventListener("click", closeEggAlbum);
+    }
+
     function createProp(id, src, rect, draggable = true) {
       const img = document.createElement("img");
       img.id = id;
@@ -171,7 +218,8 @@ export default {
       let swipeDistance = 0;
       let lastPointerX = 0;
       let lastPointerY = 0;
-      let targetEnteredAt = null;
+      let accumulatedTargetMs = 0;
+      let lastTargetTick = null;
       let isCompleting = false;
       let holdTimer = null;
       let activePointerId = null;
@@ -180,6 +228,31 @@ export default {
         if (!holdTimer) return;
         window.clearTimeout(holdTimer);
         holdTimer = null;
+      }
+
+      function stopAccumulatingTargetTime() {
+        clearHoldTimer();
+
+        if (lastTargetTick === null) return;
+
+        accumulatedTargetMs += performance.now() - lastTargetTick;
+        lastTargetTick = null;
+      }
+
+      function resetAccumulatedTargetTime() {
+        clearHoldTimer();
+        accumulatedTargetMs = 0;
+        lastTargetTick = null;
+      }
+
+      function scheduleAccumulatedHoldCheck() {
+        clearHoldTimer();
+
+        const remainingMs = INTERACTION_HOLD_MS - accumulatedTargetMs;
+        holdTimer = window.setTimeout(
+          tryCompleteInteraction,
+          Math.max(0, remainingMs),
+        );
       }
 
       function tryCompleteInteraction() {
@@ -191,7 +264,7 @@ export default {
 
         isCompleting = true;
         dragging = false;
-        clearHoldTimer();
+        stopAccumulatingTargetTime();
         el.classList.remove("is-dragging");
         el.classList.remove("is-activating");
 
@@ -207,10 +280,9 @@ export default {
 
         dragging = true;
         swipeDistance = 0;
-        targetEnteredAt = null;
+        resetAccumulatedTargetTime();
         isCompleting = false;
         activePointerId = e.pointerId;
-        clearHoldTimer();
         lastPointerX = e.clientX;
         lastPointerY = e.clientY;
 
@@ -230,15 +302,17 @@ export default {
         el.style.left = `${e.clientX - wrapRect.left - offsetX}px`;
         el.style.top = `${e.clientY - wrapRect.top - offsetY}px`;
 
-        if (el.id === "mopItem" && isOverInteractionTarget(el)) {
-          if (targetEnteredAt === null) {
-            targetEnteredAt = performance.now();
-            swipeDistance = 0;
-            clearHoldTimer();
-            holdTimer = window.setTimeout(
-              tryCompleteInteraction,
-              INTERACTION_HOLD_MS,
-            );
+        const isOverTarget = isOverInteractionTarget(el);
+
+        if (el.id === "mopItem" && isOverTarget) {
+          const now = performance.now();
+
+          if (lastTargetTick === null) {
+            lastTargetTick = now;
+            scheduleAccumulatedHoldCheck();
+          } else {
+            accumulatedTargetMs += now - lastTargetTick;
+            lastTargetTick = now;
           }
 
           swipeDistance += Math.hypot(
@@ -247,14 +321,12 @@ export default {
           );
           el.classList.add("is-activating");
 
-          if (performance.now() - targetEnteredAt >= INTERACTION_HOLD_MS) {
+          if (accumulatedTargetMs >= INTERACTION_HOLD_MS) {
             tryCompleteInteraction();
             if (isCompleting) return;
           }
         } else {
-          targetEnteredAt = null;
-          swipeDistance = 0;
-          clearHoldTimer();
+          stopAccumulatingTargetTime();
           el.classList.remove("is-activating");
         }
 
@@ -266,7 +338,7 @@ export default {
         if (!dragging) return;
 
         dragging = false;
-        clearHoldTimer();
+        resetAccumulatedTargetTime();
 
         try {
           el.releasePointerCapture(e.pointerId);
@@ -371,7 +443,7 @@ export default {
       const rects = [];
 
       if (scene === "mainCloudy") rects.push(RECTS.clock);
-      if (scene === "sunnyWaterLeak") rects.push(RECTS.floor);
+      if (scene === "sunnyWaterLeak") rects.push(RECTS.floor, RECTS.window);
       if (scene === "dried" || scene === "cloudyDried") {
         rects.push(...Object.values(RECTS.plants));
       }
@@ -419,6 +491,17 @@ export default {
           RECTS.props.spray,
           true,
         );
+
+        createHotspot(
+          RECTS.window,
+          () => {
+            showEggAlbum({
+              title: "Window memory",
+              image: "./assets/props/room8/egg8.1.webp?v=20260624-1",
+            });
+          },
+          "Open window memory",
+        );
       }
 
       if (scene === "dried") {
@@ -459,6 +542,16 @@ export default {
 
       if (scene === "driedNight") {
         // final scene: mop remains, spray removed
+        createHotspot(
+          RECTS.window,
+          () => {
+            showEggAlbum({
+              title: "Night window memory",
+              image: "./assets/props/room8/egg8.2.webp?v=20260624-2",
+            });
+          },
+          "Open night window memory",
+        );
       }
 
       drawDebugRects();
@@ -483,6 +576,7 @@ export default {
 
     this.cleanup = () => {
       bgm.stop();
+      closeEggAlbum();
       window.removeEventListener("resize", layout);
       window.removeEventListener("game:debug", handleDebugChange);
       if (completionTimer) {

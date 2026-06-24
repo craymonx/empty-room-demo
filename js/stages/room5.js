@@ -49,6 +49,8 @@ export default {
         },
         mainView: {
           zone1: { x: 2050, y: 750, w: 480, h: 440 },
+          window: { x: 700, y: 450, w: 265, h: 355 },
+          table: { x: 330, y: 1090, w: 300, h: 250 },
         },
         close1: {
           zone1: { x: 1700, y: 560, w: 650, h: 700 },
@@ -101,7 +103,25 @@ export default {
   
         mainView: {
           bg: "./assets/bg/room5/main-view.webp",
-          hotspots: [{ rect: RECTS.mainView.zone1, next: "close1", label: "Zoom in" }],
+          hotspots: [
+            { rect: RECTS.mainView.zone1, next: "close1", label: "Zoom in" },
+            {
+              rect: RECTS.mainView.window,
+              action: () => showEggAlbum({
+                title: "Window memory",
+                image: "./assets/props/room5/egg5.1.webp?v=20260624-1",
+              }),
+              label: "Open window memory",
+            },
+            {
+              rect: RECTS.mainView.table,
+              action: () => showEggAlbum({
+                title: "Table memory",
+                image: "./assets/props/room5/egg5.2.webp?v=20260624-1",
+              }),
+              label: "Open table memory",
+            },
+          ],
         },
   
         close1: {
@@ -251,18 +271,69 @@ export default {
         el.style.height = `${(rect.h / COORD_H) * imgDrawRect.height}px`;
       }
   
-      function createHotspot({ rect, next, label }) {
+      function createHotspot({ rect, next, action, label }) {
         const btn = document.createElement("button");
         btn.className = "hotspot";
         btn.type = "button";
         btn.setAttribute("aria-label", label || "Interactive area");
   
         btn.addEventListener("click", () => {
+          if (typeof action === "function") {
+            action();
+            return;
+          }
+
           setScene(next);
         });
   
         overlays.appendChild(btn);
         activeHotspots.push({ el: btn, rect });
+      }
+
+      function closeEggAlbum() {
+        dialogLayer.querySelector("#room5EggAlbum")?.remove();
+      }
+
+      function showEggAlbum({ title, image }) {
+        closeEggAlbum();
+
+        const album = document.createElement("div");
+        album.id = "room5EggAlbum";
+        album.className = "room5-egg-album";
+        album.innerHTML = `
+          <div class="room5-egg-album__backdrop"></div>
+          <div class="room5-egg-album__book" role="dialog" aria-modal="true" aria-label="${title}">
+            <button
+              id="room5EggAlbumClose"
+              class="room5-egg-album__close"
+              type="button"
+              aria-label="Close album"
+            >×</button>
+
+            <div class="room5-egg-album__spine" aria-hidden="true"></div>
+
+            <div class="room5-egg-album__page">
+              <div class="room5-egg-album__photo-frame">
+                <img class="room5-egg-album__image" src="${image}" alt="${title}">
+              </div>
+
+              <div class="room5-egg-album__caption">
+                <span>${title}</span>
+                <span>1 / 1</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        dialogLayer.appendChild(album);
+
+        album
+          .querySelector("#room5EggAlbumClose")
+          .addEventListener("click", closeEggAlbum);
+
+        album
+          .querySelector(".room5-egg-album__backdrop")
+          .addEventListener("click", closeEggAlbum);
       }
   
       function layout() {
@@ -434,6 +505,7 @@ export default {
         destroyed = true;
         clearAllTimers();
         bgm.stop();
+        closeEggAlbum();
         window.removeEventListener("resize", layout);
       };
   

@@ -45,6 +45,9 @@ export default {
         burningBush: {
           middleZone: { x: 600, y: 900, w: 1500, h: 250 },
         },
+        wetRoom: {
+          window: { x: 0, y: 210, w: 510, h: 520 },
+        },
       };
   
       const SPIRIT_SEQUENCE = [
@@ -232,6 +235,52 @@ export default {
       
         overlays.appendChild(black);
       }
+
+      function closeEggAlbum() {
+        overlays.querySelector("#room6EggAlbum")?.remove();
+      }
+
+      function showEggAlbum() {
+        closeEggAlbum();
+
+        const album = document.createElement("div");
+        album.id = "room6EggAlbum";
+        album.className = "room6-egg-album";
+        album.innerHTML = `
+          <div class="room6-egg-album__backdrop"></div>
+          <div class="room6-egg-album__book" role="dialog" aria-modal="true" aria-label="Window memory">
+            <button
+              id="room6EggAlbumClose"
+              class="room6-egg-album__close"
+              type="button"
+              aria-label="Close album"
+            >×</button>
+
+            <div class="room6-egg-album__spine" aria-hidden="true"></div>
+
+            <div class="room6-egg-album__page">
+              <div class="room6-egg-album__photo-frame">
+                <img class="room6-egg-album__image" src="./assets/props/room6/egg6.1.webp?v=20260624-2" alt="Window memory">
+              </div>
+
+              <div class="room6-egg-album__caption">
+                <span>Window memory</span>
+                <span>1 / 1</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        overlays.appendChild(album);
+
+        album
+          .querySelector("#room6EggAlbumClose")
+          .addEventListener("click", closeEggAlbum);
+
+        album
+          .querySelector(".room6-egg-album__backdrop")
+          .addEventListener("click", closeEggAlbum);
+      }
   
       function playSpiritSequence() {
         clearTimers();
@@ -313,6 +362,12 @@ export default {
   
         if (scene === "wetRoom") {
           setBg("./assets/bg/room6/wet-room.webp");
+
+          makeHotspot(
+            RECTS.wetRoom.window,
+            showEggAlbum,
+            "Open window memory"
+          );
         
           localStorage.setItem("room6_done", "1");
         
@@ -363,6 +418,7 @@ export default {
   
       this.cleanup = () => {
         clearTimers();
+        closeEggAlbum();
         bgm.stop();
         window.removeEventListener("resize", layout);
       };
