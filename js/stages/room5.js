@@ -1,4 +1,5 @@
 // /js/stages/room5.js
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
@@ -343,16 +344,22 @@ export default {
       
           localStorage.setItem("room5_done", "1");
       
-          window.dispatchEvent(
-            new CustomEvent("stage:end", {
-              detail: {
-                nextStage: "room6",
-                menuStage: "intro",
-                nextLabel: "Next",
-                menuLabel: "Back to Menu",
-              },
-            })
-          );
+          showChapterEndDialog({
+            container: dialogLayer,
+            text: "…",
+            onContinue: () => {
+              window.dispatchEvent(
+                new CustomEvent("stage:end", {
+                  detail: {
+                    nextStage: "room6",
+                    menuStage: "intro",
+                    nextLabel: "Next",
+                    menuLabel: "Back to Menu",
+                  },
+                })
+              );
+            },
+          });
         }, 5000);
       }
   

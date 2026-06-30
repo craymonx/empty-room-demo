@@ -1,3 +1,4 @@
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
 export default {
@@ -42,6 +43,7 @@ export default {
     const RECTS = {
       main: {
         steamZone: { x: 1220, y: 350, w: 200, h: 200 },
+        couchWallEgg: { x: 390, y: 170, w: 560, h: 330 },
       },
 
       mainSteam: {
@@ -124,6 +126,19 @@ export default {
 
     function clearOverlays() {
       overlays.innerHTML = "";
+    }
+
+    function closeEggPhoto() {
+      closePhotoPopup(overlays, "room7EggPhoto");
+    }
+
+    function showEggPhoto() {
+      showPhotoPopup({
+        container: overlays,
+        id: "room7EggPhoto",
+        title: "Wall memory",
+        images: ["./assets/props/room7/egg7.1.webp?v=20260625-1"],
+      });
     }
 
     function addHotspot(rect, onClick, label = "hotspot") {
@@ -333,6 +348,12 @@ export default {
           () => setScene("mainSteam"),
           "Go to steam scene",
         );
+
+        addHotspot(
+          RECTS.main.couchWallEgg,
+          showEggPhoto,
+          "Open wall memory",
+        );
       }
 
       if (scene === "mainSteam") {
@@ -466,6 +487,7 @@ export default {
 
     this.cleanup = () => {
       bgm.stop();
+      closeEggPhoto();
       window.removeEventListener("resize", layout);
       wrap.removeEventListener("mousemove", handleLeftGradient);
 

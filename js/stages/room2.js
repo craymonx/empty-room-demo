@@ -1,3 +1,5 @@
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
+
 export default {
   enter({ root, go }) {
     root.innerHTML = `
@@ -1047,16 +1049,22 @@ export default {
                               localStorage.setItem("room2_done", "1");
                               showBedroomEggHotspot();
                         
-                              window.dispatchEvent(
-                                new CustomEvent("stage:end", {
-                                  detail: {
-                                    nextStage: "room3",
-                                    menuStage: "intro",
-                                    nextLabel: "Next",
-                                    menuLabel: "Back to Menu",
-                                  },
-                                })
-                              );
+                              showChapterEndDialog({
+                                container: overlays,
+                                text: "That’s it, I’m done…",
+                                onContinue: () => {
+                                  window.dispatchEvent(
+                                    new CustomEvent("stage:end", {
+                                      detail: {
+                                        nextStage: "room3",
+                                        menuStage: "intro",
+                                        nextLabel: "Next",
+                                        menuLabel: "Back to Menu",
+                                      },
+                                    })
+                                  );
+                                },
+                              });
                             });
                           },
                         });
@@ -1155,8 +1163,13 @@ export default {
                           if (scene !== "drawerMessy") return;
 
                           await transitionBg("./assets/bg/room2/empty-drawer.webp");
-                          resetSortingGame();
-                          startUtensilSortingGame();
+                          showClosableDialog({
+                            textLines: ["I guess I’ll make myself busy busy…"],
+                            onClose: () => {
+                              resetSortingGame();
+                              startUtensilSortingGame();
+                            },
+                          });
                         });
                       });
                     });

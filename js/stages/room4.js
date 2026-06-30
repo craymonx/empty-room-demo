@@ -1,4 +1,5 @@
 // /js/stages/room4.js
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { createRoomBgm } from "../room-bgm.js";
 
 export default {
@@ -35,6 +36,7 @@ export default {
     let debug = false;
     let rewinding = false;
     let beachEnded = false;
+    let openingDialogPending = true;
     let eggAudio = null;
     const bgm = createRoomBgm(
       "./assets/audio/room4/4 pebbles and the rock bgm_1.wav",
@@ -337,16 +339,22 @@ export default {
 
   localStorage.setItem("room4_done", "1");
 
-  window.dispatchEvent(
-    new CustomEvent("stage:end", {
-      detail: {
-        nextStage: "room5",
-        menuStage: "intro",
-        nextLabel: "Next",
-        menuLabel: "Back to Menu",
-      },
-    })
-  );
+  showChapterEndDialog({
+    container: overlays,
+    text: "I’m tired.  Good night.",
+    onContinue: () => {
+      window.dispatchEvent(
+        new CustomEvent("stage:end", {
+          detail: {
+            nextStage: "room5",
+            menuStage: "intro",
+            nextLabel: "Next",
+            menuLabel: "Back to Menu",
+          },
+        })
+      );
+    },
+  });
 }
 
     function formatDuration(seconds) {
@@ -716,7 +724,10 @@ export default {
 
       if (scene === "campus") {
         bg.src = "./assets/bg/room4/campus.webp";
-        cleanupJarEvents = makeJar();
+
+        if (!openingDialogPending) {
+          cleanupJarEvents = makeJar();
+        }
       }
 
       if (scene === "beach") {
@@ -861,6 +872,14 @@ export default {
 
     bgm.start();
     renderScene();
+    showChapterEndDialog({
+      container: overlays,
+      text: "The moon is looking pretty tonight.",
+      onContinue: () => {
+        openingDialogPending = false;
+        renderScene();
+      },
+    });
 
     this._cleanup = () => {
       destroyed = true;

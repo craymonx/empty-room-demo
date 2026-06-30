@@ -1,4 +1,5 @@
 // /js/stages/room10.js
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
 export default {
@@ -38,6 +39,7 @@ export default {
 
     const RECTS = {
       radio: { x: 160, y: 385, w: 130, h: 100 },
+      finalTable: { x: 230, y: 505, w: 500, h: 190 },
     };
 
     const slides = [
@@ -230,6 +232,40 @@ export default {
       updatePlaybackUi();
     }
 
+    function closePhotoEgg() {
+      closePhotoPopup(overlays, "room10PhotoEgg");
+    }
+
+    function showPhotoEgg() {
+      showPhotoPopup({
+        container: overlays,
+        id: "room10PhotoEgg",
+        title: "Table memory",
+        images: ["./assets/props/room10/egg10.2.webp?v=20260625-1"],
+      });
+    }
+
+    function renderFinalTableHotspot() {
+      overlays.querySelector("#room10FinalTableHotspot")?.remove();
+
+      if (index !== slides.length - 1 || finished) return;
+
+      const hotspot = document.createElement("button");
+      hotspot.id = "room10FinalTableHotspot";
+      hotspot.type = "button";
+      hotspot.className = "room10-hotspot room10-final-table-hotspot";
+      hotspot.setAttribute("aria-label", "Open table memory");
+      hotspot.addEventListener("click", showPhotoEgg);
+
+      overlays.appendChild(hotspot);
+      placeRectOnImage(hotspot, RECTS.finalTable);
+    }
+
+    function renderSceneHotspots() {
+      renderRadioHotspot();
+      renderFinalTableHotspot();
+    }
+
     function renderRadioHotspot() {
       overlays.querySelector("#room10RadioHotspot")?.remove();
 
@@ -252,6 +288,7 @@ export default {
       advanceBtn.disabled = true;
       advanceBtn.classList.add("hidden");
       closeEggPlayer();
+      closePhotoEgg();
       overlays.innerHTML = "";
 
       localStorage.setItem("room10_done", "1");
@@ -278,21 +315,22 @@ export default {
 
       index += 1;
       bg.src = `./assets/bg/room10/${slides[index]}`;
-      renderRadioHotspot();
+      renderSceneHotspots();
     }
 
     advanceBtn.addEventListener("click", advanceScene);
-    window.addEventListener("resize", renderRadioHotspot);
-    bg.addEventListener("load", renderRadioHotspot);
-    renderRadioHotspot();
+    window.addEventListener("resize", renderSceneHotspots);
+    bg.addEventListener("load", renderSceneHotspots);
+    renderSceneHotspots();
     bgm.start();
 
     this.cleanup = () => {
       closeEggPlayer();
+      closePhotoEgg();
       bgm.stop();
       advanceBtn.removeEventListener("click", advanceScene);
-      window.removeEventListener("resize", renderRadioHotspot);
-      bg.removeEventListener("load", renderRadioHotspot);
+      window.removeEventListener("resize", renderSceneHotspots);
+      bg.removeEventListener("load", renderSceneHotspots);
     };
   },
 

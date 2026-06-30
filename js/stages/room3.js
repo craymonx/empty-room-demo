@@ -1,3 +1,4 @@
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 
 let room3Bgm = null;
@@ -729,16 +730,22 @@ Please do not leave a message.`,
 
         localStorage.setItem("room3_done", "1");
 
-        window.dispatchEvent(
-          new CustomEvent("stage:end", {
-            detail: {
-              nextStage: "room4",
-              menuStage: "intro",
-              nextLabel: "Next",
-              menuLabel: "Back to Menu",
-            },
-          })
-        );
+        showChapterEndDialog({
+          container: dialogLayer,
+          text: "Back to normal, I guess…",
+          onContinue: () => {
+            window.dispatchEvent(
+              new CustomEvent("stage:end", {
+                detail: {
+                  nextStage: "room4",
+                  menuStage: "intro",
+                  nextLabel: "Next",
+                  menuLabel: "Back to Menu",
+                },
+              })
+            );
+          },
+        });
       }
 
       function layout() {

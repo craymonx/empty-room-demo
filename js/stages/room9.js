@@ -1,4 +1,5 @@
 // /js/stages/room9.js
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 
@@ -59,6 +60,13 @@ export default {
         "./assets/props/room9/egg9.1.webp?v=20260624-1",
         "./assets/props/room9/egg9.2.webp?v=20260624-1",
       ];
+
+      const SCENE_DIALOGS = {
+        r62: "I’ve been here before.",
+        r6: "I should keep moving.",
+        l5: "This feels familiar.",
+        shore: "What’s that?",
+      };
   
       const ROUTES = {
         further: [
@@ -268,7 +276,19 @@ export default {
 
         if (scene === "r61") {
           renderR61HouseHotspot();
-        } 
+        }
+
+        renderSceneDialog();
+      }
+
+      function renderSceneDialog() {
+        const text = SCENE_DIALOGS[scene];
+        if (!text) return;
+
+        showChapterEndDialog({
+          container: overlays,
+          text,
+        });
       }
 
       function renderFogBoatArrow() {
@@ -307,7 +327,7 @@ export default {
       function renderShoreHotspot() {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = `room9-hotspot ${debug ? "debug" : ""}`;
+        btn.className = `room9-hotspot room9-shore-hotspot ${debug ? "debug" : ""}`;
         btn.setAttribute("aria-label", "Inspect burning bush");
   
         btn.addEventListener("click", () => {
@@ -422,16 +442,22 @@ for (const s of returnSeq) {
         renderMainRoomEggHotspot();
         localStorage.setItem("room9_done", "1");
 
-        window.dispatchEvent(
-          new CustomEvent("stage:end", {
-            detail: {
-              nextStage: "room10",
-              menuStage: "intro",
-              nextLabel: "Next",
-              menuLabel: "Back to Menu",
-            },
-          })
-        );
+        showChapterEndDialog({
+          container: overlays,
+          text: "That was nice…",
+          onContinue: () => {
+            window.dispatchEvent(
+              new CustomEvent("stage:end", {
+                detail: {
+                  nextStage: "room10",
+                  menuStage: "intro",
+                  nextLabel: "Next",
+                  menuLabel: "Back to Menu",
+                },
+              })
+            );
+          },
+        });
       }
   
       function layout() {

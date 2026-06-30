@@ -131,6 +131,11 @@
   outline: 2px solid rgba(255, 0, 0, 0.75);
 }
 
+.room9-shore-hotspot:hover {
+  background: rgba(255, 255, 255, 0.08);
+  outline: 1px solid rgba(255, 255, 255, 0.28);
+}
+
 /* Click catcher */
 .room9-click-catcher {
   position: absolute;

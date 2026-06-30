@@ -309,6 +309,7 @@ body.debug .sorting-zone {
 
 /* Shared room dialogues */
 .rpg-ui,
+.chapter-end-dialog,
 .room3-monologue {
   position: absolute;
   inset: 0;
@@ -368,6 +369,7 @@ body.debug .sorting-zone {
 }
 
 .rpg-box,
+.chapter-end-dialog__box,
 .room1-dialogue-text,
 .room3-monologue__inner,
 .room11-rpg-dialog {
@@ -394,6 +396,7 @@ body.debug .sorting-zone {
 }
 
 .rpg-text,
+.chapter-end-dialog__text,
 .room1-dialogue-text,
 .room3-monologue__text,
 .room11-rpg-text {
@@ -404,6 +407,7 @@ body.debug .sorting-zone {
   overflow-wrap: anywhere;
 }
 
+.chapter-end-dialog__text,
 .room3-monologue__text {
   margin: 0;
 }
@@ -418,6 +422,7 @@ body.debug .sorting-zone {
 }
 
 .rpg-continue,
+.chapter-end-dialog__continue,
 .room1-dialogue-continue,
 .room3-monologue__continue,
 .room11-rpg-next {
@@ -448,6 +453,7 @@ body.debug .sorting-zone {
 }
 
 .rpg-continue:hover,
+.chapter-end-dialog__continue:hover,
 .room1-dialogue-continue:hover,
 .room3-monologue__continue:hover,
 .room11-rpg-next:hover {
@@ -460,6 +466,7 @@ body.debug .sorting-zone {
 }
 
 .rpg-continue:active,
+.chapter-end-dialog__continue:active,
 .room1-dialogue-continue:active,
 .room3-monologue__continue:active,
 .room11-rpg-next:active {
@@ -479,6 +486,10 @@ body.debug .sorting-zone {
 .room11-rpg-text {
   margin: 0;
   padding-right: 30px;
+}
+
+.room11-rpg-speaker-inline {
+  font-weight: 700;
 }
 
 .rpg-box--dialog {
@@ -869,6 +880,7 @@ body.debug .sorting-zone {
 
 @media (max-width: 768px) {
   .rpg-ui,
+  .chapter-end-dialog,
   .room3-monologue {
     gap: 8px;
     padding-right: var(--room-ui-x-mobile);
@@ -894,6 +906,7 @@ body.debug .sorting-zone {
   }
 
   .rpg-box,
+  .chapter-end-dialog__box,
   .room1-dialogue-text,
   .room3-monologue__inner,
   .room11-rpg-dialog {
@@ -911,6 +924,7 @@ body.debug .sorting-zone {
   }
 
   .rpg-continue,
+  .chapter-end-dialog__continue,
   .room1-dialogue-continue,
   .room3-monologue__continue,
   .room11-rpg-next {

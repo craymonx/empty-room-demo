@@ -1,3 +1,4 @@
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 
 export default {
@@ -7,7 +8,7 @@ export default {
         <div class="scene-inner" id="room1Wrap">
           <img
             id="bg"
-            src="./assets/bg/room1/living-room-main-view.webp"
+            src="./assets/bg/room1/kitchen-main-view.webp"
             class="bg"
             alt="Room 1 scene"
             draggable="false"
@@ -29,11 +30,12 @@ export default {
     const overlays = root.querySelector("#overlays");
     const stoveBtn = root.querySelector("#kitchenStove");
 
-    let scene = "livingRoom";
+    let scene = "kitchen";
     let cleanupDrag = null;
     let kitchenEggUnlocked = false;
     let kitchenEggIndex = 0;
     let eggAlbumOpen = false;
+    let openingDialogShown = false;
 
     let chopstickEl = null;
     let chopstickTracking = false;
@@ -55,9 +57,6 @@ export default {
     }
 
     const RECTS = {
-      livingRoom: {
-        kitchen: { x: 930, y: 200, w: 520, h: 330 },
-      },
       kitchen: {
         stove: { x: 930, y: 200, w: 520, h: 330 },
         eggTable: { x: 0, y: 420, w: 455, h: 310 },
@@ -205,18 +204,6 @@ export default {
       if (!bg.complete || !bg.naturalWidth) return;
 
       updateCursorByScene();
-
-      if (scene === "livingRoom") {
-        stoveBtn.style.display = "block";
-        stoveBtn.setAttribute("aria-label", "Kitchen area");
-
-        placeRectOnImage({
-          imgEl: bg,
-          parentEl: wrap,
-          targetEl: stoveBtn,
-          rectPx: RECTS.livingRoom.kitchen,
-        });
-      }
 
       if (scene === "kitchen") {
         stoveBtn.style.display = "block";
@@ -592,6 +579,17 @@ export default {
       layout();
     }
 
+    function showOpeningKitchenDialog() {
+      if (openingDialogShown || scene !== "kitchen") return;
+
+      openingDialogShown = true;
+      showRoom1Dialogue("Kinda hungry, gonna cook something", () => {
+        kitchenEggUnlocked = true;
+        showKitchenEggHotspot();
+        layout();
+      });
+    }
+
     async function finishRoom1AfterGlass() {
       if (scene !== "glassEmptyAfterMix") return;
 
@@ -609,16 +607,22 @@ export default {
 
       localStorage.setItem("room1_done", "1");
 
-      window.dispatchEvent(
-        new CustomEvent("stage:end", {
-          detail: {
-            nextStage: "room2",
-            menuStage: "intro",
-            nextLabel: "Next",
-            menuLabel: "Back to Menu",
-          },
-        })
-      );
+      showChapterEndDialog({
+        container: overlays,
+        text: "Let’s call it a night.",
+        onContinue: () => {
+          window.dispatchEvent(
+            new CustomEvent("stage:end", {
+              detail: {
+                nextStage: "room2",
+                menuStage: "intro",
+                nextLabel: "Next",
+                menuLabel: "Back to Menu",
+              },
+            })
+          );
+        },
+      });
     }
 
     function startGlassMixingGame() {
@@ -795,21 +799,6 @@ export default {
 
       startBgm();
 
-      if (scene === "livingRoom") {
-        scene = "kitchen";
-
-        await transitionBg("./assets/bg/room1/kitchen-main-view.webp");
-
-        showRoom1Dialogue("Kinda hungry, gonna cook something", () => {
-          kitchenEggUnlocked = true;
-          showKitchenEggHotspot();
-          layout();
-        });
-
-        layout();
-        return;
-      }
-
       if (scene !== "kitchen") return;
 
       scene = "stove";
@@ -831,9 +820,14 @@ export default {
     window.addEventListener("pointerdown", startBgm, { once: true });
     window.addEventListener("keydown", startBgm, { once: true });
 
-    bg.addEventListener("load", layout, { once: false });
+    const handleBgLoad = () => {
+      layout();
+      showOpeningKitchenDialog();
+    };
 
-    layout();
+    bg.addEventListener("load", handleBgLoad, { once: false });
+
+    handleBgLoad();
     startBgm();
 
     this._room1Cleanup = () => {
@@ -841,6 +835,7 @@ export default {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointerdown", startBgm);
       window.removeEventListener("keydown", startBgm);
+      bg.removeEventListener("load", handleBgLoad);
 
       if (cleanupDrag) {
         cleanupDrag();

@@ -226,7 +226,7 @@ export default {
       }
 
       alarmAudio.loop = false;
-      alarmAudio.volume = 1;
+      alarmAudio.volume = 0.7;
       alarmAudio.currentTime = 0;
       alarmAudio.play().catch(() => {});
     }
@@ -319,11 +319,15 @@ export default {
     }
 
     function showRpgDialog(text, speaker, onClose) {
+      const shouldShowSpeaker = speaker && speaker.toLowerCase() !== "me";
+      const dialogueText = shouldShowSpeaker
+        ? `<span class="room11-rpg-speaker-inline">${speaker}:</span> ${text}`
+        : text;
+
       popupLayer.innerHTML = `
         <div class="room11-rpg-layer">
           <div class="room11-rpg-dialog">
-            <div class="room11-rpg-name">${speaker}</div>
-            <div class="room11-rpg-text">${text}</div>
+            <div class="room11-rpg-text">${dialogueText}</div>
             <button class="room11-rpg-next" type="button">Continue</button>
           </div>
         </div>
