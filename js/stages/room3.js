@@ -46,7 +46,7 @@ export default {
     const CORRECT_SECURITY_NUMBER = "20200813";
     const FRESHENER_REQUIRED_MS = 3000;
 
-    const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm 2.wav";
+    const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm 3.wav";
     const SPRAY_SRC = "./assets/audio/room3/spray.wav";
     const PHONE_EASTER_EGGS = {
       20210115: {
