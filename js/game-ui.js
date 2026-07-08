@@ -156,10 +156,23 @@ export function showStageEndButtons({
   nextBtn.classList.remove("hidden");
 }
 
-export function hideStageEndButtons() {
+export function setMenuButtonVisible(
+  isVisible,
+  { menuStage = "intro", menuLabel = "Back to Menu" } = {},
+) {
+  menuStageName = menuStage;
+
+  const menuBtn = document.querySelector("#globalMenuBtn");
+  if (!menuBtn) return;
+
+  menuBtn.textContent = menuLabel;
+  menuBtn.classList.toggle("hidden", !isVisible);
+}
+
+export function hideStageEndButtons({ hideMenu = false } = {}) {
   const nextBtn = document.querySelector("#globalNextBtn");
   const menuBtn = document.querySelector("#globalMenuBtn");
 
   if (nextBtn) nextBtn.classList.add("hidden");
-  if (menuBtn) menuBtn.classList.add("hidden");
+  if (hideMenu && menuBtn) menuBtn.classList.add("hidden");
 }

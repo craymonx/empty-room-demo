@@ -1,6 +1,8 @@
 // /js/stages/room10.js
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
+import { showEasterEggAudioPlayer } from "../easter-egg-audio-player.js?v=20260703-2";
 
 export default {
   enter({ root }) {
@@ -58,21 +60,12 @@ export default {
 
     let index = 0;
     let finished = false;
-    let eggAudio = null;
+    let eggPlayer = null;
 
     slides.slice(1).forEach((slide) => {
       const image = new Image();
       image.src = `./assets/bg/room10/${slide}`;
     });
-
-    function formatDuration(seconds) {
-      if (!Number.isFinite(seconds) || seconds < 0) return "--:--";
-
-      const total = Math.floor(seconds);
-      const minutes = Math.floor(total / 60);
-      const secs = String(total % 60).padStart(2, "0");
-      return `${minutes}:${secs}`;
-    }
 
     function getDrawnImageRect() {
       const wrapRect = bg.parentElement.getBoundingClientRect();
@@ -111,21 +104,11 @@ export default {
     }
 
     function stopEggAudio() {
-      if (!eggAudio) return;
-
-      eggAudio.pause();
-      eggAudio.currentTime = 0;
-      eggAudio = null;
+      eggPlayer?.close();
     }
 
     function closeEggPlayer() {
-      overlays.querySelector("#room10EggPlayer")?.remove();
       stopEggAudio();
-
-      if (!finished) {
-        advanceBtn.disabled = false;
-        bgm.start();
-      }
     }
 
     function showEggPlayer() {
@@ -133,103 +116,21 @@ export default {
       advanceBtn.disabled = true;
       bgm.stop();
 
-      eggAudio = new Audio("./assets/audio/room10/egg10.m4a");
+      eggPlayer = showEasterEggAudioPlayer({
+        container: overlays,
+        id: "room10EggPlayer",
+        src: "./assets/audio/room10/egg10.m4a",
+        title: "Impression",
+        date: "25 Feb 2021",
+        onClose: () => {
+          eggPlayer = null;
 
-      const popup = document.createElement("div");
-      popup.id = "room10EggPlayer";
-      popup.className = "room10-egg-player";
-      popup.innerHTML = `
-        <div class="room10-egg-player__backdrop"></div>
-        <div class="room10-egg-player__deck" role="dialog" aria-modal="true" aria-label="Vintage song player">
-          <button class="room10-egg-player__close" type="button" aria-label="Close player">×</button>
-
-          <div class="room10-egg-player__record" aria-hidden="true">
-            <div class="room10-egg-player__label">Impression</div>
-          </div>
-
-          <div class="room10-egg-player__info">
-            <p class="room10-egg-player__eyebrow">Demo tape</p>
-            <h2>Impression</h2>
-            <dl>
-              <div>
-                <dt>Date</dt>
-                <dd>25 Feb 2021</dd>
-              </div>
-              <div>
-                <dt>Duration</dt>
-                <dd id="room10EggDuration">--:--</dd>
-              </div>
-            </dl>
-
-            <div class="room10-egg-player__progress">
-              <div id="room10EggProgress" class="room10-egg-player__progress-bar"></div>
-            </div>
-
-            <div class="room10-egg-player__times">
-              <span id="room10EggCurrentTime">0:00</span>
-              <span id="room10EggTotalTime">--:--</span>
-            </div>
-
-            <button id="room10EggPlay" class="room10-egg-player__play" type="button">Play</button>
-          </div>
-        </div>
-      `;
-
-      overlays.appendChild(popup);
-
-      const playBtn = popup.querySelector("#room10EggPlay");
-      const durationEl = popup.querySelector("#room10EggDuration");
-      const totalTimeEl = popup.querySelector("#room10EggTotalTime");
-      const currentTimeEl = popup.querySelector("#room10EggCurrentTime");
-      const progressEl = popup.querySelector("#room10EggProgress");
-
-      function updatePlaybackUi() {
-        if (!eggAudio) return;
-
-        const duration = eggAudio.duration;
-        const current = eggAudio.currentTime;
-
-        currentTimeEl.textContent = formatDuration(current);
-        playBtn.textContent = eggAudio.paused ? "Play" : "Pause";
-
-        if (Number.isFinite(duration) && duration > 0) {
-          progressEl.style.width = `${Math.min(100, (current / duration) * 100)}%`;
-        } else {
-          progressEl.style.width = "0%";
-        }
-      }
-
-      eggAudio.addEventListener("loadedmetadata", () => {
-        const durationText = formatDuration(eggAudio.duration);
-        durationEl.textContent = durationText;
-        totalTimeEl.textContent = durationText;
+          if (!finished) {
+            advanceBtn.disabled = false;
+            bgm.start();
+          }
+        },
       });
-
-      eggAudio.addEventListener("timeupdate", updatePlaybackUi);
-      eggAudio.addEventListener("play", updatePlaybackUi);
-      eggAudio.addEventListener("pause", updatePlaybackUi);
-      eggAudio.addEventListener("ended", updatePlaybackUi);
-
-      popup
-        .querySelector(".room10-egg-player__close")
-        .addEventListener("click", closeEggPlayer);
-
-      popup
-        .querySelector(".room10-egg-player__backdrop")
-        .addEventListener("click", closeEggPlayer);
-
-      playBtn.addEventListener("click", () => {
-        if (!eggAudio) return;
-
-        if (eggAudio.paused) {
-          eggAudio.play().catch(() => {});
-        } else {
-          eggAudio.pause();
-        }
-      });
-
-      eggAudio.play().catch(() => {});
-      updatePlaybackUi();
     }
 
     function closePhotoEgg() {
@@ -293,16 +194,22 @@ export default {
 
       localStorage.setItem("room10_done", "1");
 
-      window.dispatchEvent(
-        new CustomEvent("stage:end", {
-          detail: {
-            nextStage: "room11",
-            menuStage: "intro",
-            nextLabel: "Next",
-            menuLabel: "Back to Menu",
-          },
-        }),
-      );
+      showChapterEndDialog({
+        container: overlays,
+        text: "Goodnight, what a journey.",
+        onContinue: () => {
+          window.dispatchEvent(
+            new CustomEvent("stage:end", {
+              detail: {
+                nextStage: "room11",
+                menuStage: "intro",
+                nextLabel: "Next",
+                menuLabel: "Back to Menu",
+              },
+            }),
+          );
+        },
+      });
     }
 
     function advanceScene() {

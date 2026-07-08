@@ -1,5 +1,6 @@
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
 
 export default {
   enter({ root, go }) {
@@ -43,7 +44,7 @@ export default {
     const RECTS = {
       main: {
         steamZone: { x: 1220, y: 350, w: 200, h: 200 },
-        couchWallEgg: { x: 390, y: 170, w: 560, h: 330 },
+        couchWallEgg: { x: 390, y: 170, w: 410, h: 330 },
       },
 
       mainSteam: {
@@ -202,17 +203,23 @@ export default {
         endButtonTimer = setTimeout(() => {
           localStorage.setItem("room7_done", "1");
 
-          window.dispatchEvent(
-            new CustomEvent("stage:end", {
-              detail: {
-                nextStage: "room8",
-                menuStage: "intro",
-                nextLabel: "Next",
-                menuLabel: "Back to Menu",
-              },
-            }),
-          );
-        }, 5000);
+          showChapterEndDialog({
+            container: overlays,
+            text: "Oh God…",
+            onContinue: () => {
+              window.dispatchEvent(
+                new CustomEvent("stage:end", {
+                  detail: {
+                    nextStage: "room8",
+                    menuStage: "intro",
+                    nextLabel: "Next",
+                    menuLabel: "Back to Menu",
+                  },
+                }),
+              );
+            },
+          });
+        }, 2000);
 
         return;
       }

@@ -1,6 +1,7 @@
 // /js/stages/room11.js
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
+import { showChapterEndDialog } from "../chapter-end-dialog.js";
 
 export default {
   enter({ root, go }) {
@@ -606,16 +607,22 @@ export default {
 
       localStorage.setItem("room11_done", "1");
 
-      window.dispatchEvent(
-        new CustomEvent("stage:end", {
-          detail: {
-            nextStage: "ending",
-            menuStage: "intro",
-            nextLabel: "Next",
-            menuLabel: "Back to Menu",
-          },
-        }),
-      );
+      showChapterEndDialog({
+        container: overlays,
+        text: "I’m out, finally.",
+        onContinue: () => {
+          window.dispatchEvent(
+            new CustomEvent("stage:end", {
+              detail: {
+                nextStage: "ending",
+                menuStage: "intro",
+                nextLabel: "Next",
+                menuLabel: "Back to Menu",
+              },
+            }),
+          );
+        },
+      });
     }
 
     function handleResize() {

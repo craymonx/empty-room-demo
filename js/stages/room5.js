@@ -360,7 +360,7 @@ export default {
               );
             },
           });
-        }, 5000);
+        }, 2000);
       }
   
       function playZoomIntoDistortion() {

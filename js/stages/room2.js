@@ -1,4 +1,5 @@
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
+import { showEasterEggAudioPlayer } from "../easter-egg-audio-player.js?v=20260703-2";
 
 export default {
   enter({ root, go }) {
@@ -25,7 +26,7 @@ export default {
     let scene = "chatting";
     let cleanupDrag = null;
     let room2Bgm = null;
-    let eggAudio = null;
+    let eggPlayer = null;
     let eggBgmWasPlaying = false;
 
     function setupRoom2Bgm() {
@@ -726,33 +727,13 @@ export default {
       layout();
     }
 
-    function formatDuration(seconds) {
-      if (!Number.isFinite(seconds) || seconds < 0) return "--:--";
-
-      const totalSeconds = Math.floor(seconds);
-      const mins = Math.floor(totalSeconds / 60);
-      const secs = totalSeconds % 60;
-
-      return `${mins}:${String(secs).padStart(2, "0")}`;
-    }
-
-    function stopEggAudio() {
-      if (!eggAudio) return;
-
-      eggAudio.pause();
-      eggAudio.currentTime = 0;
-      eggAudio = null;
-    }
-
     function closeEggPlayer() {
-      overlays.querySelector("#room2EggPlayer")?.remove();
-      stopEggAudio();
-
-      if (eggBgmWasPlaying && room2Bgm) {
-        room2Bgm.play().catch(() => {});
+      if (!eggPlayer) {
+        eggBgmWasPlaying = false;
+        return;
       }
 
-      eggBgmWasPlaying = false;
+      eggPlayer.close();
     }
 
     function showEggPlayer() {
@@ -761,103 +742,22 @@ export default {
       eggBgmWasPlaying = Boolean(room2Bgm && !room2Bgm.paused);
       if (room2Bgm) room2Bgm.pause();
 
-      eggAudio = new Audio("./assets/audio/room2/egg2.m4a");
+      eggPlayer = showEasterEggAudioPlayer({
+        container: overlays,
+        id: "room2EggPlayer",
+        src: "./assets/audio/room2/egg2.m4a",
+        title: "Talk",
+        date: "17 Jan 2020",
+        onClose: () => {
+          eggPlayer = null;
 
-      const popup = document.createElement("div");
-      popup.id = "room2EggPlayer";
-      popup.className = "room2-egg-player";
-      popup.innerHTML = `
-        <div class="room2-egg-player__backdrop"></div>
-        <div class="room2-egg-player__deck" role="dialog" aria-modal="true" aria-label="Vintage song player">
-          <button class="room2-egg-player__close" type="button" aria-label="Close player">×</button>
+          if (eggBgmWasPlaying && room2Bgm) {
+            room2Bgm.play().catch(() => {});
+          }
 
-          <div class="room2-egg-player__record" aria-hidden="true">
-            <div class="room2-egg-player__label">Talk</div>
-          </div>
-
-          <div class="room2-egg-player__info">
-            <p class="room2-egg-player__eyebrow">Demo tape</p>
-            <h2>Talk</h2>
-            <dl>
-              <div>
-                <dt>Date</dt>
-                <dd>17 Jan 2020</dd>
-              </div>
-              <div>
-                <dt>Duration</dt>
-                <dd id="room2EggDuration">--:--</dd>
-              </div>
-            </dl>
-
-            <div class="room2-egg-player__progress">
-              <div id="room2EggProgress" class="room2-egg-player__progress-bar"></div>
-            </div>
-
-            <div class="room2-egg-player__times">
-              <span id="room2EggCurrentTime">0:00</span>
-              <span id="room2EggTotalTime">--:--</span>
-            </div>
-
-            <button id="room2EggPlay" class="room2-egg-player__play" type="button">Play</button>
-          </div>
-        </div>
-      `;
-
-      overlays.appendChild(popup);
-
-      const playBtn = popup.querySelector("#room2EggPlay");
-      const durationEl = popup.querySelector("#room2EggDuration");
-      const totalTimeEl = popup.querySelector("#room2EggTotalTime");
-      const currentTimeEl = popup.querySelector("#room2EggCurrentTime");
-      const progressEl = popup.querySelector("#room2EggProgress");
-
-      function updatePlaybackUi() {
-        if (!eggAudio) return;
-
-        const duration = eggAudio.duration;
-        const current = eggAudio.currentTime;
-
-        currentTimeEl.textContent = formatDuration(current);
-        playBtn.textContent = eggAudio.paused ? "Play" : "Pause";
-
-        if (Number.isFinite(duration) && duration > 0) {
-          progressEl.style.width = `${Math.min(100, (current / duration) * 100)}%`;
-        } else {
-          progressEl.style.width = "0%";
-        }
-      }
-
-      eggAudio.addEventListener("loadedmetadata", () => {
-        const durationText = formatDuration(eggAudio.duration);
-        durationEl.textContent = durationText;
-        totalTimeEl.textContent = durationText;
+          eggBgmWasPlaying = false;
+        },
       });
-
-      eggAudio.addEventListener("timeupdate", updatePlaybackUi);
-      eggAudio.addEventListener("play", updatePlaybackUi);
-      eggAudio.addEventListener("pause", updatePlaybackUi);
-      eggAudio.addEventListener("ended", updatePlaybackUi);
-
-      popup
-        .querySelector(".room2-egg-player__close")
-        .addEventListener("click", closeEggPlayer);
-
-      popup
-        .querySelector(".room2-egg-player__backdrop")
-        .addEventListener("click", closeEggPlayer);
-
-      playBtn.addEventListener("click", () => {
-        if (!eggAudio) return;
-
-        if (eggAudio.paused) {
-          eggAudio.play().catch(() => {});
-        } else {
-          eggAudio.pause();
-        }
-      });
-
-      eggAudio.play().catch(() => {});
-      updatePlaybackUi();
     }
 
     function showBedroomEggHotspot() {
@@ -1164,7 +1064,7 @@ export default {
 
                           await transitionBg("./assets/bg/room2/empty-drawer.webp");
                           showClosableDialog({
-                            textLines: ["I guess I’ll make myself busy busy…"],
+                            textLines: ["I guess I’ll make myself busy…"],
                             onClose: () => {
                               resetSortingGame();
                               startUtensilSortingGame();

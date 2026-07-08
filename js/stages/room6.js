@@ -323,10 +323,6 @@ export default {
           }, 2000);
         }
   
-        if (scene === "spiritSequence") {
-          playSpiritSequence();
-        }
-  
         if (scene === "blackout") {
           makeBlackout();
         }

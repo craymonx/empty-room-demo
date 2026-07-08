@@ -1,11 +1,18 @@
 // /js/router.js
-import { hideStageEndButtons } from "./game-ui.js?v=20260622-2";
+import {
+  hideStageEndButtons,
+  setMenuButtonVisible,
+} from "./game-ui.js?v=20260703-1";
 
 const STAGE_LOADERS = new Map();
 const STAGES = new Map();
 const ROOM_CSS_VERSION = "20260625-1";
 
 let currentStageId = null;
+
+function isRoomStage(stageId) {
+  return /^room\d+$/i.test(stageId);
+}
 
 function setLoading(isLoading) {
   const el = document.getElementById("loading-screen");
@@ -86,6 +93,10 @@ async function loadStage(stageId) {
 
 export async function goToStage(nextStageId, payload = {}) {
   hideStageEndButtons();
+  setMenuButtonVisible(isRoomStage(nextStageId), {
+    menuStage: "intro",
+    menuLabel: "Back to Menu",
+  });
   document.body.classList.remove("debug");
 
   const root = document.getElementById("game-root");

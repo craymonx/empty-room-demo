@@ -680,6 +680,133 @@ body.debug .sorting-zone {
   }
 }
 
+/* Shared easter egg audio player */
+.egg-audio-player {
+  position: absolute;
+  inset: 0;
+  z-index: 190;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  pointer-events: auto;
+  font-family: var(--room-ui-font);
+}
+
+.egg-audio-player__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.egg-audio-player__deck {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(560px, calc(100vw - 48px));
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: #f5f5f5;
+  color: #111;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.55);
+}
+
+.egg-audio-player__close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: 2px solid #111;
+  border-radius: 999px;
+  background: #f5f5f5;
+  color: #111;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.egg-audio-player__info {
+  min-width: 0;
+}
+
+.egg-audio-player__eyebrow {
+  margin: 0 0 6px;
+  color: #6b5b2b;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.egg-audio-player__info h2 {
+  margin: 0 0 14px;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.egg-audio-player__info dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.egg-audio-player__info dl > div {
+  padding: 10px 12px;
+  border: 1px solid #d7d7d7;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.egg-audio-player__info dt {
+  margin: 0 0 4px;
+  color: #777;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.egg-audio-player__info dd {
+  margin: 0;
+  font-size: 15px;
+}
+
+.egg-audio-player__figure {
+  margin: 0;
+}
+
+.egg-audio-player__caption {
+  margin: 0 0 8px;
+  color: #555;
+  font-size: 14px;
+}
+
+.egg-audio-player__native {
+  width: 100%;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .egg-audio-player {
+    padding: 16px;
+  }
+
+  .egg-audio-player__deck {
+    width: calc(100vw - 32px);
+    padding: 20px;
+  }
+
+  .egg-audio-player__info h2 {
+    font-size: 30px;
+  }
+
+  .egg-audio-player__info dl {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Shared left return/back plates */
 .room1-left-gradient,
 .room2-left-gradient,

@@ -1,6 +1,7 @@
 // /js/stages/room4.js
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { createRoomBgm } from "../room-bgm.js";
+import { showEasterEggAudioPlayer } from "../easter-egg-audio-player.js?v=20260703-2";
 
 export default {
   enter({ root, go }) {
@@ -37,7 +38,7 @@ export default {
     let rewinding = false;
     let beachEnded = false;
     let openingDialogPending = true;
-    let eggAudio = null;
+    let eggPlayer = null;
     const bgm = createRoomBgm(
       "./assets/audio/room4/4 pebbles and the rock bgm_1.wav",
     );
@@ -357,135 +358,28 @@ export default {
   });
 }
 
-    function formatDuration(seconds) {
-      if (!Number.isFinite(seconds) || seconds < 0) return "--:--";
-
-      const totalSeconds = Math.floor(seconds);
-      const mins = Math.floor(totalSeconds / 60);
-      const secs = totalSeconds % 60;
-
-      return `${mins}:${String(secs).padStart(2, "0")}`;
-    }
-
-    function stopEggAudio() {
-      if (!eggAudio) return;
-
-      eggAudio.pause();
-      eggAudio.currentTime = 0;
-      eggAudio = null;
-    }
-
     function closeEggPlayer() {
-      overlays.querySelector("#room4EggPlayer")?.remove();
-      stopEggAudio();
-
-      if (!destroyed) {
-        bgm.start();
-      }
+      eggPlayer?.close();
     }
 
     function showEggPlayer() {
-      overlays.querySelector("#room4EggPlayer")?.remove();
-      stopEggAudio();
+      closeEggPlayer();
       bgm.stop();
 
-      eggAudio = new Audio("./assets/audio/room4/egg4.m4a");
+      eggPlayer = showEasterEggAudioPlayer({
+        container: overlays,
+        id: "room4EggPlayer",
+        src: "./assets/audio/room4/egg4.m4a",
+        title: "Fade",
+        date: "1 Jun 2020",
+        onClose: () => {
+          eggPlayer = null;
 
-      const popup = document.createElement("div");
-      popup.id = "room4EggPlayer";
-      popup.className = "room4-egg-player";
-      popup.innerHTML = `
-        <div class="room4-egg-player__backdrop"></div>
-        <div class="room4-egg-player__deck" role="dialog" aria-modal="true" aria-label="Vintage song player">
-          <button class="room4-egg-player__close" type="button" aria-label="Close player">×</button>
-
-          <div class="room4-egg-player__record" aria-hidden="true">
-            <div class="room4-egg-player__label">Fade</div>
-          </div>
-
-          <div class="room4-egg-player__info">
-            <p class="room4-egg-player__eyebrow">Demo tape</p>
-            <h2>Fade</h2>
-            <dl>
-              <div>
-                <dt>Date</dt>
-                <dd>1 Jun 2020</dd>
-              </div>
-              <div>
-                <dt>Duration</dt>
-                <dd id="room4EggDuration">--:--</dd>
-              </div>
-            </dl>
-
-            <div class="room4-egg-player__progress">
-              <div id="room4EggProgress" class="room4-egg-player__progress-bar"></div>
-            </div>
-
-            <div class="room4-egg-player__times">
-              <span id="room4EggCurrentTime">0:00</span>
-              <span id="room4EggTotalTime">--:--</span>
-            </div>
-
-            <button id="room4EggPlay" class="room4-egg-player__play" type="button">Play</button>
-          </div>
-        </div>
-      `;
-
-      overlays.appendChild(popup);
-
-      const playBtn = popup.querySelector("#room4EggPlay");
-      const durationEl = popup.querySelector("#room4EggDuration");
-      const totalTimeEl = popup.querySelector("#room4EggTotalTime");
-      const currentTimeEl = popup.querySelector("#room4EggCurrentTime");
-      const progressEl = popup.querySelector("#room4EggProgress");
-
-      function updatePlaybackUi() {
-        if (!eggAudio) return;
-
-        const duration = eggAudio.duration;
-        const current = eggAudio.currentTime;
-
-        currentTimeEl.textContent = formatDuration(current);
-        playBtn.textContent = eggAudio.paused ? "Play" : "Pause";
-
-        if (Number.isFinite(duration) && duration > 0) {
-          progressEl.style.width = `${Math.min(100, (current / duration) * 100)}%`;
-        } else {
-          progressEl.style.width = "0%";
-        }
-      }
-
-      eggAudio.addEventListener("loadedmetadata", () => {
-        const durationText = formatDuration(eggAudio.duration);
-        durationEl.textContent = durationText;
-        totalTimeEl.textContent = durationText;
+          if (!destroyed) {
+            bgm.start();
+          }
+        },
       });
-
-      eggAudio.addEventListener("timeupdate", updatePlaybackUi);
-      eggAudio.addEventListener("play", updatePlaybackUi);
-      eggAudio.addEventListener("pause", updatePlaybackUi);
-      eggAudio.addEventListener("ended", updatePlaybackUi);
-
-      popup
-        .querySelector(".room4-egg-player__close")
-        .addEventListener("click", closeEggPlayer);
-
-      popup
-        .querySelector(".room4-egg-player__backdrop")
-        .addEventListener("click", closeEggPlayer);
-
-      playBtn.addEventListener("click", () => {
-        if (!eggAudio) return;
-
-        if (eggAudio.paused) {
-          eggAudio.play().catch(() => {});
-        } else {
-          eggAudio.pause();
-        }
-      });
-
-      eggAudio.play().catch(() => {});
-      updatePlaybackUi();
     }
 
     function makeJar() {
