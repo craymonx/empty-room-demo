@@ -1,5 +1,6 @@
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 let room3Bgm = null;
 
@@ -378,6 +379,7 @@ export default {
       }
 
       function showEggAlbum(egg) {
+        markEasterEggFound("room3-phone");
         activeEgg = egg;
         eggAlbumIndex = 0;
 

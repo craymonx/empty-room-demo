@@ -3,6 +3,7 @@ import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { showEasterEggAudioPlayer } from "../easter-egg-audio-player.js?v=20260703-2";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 export default {
   enter({ root }) {
@@ -113,6 +114,7 @@ export default {
 
     function showEggPlayer() {
       closeEggPlayer();
+      markEasterEggFound("room10-radio");
       advanceBtn.disabled = true;
       bgm.stop();
 
@@ -138,6 +140,7 @@ export default {
     }
 
     function showPhotoEgg() {
+      markEasterEggFound("room10-table");
       showPhotoPopup({
         container: overlays,
         id: "room10PhotoEgg",
@@ -149,7 +152,7 @@ export default {
     function renderFinalTableHotspot() {
       overlays.querySelector("#room10FinalTableHotspot")?.remove();
 
-      if (index !== slides.length - 1 || finished) return;
+      if (index !== slides.length - 1) return;
 
       const hotspot = document.createElement("button");
       hotspot.id = "room10FinalTableHotspot";
@@ -210,6 +213,8 @@ export default {
           );
         },
       });
+
+      renderFinalTableHotspot();
     }
 
     function advanceScene() {

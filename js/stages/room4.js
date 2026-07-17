@@ -2,6 +2,7 @@
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { createRoomBgm } from "../room-bgm.js";
 import { showEasterEggAudioPlayer } from "../easter-egg-audio-player.js?v=20260703-2";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 export default {
   enter({ root, go }) {
@@ -364,6 +365,7 @@ export default {
 
     function showEggPlayer() {
       closeEggPlayer();
+      markEasterEggFound("room4-chair");
       bgm.stop();
 
       eggPlayer = showEasterEggAudioPlayer({

@@ -25,6 +25,33 @@
   outline: 2px solid rgba(255, 0, 0, 0.85);
 }
 
+.room11-ending-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 190;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(2px);
+}
+
+.room11-ending-card {
+  width: min(760px, 100%);
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  backdrop-filter: blur(6px);
+}
+
+.room11-ending-card h2 {
+  margin: 0 0 12px;
+}
+
 .room11-alert-overlay {
   position: absolute;
   inset: 0;

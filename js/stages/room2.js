@@ -1,5 +1,6 @@
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { showEasterEggAudioPlayer } from "../easter-egg-audio-player.js?v=20260703-2";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 export default {
   enter({ root, go }) {
@@ -738,6 +739,7 @@ export default {
 
     function showEggPlayer() {
       closeEggPlayer();
+      markEasterEggFound("room2-desk");
 
       eggBgmWasPlaying = Boolean(room2Bgm && !room2Bgm.paused);
       if (room2Bgm) room2Bgm.pause();

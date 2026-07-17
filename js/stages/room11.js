@@ -2,6 +2,7 @@
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 export default {
   enter({ root, go }) {
@@ -93,6 +94,7 @@ export default {
     );
     const EGG_ALBUMS = {
       books: {
+        progressId: "room11-books",
         title: "Book memories",
         caption: "Book memory",
         images: [
@@ -101,6 +103,7 @@ export default {
         ],
       },
       board: {
+        progressId: "room11-board",
         title: "Board memory",
         caption: "Board memory",
         images: ["./assets/props/room11/egg11.3.webp?v=20260624-1"],
@@ -227,7 +230,7 @@ export default {
       }
 
       alarmAudio.loop = false;
-      alarmAudio.volume = 0.7;
+      alarmAudio.volume = 0.2;
       alarmAudio.currentTime = 0;
       alarmAudio.play().catch(() => {});
     }
@@ -240,7 +243,7 @@ export default {
       }
 
       knockAudio.loop = true;
-      knockAudio.volume = 1;
+      knockAudio.volume = 0.8;
       knockAudio.currentTime = 0;
       knockAudio.play().catch(() => {});
 
@@ -287,6 +290,7 @@ export default {
 
     function showEggAlbum(albumData) {
       closeEggAlbum();
+      markEasterEggFound(albumData.progressId);
 
       showPhotoPopup({
         container: popupLayer,
@@ -414,7 +418,11 @@ export default {
       setBG("./assets/bg/room11/coca3.webp");
       clearOverlays();
 
-      addTimer(goToAlarm, 3000);
+      showRpgDialog(
+        "Hey! How’s your nap? We’ve been waiting for you.",
+        "",
+        goToAlarm,
+      );
     }
 
     function goToAlarm() {
@@ -610,19 +618,23 @@ export default {
       showChapterEndDialog({
         container: overlays,
         text: "I’m out, finally.",
-        onContinue: () => {
-          window.dispatchEvent(
-            new CustomEvent("stage:end", {
-              detail: {
-                nextStage: "ending",
-                menuStage: "intro",
-                nextLabel: "Next",
-                menuLabel: "Back to Menu",
-              },
-            }),
-          );
-        },
+        onContinue: showEndingPopup,
       });
+    }
+
+    function showEndingPopup() {
+      popupLayer.innerHTML = `
+        <div class="room11-ending-overlay">
+          <section class="room11-ending-card" role="dialog" aria-modal="true" aria-labelledby="room11EndingTitle">
+            <h2 id="room11EndingTitle">Thank you for visiting Empty Room.</h2>
+            <button class="hud-btn room11-ending-menu" type="button">Back to Menu</button>
+          </section>
+        </div>
+      `;
+
+      popupLayer
+        .querySelector(".room11-ending-menu")
+        .addEventListener("click", () => go("intro"));
     }
 
     function handleResize() {

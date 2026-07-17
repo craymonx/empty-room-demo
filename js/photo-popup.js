@@ -25,9 +25,9 @@ export function showPhotoPopup({
       <button class="egg-photo-popup__close" type="button" aria-label="Close photo">×</button>
       <img class="egg-photo-popup__image" src="" alt="${title}">
       <div class="egg-photo-popup__controls">
-        <button class="egg-photo-popup__nav egg-photo-popup__prev" type="button">‹ Back</button>
+        <button class="egg-photo-popup__nav egg-photo-popup__prev" type="button" aria-label="Previous photo">‹</button>
         <span class="egg-photo-popup__counter"></span>
-        <button class="egg-photo-popup__nav egg-photo-popup__next" type="button">Forward ›</button>
+        <button class="egg-photo-popup__nav egg-photo-popup__next" type="button" aria-label="Next photo">›</button>
       </div>
     </div>
   `;

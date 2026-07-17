@@ -1,4 +1,5 @@
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 import { createRoomBgm } from "../room-bgm.js";
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 
@@ -134,6 +135,7 @@ export default {
     }
 
     function showEggPhoto() {
+      markEasterEggFound("room7-wall");
       showPhotoPopup({
         container: overlays,
         id: "room7EggPhoto",

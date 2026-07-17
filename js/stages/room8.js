@@ -2,6 +2,7 @@
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 export default {
   enter({ root, go }) {
@@ -156,8 +157,9 @@ export default {
       closePhotoPopup(overlays, "room8EggAlbum");
     }
 
-    function showEggAlbum({ title, image }) {
+    function showEggAlbum({ title, image, progressId }) {
       closeEggAlbum();
+      markEasterEggFound(progressId);
 
       showPhotoPopup({
         container: overlays,
@@ -475,6 +477,7 @@ export default {
             showEggAlbum({
               title: "Window memory",
               image: "./assets/props/room8/egg8.1.webp?v=20260624-1",
+              progressId: "room8-window-day",
             });
           },
           "Open window memory",
@@ -525,6 +528,7 @@ export default {
             showEggAlbum({
               title: "Night window memory",
               image: "./assets/props/room8/egg8.2.webp?v=20260624-2",
+              progressId: "room8-window-night",
             });
           },
           "Open night window memory",

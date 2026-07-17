@@ -1,5 +1,12 @@
 // /js/stages/intro.js
 
+import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
+import {
+  EASTER_EGG_GROUPS,
+  isEasterEggFound,
+  markEasterEggFound,
+} from "../easter-egg-progress.js";
+
 export default {
   enter({ root, go }) {
     const ROOMS = [
@@ -18,6 +25,13 @@ export default {
 
     const BASE_W = 1248;
     const BASE_H = 1248;
+    const CABINET_PHOTOS = [
+      "./assets/props/intro/1-cooking.webp",
+      "./assets/props/intro/2-static.webp",
+      "./assets/props/intro/3-pebbles.webp",
+      "./assets/props/intro/4-empty.webp",
+      "./assets/props/intro/5-car.webp",
+    ];
 
     function isRoomUnlocked(index) {
       if (index === 0) return true;
@@ -95,7 +109,7 @@ export default {
       {
         id: "artist-statement",
         label: "Artist statement",
-        rect: { x: 0, y: 600, w: 300, h: 250 }, // table
+        rect: { x: 0, y: 630, w: 270, h: 200 }, // table
       },
       {
         id: "album-link",
@@ -105,7 +119,22 @@ export default {
       {
         id: "credit",
         label: "Credit",
-        rect: { x: 790, y: 555, w: 160, h: 170 }, // oven
+        rect: { x: 795, y: 575, w: 105, h: 155 }, // stove
+      },
+      {
+        id: "intro-egg",
+        label: "Open hidden photo",
+        rect: { x: 485, y: 535, w: 70, h: 85 }, // man's head
+      },
+      {
+        id: "cabinet-gallery",
+        label: "Open cabinet gallery",
+        rect: { x: 810, y: 325, w: 320, h: 175 }, // upper cabinet
+      },
+      {
+        id: "egg-checklist",
+        label: "Open Easter egg checklist",
+        rect: { x: 330, y: 485, w: 80, h: 245 }, // floor lamp
       },
     ];
 
@@ -156,6 +185,17 @@ export default {
         placeHotspot(btn, spot.rect);
 
         btn.addEventListener("click", () => {
+          if (spot.id === "intro-egg") {
+            markEasterEggFound("intro-egg0");
+            showPhotoPopup({
+              container: wrap,
+              id: "introEggAlbum",
+              title: "Hidden memory",
+              images: ["./assets/props/intro/egg0.webp"],
+            });
+            return;
+          }
+
           openPanel(spot.id);
         });
 
@@ -164,6 +204,8 @@ export default {
     }
 
     function openPanel(type) {
+      panel.classList.toggle("is-gallery", type === "cabinet-gallery");
+
       if (type === "level-list") {
         panelContent.innerHTML = `
           <h1>Chapters</h1>
@@ -200,16 +242,10 @@ export default {
 
       if (type === "album-link") {
         panelContent.innerHTML = `
-          <h1>Album Links</h1>
-          <p>Choose a platform to listen.</p>
-
           <div class="linktree-list">
+            <a href="#" target="_blank" rel="noopener noreferrer">Listen</a>
+            <a href="#" target="_blank" rel="noopener noreferrer">Purchase</a>
             <a href="#" target="_blank" rel="noopener noreferrer">Official Website</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">Spotify</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">Apple Music</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">YouTube</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">Bandcamp</a>
           </div>
         `;
       }
@@ -251,12 +287,86 @@ export default {
         `;
       }
 
+      if (type === "cabinet-gallery") {
+        let photoIndex = 0;
+
+        panelContent.innerHTML = `
+          <h1>Empty Room Gallery</h1>
+
+          <div class="intro-gallery">
+            <img class="intro-gallery-image" src="" alt="">
+
+            <div class="intro-gallery-controls">
+              <button class="intro-gallery-nav intro-gallery-prev" type="button" aria-label="Previous photo">‹</button>
+              <span class="intro-gallery-counter"></span>
+              <button class="intro-gallery-nav intro-gallery-next" type="button" aria-label="Next photo">›</button>
+            </div>
+          </div>
+        `;
+
+        const image = panelContent.querySelector(".intro-gallery-image");
+        const counter = panelContent.querySelector(".intro-gallery-counter");
+        const prevBtn = panelContent.querySelector(".intro-gallery-prev");
+        const nextBtn = panelContent.querySelector(".intro-gallery-next");
+
+        function updateGallery() {
+          image.src = CABINET_PHOTOS[photoIndex];
+          image.alt = `Empty Room gallery photo ${photoIndex + 1}`;
+          counter.textContent = `${photoIndex + 1} / ${CABINET_PHOTOS.length}`;
+          prevBtn.disabled = photoIndex === 0;
+          nextBtn.disabled = photoIndex === CABINET_PHOTOS.length - 1;
+        }
+
+        prevBtn.addEventListener("click", () => {
+          photoIndex = Math.max(0, photoIndex - 1);
+          updateGallery();
+        });
+
+        nextBtn.addEventListener("click", () => {
+          photoIndex = Math.min(CABINET_PHOTOS.length - 1, photoIndex + 1);
+          updateGallery();
+        });
+
+        updateGallery();
+      }
+
+      if (type === "egg-checklist") {
+        panelContent.innerHTML = `
+          <h1>Easter Egg Checklist</h1>
+
+          <div class="intro-egg-checklist">
+            ${EASTER_EGG_GROUPS.map(
+              (group) => `
+                <section class="intro-egg-group">
+                  <h2>${group.label}</h2>
+                  <div class="intro-egg-boxes">
+                    ${group.eggs
+                      .map((eggId, index) => {
+                        const found = isEasterEggFound(eggId);
+                        return `
+                          <span
+                            class="intro-egg-box ${found ? "is-found" : ""}"
+                            role="img"
+                            aria-label="${group.label} Easter egg ${index + 1}: ${found ? "found" : "not found"}"
+                          >${found ? "✓" : ""}</span>
+                        `;
+                      })
+                      .join("")}
+                  </div>
+                </section>
+              `,
+            ).join("")}
+          </div>
+        `;
+      }
+
       panel.classList.add("is-open");
       panel.setAttribute("aria-hidden", "false");
     }
 
     function closePanel() {
       panel.classList.remove("is-open");
+      panel.classList.remove("is-gallery");
       panel.setAttribute("aria-hidden", "true");
     }
 
@@ -283,6 +393,7 @@ export default {
   },
 
   exit({ root }) {
+    closePhotoPopup(root, "introEggAlbum");
     root.innerHTML = "";
   },
 };

@@ -2,6 +2,7 @@
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 export default {
     enter({ root, go }) {
@@ -112,6 +113,7 @@ export default {
               action: () => showEggAlbum({
                 title: "Window memory",
                 image: "./assets/props/room5/egg5.1.webp?v=20260624-1",
+                progressId: "room5-window",
               }),
               label: "Open window memory",
             },
@@ -120,6 +122,7 @@ export default {
               action: () => showEggAlbum({
                 title: "Table memory",
                 image: "./assets/props/room5/egg5.2.webp?v=20260624-1",
+                progressId: "room5-table",
               }),
               label: "Open table memory",
             },
@@ -296,8 +299,9 @@ export default {
         closePhotoPopup(dialogLayer, "room5EggAlbum");
       }
 
-      function showEggAlbum({ title, image }) {
+      function showEggAlbum({ title, image, progressId }) {
         closeEggAlbum();
+        markEasterEggFound(progressId);
 
         showPhotoPopup({
           container: dialogLayer,

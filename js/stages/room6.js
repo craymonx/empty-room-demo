@@ -1,6 +1,7 @@
 import { showChapterEndDialog } from "../chapter-end-dialog.js";
 import { closePhotoPopup, showPhotoPopup } from "../photo-popup.js";
 import { createRoomBgm } from "../room-bgm.js";
+import { markEasterEggFound } from "../easter-egg-progress.js";
 
 export default {
     enter({ root, go }) {
@@ -244,6 +245,7 @@ export default {
 
       function showEggAlbum() {
         closeEggAlbum();
+        markEasterEggFound("room6-window");
 
         showPhotoPopup({
           container: overlays,

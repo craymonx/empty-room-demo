@@ -35,6 +35,10 @@
   pointer-events: auto;
 }
 
+.room10-final-table-hotspot {
+  z-index: 130;
+}
+
 body.debug .room10-hotspot {
   outline: 2px dashed rgba(255, 220, 120, 0.86);
   background: rgba(255, 200, 80, 0.18);
