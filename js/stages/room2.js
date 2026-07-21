@@ -30,6 +30,28 @@ export default {
     let eggPlayer = null;
     let eggBgmWasPlaying = false;
 
+    const soundEffects = {
+      smoke: new Audio("./assets/audio/room2/smoke.wav"),
+      pouringBeer: new Audio("./assets/audio/room2/pouring_beer.wav"),
+      openDrawer: new Audio("./assets/audio/room2/open_drawer.wav"),
+    };
+
+    Object.values(soundEffects).forEach((audio) => {
+      audio.preload = "auto";
+    });
+
+    function playSoundEffect(audio) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+
+    function stopSoundEffects() {
+      Object.values(soundEffects).forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
+
     function setupRoom2Bgm() {
       room2Bgm = new Audio("./assets/audio/room2/2 static bgm 2.wav");
       room2Bgm.loop = true;
@@ -1028,6 +1050,7 @@ export default {
           }
 
           scene = "fullCup";
+          playSoundEffect(soundEffects.pouringBeer);
           clearOverlays();
           await transitionBg("./assets/bg/room2/full-cup.webp");
 
@@ -1037,6 +1060,7 @@ export default {
               showBackSlider(async () => {
                 if (scene !== "fullCup") return;
 
+                stopSoundEffects();
                 scene = "stare1";
                 clearOverlays();
                 await transitionBg("./assets/bg/room2/stare-1.webp");
@@ -1060,10 +1084,12 @@ export default {
                         scene = "drawerMessy";
                         clearOverlays();
                         await transitionBg("./assets/bg/room2/drawer-messy.webp");
+                        playSoundEffect(soundEffects.openDrawer);
 
                         showDrawerOpenHotspot(async () => {
                           if (scene !== "drawerMessy") return;
 
+                          stopSoundEffects();
                           await transitionBg("./assets/bg/room2/empty-drawer.webp");
                           showClosableDialog({
                             textLines: ["I guess I’ll make myself busy…"],
@@ -1099,17 +1125,21 @@ export default {
         scene = "smoke";
         clearOverlays();
         await transitionBg("./assets/bg/room2/smoke.webp");
+        playSoundEffect(soundEffects.smoke);
 
         showSmokeHotspot(async () => {
           if (scene !== "smoke") return;
 
+          stopSoundEffects();
           scene = "canSmoke";
           clearOverlays();
           await transitionBg("./assets/bg/room2/can-explode.webp");
+          playSoundEffect(soundEffects.smoke);
 
           showCanHotspot(async () => {
             if (scene !== "canSmoke") return;
 
+            stopSoundEffects();
             await transitionBg("./assets/bg/room2/empty-cup.webp");
             startBeerGame();
           });
@@ -1156,6 +1186,7 @@ export default {
       if (cleanupDrag) cleanupDrag();
       closeEggPlayer();
       stopRoom2Bgm();
+      stopSoundEffects();
       delete window.__room2Rects;
       delete window.__room2Layout;
       delete window.__room2SortingState;

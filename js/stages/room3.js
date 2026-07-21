@@ -49,6 +49,64 @@ export default {
 
     const BGM_SRC = "./assets/audio/room3/3 no wheel no deal bgm 3.wav";
     const SPRAY_SRC = "./assets/audio/room3/spray.wav";
+    const activeSpraySounds = new Set();
+    const doorLockedSound = new Audio("./assets/audio/room3/door_locked.wav");
+    const clearKeySound = new Audio("./assets/audio/room3/mobile_star.wav");
+    const phoneKeySounds = Object.fromEntries(
+      Array.from({ length: 10 }, (_, digit) => [
+        String(digit),
+        new Audio(`./assets/audio/room3/cell-phone-1-nr${digit}.wav`),
+      ])
+    );
+    const room3SoundEffects = [
+      doorLockedSound,
+      clearKeySound,
+      ...Object.values(phoneKeySounds),
+    ];
+    let phoneSequenceId = 0;
+
+    room3SoundEffects.forEach((audio) => {
+      audio.preload = "auto";
+    });
+
+    function playSoundEffect(audio) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+
+    function stopRoom3SoundEffects() {
+      phoneSequenceId += 1;
+
+      room3SoundEffects.forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
+
+    async function playPhoneNumberSequence(number) {
+      const sequenceId = ++phoneSequenceId;
+
+      clearKeySound.pause();
+      clearKeySound.currentTime = 0;
+      Object.values(phoneKeySounds).forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+
+      for (const digit of number) {
+        if (sequenceId !== phoneSequenceId) return false;
+
+        const audio = phoneKeySounds[digit];
+        playSoundEffect(audio);
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        audio.pause();
+        audio.currentTime = 0;
+      }
+
+      return sequenceId === phoneSequenceId;
+    }
+
     const PHONE_EASTER_EGGS = {
       20210115: {
         title: "Memory fragment",
@@ -83,14 +141,17 @@ export default {
 
       security1: {
         security: { x: 2300, y: 350, w: 300, h: 800 },
+        phone: { x: 375, y: 920, w: 80, h: 20 },
       },
 
       inspect1: {
         toInspect2: { x: 1700, y: 550, w: 350, h: 650 },
+        phone: { x: 375, y: 920, w: 80, h: 20 },
       },
 
       inspect2: {
         next: { x: 0, y: 0, w: 2800, h: 1800 },
+        phone: { x: 375, y: 920, w: 80, h: 20 },
       },
 
       paper1: {
@@ -149,7 +210,19 @@ export default {
     function playSpraySound() {
       const spray = new Audio(SPRAY_SRC);
       spray.volume = 0.7;
+      activeSpraySounds.add(spray);
+      spray.addEventListener("ended", () => activeSpraySounds.delete(spray), {
+        once: true,
+      });
       spray.play().catch(() => {});
+    }
+
+    function stopSpraySounds() {
+      activeSpraySounds.forEach((spray) => {
+        spray.pause();
+        spray.currentTime = 0;
+      });
+      activeSpraySounds.clear();
     }
 
     function addCleanup(fn) {
@@ -361,6 +434,7 @@ export default {
       `;
 
       function closePhone() {
+        stopRoom3SoundEffects();
         popup.remove();
       }
 
@@ -415,11 +489,16 @@ export default {
           const key = btn.dataset.key;
           const action = btn.dataset.action;
 
+          if (key) {
+            playSoundEffect(phoneKeySounds[key]);
+          }
+
           if (key && phoneInput.length < 16) {
             phoneInput += key;
           }
 
           if (action === "clear") {
+            playSoundEffect(clearKeySound);
             phoneInput = "";
           }
 
@@ -431,9 +510,21 @@ export default {
         });
       });
 
-      popup.querySelector(".room3-phone__btn--dial").addEventListener("click", (e) => {
+      let replayingDialedNumber = false;
+
+      popup.querySelector(".room3-phone__btn--dial").addEventListener("click", async (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        if (replayingDialedNumber) return;
+
+        if (phoneInput === CORRECT_SECURITY_NUMBER || PHONE_EASTER_EGGS[phoneInput]) {
+          replayingDialedNumber = true;
+          const completed = await playPhoneNumberSequence(phoneInput);
+          replayingDialedNumber = false;
+
+          if (!completed || !popup.isConnected) return;
+        }
 
         const easterEgg = PHONE_EASTER_EGGS[phoneInput];
 
@@ -458,7 +549,9 @@ Please do not leave a message.`,
         }
 
         if (phoneInput === CORRECT_SECURITY_NUMBER && !allowSecurityCall) {
-          showPhoneError("This number is no longer available.");
+          showPhoneError(
+            "One of our officer is already on the way to your room. Please stay calm and wait for the assistance."
+          );
           return;
         }
 
@@ -629,6 +722,7 @@ Please do not leave a message.`,
       if (scene === "zoomDoor") {
         items.push(
           makeHotspot("door", RECTS.zoomDoor.door, () => {
+            playSoundEffect(doorLockedSound);
             showMonologue("it is locked");
           })
         );
@@ -671,6 +765,12 @@ Please do not leave a message.`,
             render();
           })
         );
+
+        items.push(
+          makeHotspot("phone", RECTS.security1.phone, () => {
+            openPhonePopup({ allowSecurityCall: false });
+          })
+        );
       }
 
       if (scene === "inspect1") {
@@ -680,6 +780,12 @@ Please do not leave a message.`,
             render();
           })
         );
+
+        items.push(
+          makeHotspot("phone", RECTS.inspect1.phone, () => {
+            openPhonePopup({ allowSecurityCall: false });
+          })
+        );
       }
 
       if (scene === "inspect2") {
@@ -687,6 +793,12 @@ Please do not leave a message.`,
           makeHotspot("next", RECTS.inspect2.next, () => {
             scene = "paper1";
             render();
+          })
+        );
+
+        items.push(
+          makeHotspot("phone", RECTS.inspect2.phone, () => {
+            openPhonePopup({ allowSecurityCall: false });
           })
         );
       }
@@ -773,6 +885,7 @@ Please do not leave a message.`,
     }
 
     function render() {
+      stopSpraySounds();
       runCleanup();
       clearOverlays();
       clearDialog();
@@ -822,9 +935,22 @@ Please do not leave a message.`,
 
     startBgm();
     render();
+
+    this._room3SoundCleanup = stopRoom3SoundEffects;
+    this._room3SprayCleanup = stopSpraySounds;
   },
 
   exit({ root }) {
+    if (this._room3SprayCleanup) {
+      this._room3SprayCleanup();
+      this._room3SprayCleanup = null;
+    }
+
+    if (this._room3SoundCleanup) {
+      this._room3SoundCleanup();
+      this._room3SoundCleanup = null;
+    }
+
     if (room3Bgm) {
       room3Bgm.pause();
       room3Bgm.currentTime = 0;

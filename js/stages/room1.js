@@ -45,6 +45,28 @@ export default {
     bgm.loop = true;
     bgm.volume = 0.45;
 
+    const soundEffects = {
+      cookedNoodles: new Audio("./assets/audio/boiling_water.wav"),
+      pouringLiquid: new Audio("./assets/audio/room1/pouring_liquid.wav"),
+      emptyGlass: new Audio("./assets/audio/room1/drink_slurp.wav"),
+    };
+
+    Object.values(soundEffects).forEach((audio) => {
+      audio.preload = "auto";
+    });
+
+    function playSoundEffect(audio) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+
+    function stopSoundEffects() {
+      Object.values(soundEffects).forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
+
     let bgmStarted = false;
 
     function startBgm() {
@@ -595,6 +617,7 @@ export default {
     async function finishRoom1AfterGlass() {
       if (scene !== "glassEmptyAfterMix") return;
 
+      stopSoundEffects();
       scene = "distortionAfterMix";
       hideBackPlate();
 
@@ -674,6 +697,8 @@ export default {
         used.add(id);
         filledCount += 1;
 
+        playSoundEffect(soundEffects.pouringLiquid);
+
         itemEl.style.pointerEvents = "none";
         itemEl.classList.add("used");
         itemEl.style.transform = "translate(0px, 0px)";
@@ -695,11 +720,13 @@ export default {
         showCupClickHotspot(async () => {
           if (scene !== "glassPostMix") return;
 
+          stopSoundEffects();
           scene = "glassEmptyAfterMix";
 
           const cup = overlays.querySelector("#cupClickHotspot");
           if (cup) cup.remove();
 
+          playSoundEffect(soundEffects.emptyGlass);
           await transitionBg("./assets/bg/room1/glass-empty.webp");
 
           showBackPlate(finishRoom1AfterGlass);
@@ -772,12 +799,14 @@ export default {
           scene = "cooked";
 
           await transitionBg("./assets/bg/room1/cooked-noodles.webp");
+          playSoundEffect(soundEffects.cookedNoodles);
 
           clearOverlays();
 
           showPotClickHotspot(async () => {
             if (scene !== "cooked") return;
 
+            stopSoundEffects();
             scene = "emptyPot";
 
             clearOverlays();
@@ -847,6 +876,8 @@ export default {
       bgm.pause();
       bgm.currentTime = 0;
       bgmStarted = false;
+
+      stopSoundEffects();
 
       hideFakeChopstickCursor();
 
